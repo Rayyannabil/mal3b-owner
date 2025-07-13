@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mal3b/screens/login_screen.dart';
 
 void main() {
   runApp(const Mal3bApp());
@@ -44,17 +45,7 @@ class Mal3bApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: Center(
-          child: Text(
-            "Hello",
-            style: TextStyle(
-              fontFamily: "MadaniArabic",
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ),
+      home: LoginScreen(),
     );
   }
 }
