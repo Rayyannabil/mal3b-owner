@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mal3b/screens/login_screen.dart';
-import 'package:mal3b/screens/sign_up_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const Mal3bApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Mal3bApp extends StatelessWidget {
+  const Mal3bApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen());
+    return MaterialApp(debugShowCheckedModeBanner: false, home: Scaffold());
   }
 }
