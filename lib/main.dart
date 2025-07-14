@@ -37,7 +37,7 @@ class Mal3bApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      locale: const Locale('ar'),
+      locale: const Locale('en'),
       supportedLocales: const [Locale('en'), Locale('ar')],
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
