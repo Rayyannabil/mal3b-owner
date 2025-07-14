@@ -3,6 +3,7 @@ import 'package:mal3b/components/custom_button.dart';
 import 'package:mal3b/components/custom_input_component.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
+import 'package:mal3b/screens/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,24 +19,27 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomColors.primary,
-      appBar: AppBar(
-        backgroundColor: CustomColors.primary,
-        elevation: 0,
-        actions: [
-          SizedBox(height: getVerticalSpace(context, 16)),
-          Row(
-            children: [
-              Text('Skip', style: TextStyle(fontSize: 20, color: Colors.white)),
-              SizedBox(width: getHorizontalSpace(context, 12)),
-              Icon(Icons.arrow_forward_rounded, color: Colors.white),
-              SizedBox(width: getHorizontalSpace(context, 20)),
-            ],
-          ),
-        ],
-      ),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: getVerticalSpace(context, 90)),
+          GestureDetector(
+            onTap: () => print('tapped'),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Skip',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+                SizedBox(width: getHorizontalSpace(context, 12)),
+                Icon(Icons.arrow_forward_rounded, color: Colors.white),
+                SizedBox(width: getHorizontalSpace(context, 20)),
+              ],
+            ),
+          ),
+
           // Fixed Login text
           SizedBox(height: getVerticalSpace(context, 70)),
           Padding(
@@ -118,22 +122,53 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Expanded(
                                     child: CustomButton(
                                       onPressed: () {},
+
                                       bgColor: CustomColors.customWhite,
                                       fgColor: CustomColors.secondary
                                           .withOpacity(0.5),
-                                      text: Text('Log in'),
+                                      text: const Text('Log in'),
                                     ),
                                   ),
+
                                   SizedBox(
                                     width: getHorizontalSpace(context, 25),
                                   ),
+
                                   Expanded(
                                     child: CustomButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          PageRouteBuilder(
+                                            transitionDuration: Duration(
+                                              milliseconds: 500,
+                                            ),
+                                            pageBuilder: (_, __, ___) =>
+                                                const SignUpScreen(),
+                                            transitionsBuilder:
+                                                (_, animation, __, child) {
+                                                  final tween =
+                                                      Tween(
+                                                        begin: Offset(1.0, 0.0),
+                                                        end: Offset.zero,
+                                                      ).chain(
+                                                        CurveTween(
+                                                          curve: Curves.ease,
+                                                        ),
+                                                      );
+                                                  return SlideTransition(
+                                                    position: animation.drive(
+                                                      tween,
+                                                    ),
+                                                    child: child,
+                                                  );
+                                                },
+                                          ),
+                                        );
+                                      },
                                       bgColor: CustomColors.secondary,
                                       fgColor: CustomColors.white,
-
-                                      text: Text('Sign up'),
+                                      text: const Text('Sign up'),
                                     ),
                                   ),
                                 ],
