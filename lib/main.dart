@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mal3b/screens/login_screen.dart';
+import 'package:mal3b/screens/sign_up_screen.dart';
 
 void main() {
   runApp(const Mal3bApp());
@@ -45,7 +45,7 @@ class Mal3bApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: SignUpScreen(),
     );
   }
 }
