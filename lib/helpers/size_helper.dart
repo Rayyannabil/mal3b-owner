@@ -37,10 +37,10 @@ double getLogoHeight(BuildContext context) {
 }
 
 double getImageHeight(BuildContext context) {
-  if (ScreenHelper.isXs(context)) return 180; // Very small phones
-  if (ScreenHelper.isSm(context)) return 230; // Small phones
-  if (ScreenHelper.isMd(context)) return 280; // Medium phones
-  return 360; // Large phones / phablets
+  if (ScreenHelper.isXs(context)) return 130; // Very small phones
+  if (ScreenHelper.isSm(context)) return 180; // Small phones
+  if (ScreenHelper.isMd(context)) return 230; // Medium phones
+  return 310; // Large phones / phablets
 }
 
 double getVerticalSpace(BuildContext context, double space) {
