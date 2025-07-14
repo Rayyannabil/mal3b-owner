@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mal3b/components/custom_button.dart';
 import 'package:mal3b/components/custom_input_component.dart';
+import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,25 +17,19 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF609966),
+      backgroundColor: CustomColors.primary,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF609966),
+        backgroundColor: CustomColors.primary,
         elevation: 0,
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Text(
-                  'Skip',
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 8),
-                  child: Icon(Icons.arrow_forward_rounded, color: Colors.white),
-                ),
-              ],
-            ),
+          SizedBox(height: getVerticalSpace(context, 16)),
+          Row(
+            children: [
+              Text('Skip', style: TextStyle(fontSize: 20, color: Colors.white)),
+              SizedBox(width: getHorizontalSpace(context, 12)),
+              Icon(Icons.arrow_forward_rounded, color: Colors.white),
+              SizedBox(width: getHorizontalSpace(context, 20)),
+            ],
           ),
         ],
       ),
@@ -41,13 +37,18 @@ class _LoginScreenState extends State<LoginScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Fixed Login text
+          SizedBox(height: getVerticalSpace(context, 70)),
           Padding(
-            padding: const EdgeInsets.only(left: 29, top: 70, bottom: 30),
+            padding: EdgeInsetsGeometry.only(
+              left: getHorizontalSpace(context, 30),
+            ),
             child: Text(
               'Log in',
-              style: TextStyle(color: Colors.white, fontSize: 32),
+              style: TextStyle(color: CustomColors.white, fontSize: 32),
             ),
           ),
+
+          SizedBox(height: getVerticalSpace(context, 30)),
 
           // Scrollable content
           Expanded(
@@ -61,6 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 slivers: [
                   SliverFillRemaining(
                     hasScrollBody: false,
+
                     child: Padding(
                       padding: const EdgeInsets.only(
                         left: 20.0,
@@ -70,6 +72,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Center(
+                            child: Image.asset(
+                              'assets/images/football.png',
+                              width: getHorizontalSpace(context, 250),
+                              height: getVerticalSpace(context, 250),
+                            ),
+                          ),
+                          SizedBox(height: getVerticalSpace(context, 15)),
                           CustomInput(text: 'Phone Number', isObsecure: false),
                           SizedBox(height: getVerticalSpace(context, 50)),
                           CustomInput(text: 'Password', isObsecure: true),
@@ -97,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Text('Remember me'),
                             ],
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: getVerticalSpace(context, 20)),
                           Expanded(
                             child: Align(
                               alignment: Alignment.bottomCenter,
@@ -105,31 +115,32 @@ class _LoginScreenState extends State<LoginScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      fixedSize: Size(150, 45),
-                                      backgroundColor: Color(0xFFEDF1D6),
-                                      foregroundColor: Color(
-                                        0xFF40513B,
-                                      ).withOpacity(0.5),
+                                  Expanded(
+                                    child: CustomButton(
+                                      onPressed: () {},
+                                      bgColor: CustomColors.customWhite,
+                                      fgColor: CustomColors.secondary
+                                          .withOpacity(0.5),
+                                      text: Text('Log in'),
                                     ),
-                                    child: Text('Log in'),
                                   ),
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      fixedSize: Size(150, 45),
-                                      backgroundColor: Color(0xFF40513B),
-                                      foregroundColor: Colors.white,
+                                  SizedBox(
+                                    width: getHorizontalSpace(context, 25),
+                                  ),
+                                  Expanded(
+                                    child: CustomButton(
+                                      onPressed: () {},
+                                      bgColor: CustomColors.secondary,
+                                      fgColor: CustomColors.white,
+
+                                      text: Text('Sign up'),
                                     ),
-                                    child: Text('Sign up'),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                          SizedBox(height: 40),
+                          SizedBox(height: getVerticalSpace(context, 50)),
                         ],
                       ),
                     ),

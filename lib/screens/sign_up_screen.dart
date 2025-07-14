@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mal3b/components/custom_button.dart';
 import 'package:mal3b/components/custom_input_component.dart';
+import 'package:mal3b/constants/colors.dart';
+import 'package:mal3b/helpers/size_helper.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -56,89 +59,106 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
                 color: Colors.white,
               ),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.only(top: 40, left: 20, right: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomInput(
-                            text: 'First Name',
-                            isObsecure: false,
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: CustomInput(
-                            text: 'Last Name',
-                            isObsecure: false,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    CustomInput(text: 'Phone Number', isObsecure: false),
-                    SizedBox(height: 16),
-                    CustomInput(text: 'Password', isObsecure: true),
-                    SizedBox(height: 16),
-                    CustomInput(text: 'Confirm Password', isObsecure: true),
-                    SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Checkbox(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          value: _rememberMe,
-                          onChanged: (value) {
-                            setState(() {
-                              _rememberMe = value ?? false;
-                            });
-                          },
-                          checkColor: Color(0xFF609966),
-                          fillColor: MaterialStateProperty.resolveWith((
-                            states,
-                          ) {
-                            return Color(0xFFE3F2C1);
-                          }),
-                        ),
-                        Text('Remember me'),
-                      ],
-                    ),
-                    SizedBox(height: 32),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: CustomScrollView(
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40, left: 20, right: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              fixedSize: Size(150, 45),
-                              backgroundColor: Color(0xFFEDF1D6),
-                              foregroundColor: Color(
-                                0xFF40513B,
-                              ).withOpacity(0.5),
-                            ),
-                            child: Text('Log in'),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomInput(
+                                  text: 'First Name',
+                                  isObsecure: false,
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              Expanded(
+                                child: CustomInput(
+                                  text: 'Last Name',
+                                  isObsecure: false,
+                                ),
+                              ),
+                            ],
                           ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              fixedSize: Size(150, 45),
-                              backgroundColor: Color(0xFF40513B),
-                              foregroundColor: Colors.white,
-                            ),
-                            child: Text('Sign up'),
+                          SizedBox(height: getVerticalSpace(context, 16)),
+                          CustomInput(text: 'Phone Number', isObsecure: false),
+                          SizedBox(height: getVerticalSpace(context, 16)),
+                          CustomInput(text: 'Password', isObsecure: true),
+                          SizedBox(height: getVerticalSpace(context, 16)),
+                          CustomInput(
+                            text: 'Confirm Password',
+                            isObsecure: true,
                           ),
+                          SizedBox(height: getVerticalSpace(context, 16)),
+                          Row(
+                            children: [
+                              Checkbox(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                value: _rememberMe,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _rememberMe = value ?? false;
+                                  });
+                                },
+                                checkColor: Color(0xFF609966),
+                                fillColor: MaterialStateProperty.resolveWith((
+                                  states,
+                                ) {
+                                  return Color(0xFFE3F2C1);
+                                }),
+                              ),
+                              Text('Remember me'),
+                            ],
+                          ),
+                          SizedBox(height: getVerticalSpace(context, 150)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                child: CustomButton(
+                                  onPressed: () {},
+                                  bgColor: CustomColors.customWhite,
+                                  fgColor: CustomColors.secondary.withOpacity(
+                                    0.5,
+                                  ),
+                                  text: Text(
+                                    'Log in',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: getHorizontalSpace(context, 25)),
+                              Expanded(
+                                child: CustomButton(
+                                  onPressed: () {},
+                                  bgColor: CustomColors.secondary,
+                                  fgColor: CustomColors.white,
+
+                                  text: Text(
+                                    'Sign up',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: getVerticalSpace(context, 40)),
                         ],
                       ),
                     ),
-                    SizedBox(height: 40),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

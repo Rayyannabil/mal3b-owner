@@ -49,3 +49,12 @@ double getVerticalSpace(BuildContext context, double space) {
   if (ScreenHelper.isMd(context)) return space; // Medium phones
   return space * 1.25; // Large phones / phablets
 }
+
+double getHorizontalSpace(BuildContext context, double space) {
+  if (ScreenHelper.isXs(context)) return space * 0.5;   // Very small phones
+  if (ScreenHelper.isSm(context)) return space * 0.75;  // Small phones
+  if (ScreenHelper.isMd(context)) return space;         // Medium phones
+  return space * 1.25;                                  // Large phones / tablets
+}
+
+
