@@ -37,10 +37,10 @@ double getLogoHeight(BuildContext context) {
 }
 
 double getImageHeight(BuildContext context) {
-  if (ScreenHelper.isXs(context)) return 250; // Very small phones
-  if (ScreenHelper.isSm(context)) return 300; // Small phones
-  if (ScreenHelper.isMd(context)) return 350; // Medium phones
-  return 420; // Large phones / phablets
+  if (ScreenHelper.isXs(context)) return 180; // Very small phones
+  if (ScreenHelper.isSm(context)) return 230; // Small phones
+  if (ScreenHelper.isMd(context)) return 280; // Medium phones
+  return 360; // Large phones / phablets
 }
 
 double getVerticalSpace(BuildContext context, double space) {
@@ -51,10 +51,8 @@ double getVerticalSpace(BuildContext context, double space) {
 }
 
 double getHorizontalSpace(BuildContext context, double space) {
-  if (ScreenHelper.isXs(context)) return space * 0.5;   // Very small phones
-  if (ScreenHelper.isSm(context)) return space * 0.75;  // Small phones
-  if (ScreenHelper.isMd(context)) return space;         // Medium phones
-  return space * 1.25;                                  // Large phones / tablets
+  if (ScreenHelper.isXs(context)) return space * 0.5; // Very small phones
+  if (ScreenHelper.isSm(context)) return space * 0.75; // Small phones
+  if (ScreenHelper.isMd(context)) return space; // Medium phones
+  return space * 1.25; // Large phones / tablets
 }
-
-

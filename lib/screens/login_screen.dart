@@ -75,8 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           Center(
                             child: Image.asset(
                               'assets/images/football.png',
-                              width: getHorizontalSpace(context, 250),
-                              height: getVerticalSpace(context, 250),
+                              width: getImageHeight(context),
+                              height: getImageHeight(context),
                             ),
                           ),
                           SizedBox(height: getVerticalSpace(context, 15)),
