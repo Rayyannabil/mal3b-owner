@@ -3,6 +3,7 @@ import 'package:mal3b/components/custom_button.dart';
 import 'package:mal3b/components/custom_input_component.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
+import 'package:mal3b/screens/login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -18,30 +19,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF609966),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF609966),
-        elevation: 0,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(16),
+
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: getVerticalSpace(context, 90)),
+
+          GestureDetector(
+            onTap: () => print('tapped'),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
                   'Skip',
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 3, left: 8),
-                  child: Icon(Icons.arrow_forward_rounded, color: Colors.white),
-                ),
+                SizedBox(width: getHorizontalSpace(context, 12)),
+                Icon(Icons.arrow_forward_rounded, color: Colors.white),
+                SizedBox(width: getHorizontalSpace(context, 20)),
               ],
             ),
           ),
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+
           // Fixed Sign Up text
           Padding(
             padding: const EdgeInsets.only(left: 29, top: 70, bottom: 30),
@@ -123,32 +122,52 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             children: [
                               Expanded(
                                 child: CustomButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      PageRouteBuilder(
+                                        transitionDuration: Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        pageBuilder: (_, __, ___) =>
+                                            const LoginScreen(),
+                                        transitionsBuilder:
+                                            (_, animation, __, child) {
+                                              final tween =
+                                                  Tween(
+                                                    begin: Offset(1.0, 0.0),
+                                                    end: Offset.zero,
+                                                  ).chain(
+                                                    CurveTween(
+                                                      curve: Curves.ease,
+                                                    ),
+                                                  );
+                                              return SlideTransition(
+                                                position: animation.drive(
+                                                  tween,
+                                                ),
+                                                child: child,
+                                              );
+                                            },
+                                      ),
+                                    );
+                                  },
                                   bgColor: CustomColors.customWhite,
                                   fgColor: CustomColors.secondary.withOpacity(
                                     0.5,
                                   ),
-                                  text: Text(
-                                    'Log in',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  text: const Text('Log in'),
                                 ),
                               ),
+
                               SizedBox(width: getHorizontalSpace(context, 25)),
+
                               Expanded(
                                 child: CustomButton(
                                   onPressed: () {},
                                   bgColor: CustomColors.secondary,
                                   fgColor: CustomColors.white,
-
-                                  text: Text(
-                                    'Sign up',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  text: const Text('Sign up'),
                                 ),
                               ),
                             ],
