@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mal3b/components/custom_input_component.dart';
+import 'package:mal3b/screens/custom_input_component.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -56,66 +56,84 @@ class _LoginScreenState extends State<LoginScreen> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
                 color: Colors.white,
               ),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.only(top: 40, left: 20, right: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 16),
-                    CustomInput(text: 'Phone Number', isObsecure: false),
-                    SizedBox(height: 30),
-                    CustomInput(text: 'Password', isObsecure: true),
-                    SizedBox(height: 15),
+              child: CustomScrollView(
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20.0,
+                        right: 20.0,
+                        top: 30,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomInput(text: 'Phone Number', isObsecure: false),
+                          SizedBox(height: getVerticalSpace(context, 50)),
+                          CustomInput(text: 'Password', isObsecure: true),
+                          SizedBox(height: getVerticalSpace(context, 20)),
 
-                    Row(
-                      children: [
-                        Checkbox(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
+                          Row(
+                            children: [
+                              Checkbox(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                value: _rememberMe,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _rememberMe = value ?? false;
+                                  });
+                                },
+                                checkColor: Color(0xFF609966),
+                                fillColor: MaterialStateProperty.resolveWith((
+                                  states,
+                                ) {
+                                  return Color(0xFFE3F2C1);
+                                }),
+                              ),
+                              Text('Remember me'),
+                            ],
                           ),
-                          value: _rememberMe,
-                          onChanged: (value) {
-                            setState(() {
-                              _rememberMe = value ?? false;
-                            });
-                          },
-                          checkColor: Color(0xFF609966),
-                          fillColor: MaterialStateProperty.resolveWith((
-                            states,
-                          ) {
-                            return Color(0xFFE3F2C1);
-                          }),
-                        ),
-                        Text('Remember me'),
-                      ],
+                          SizedBox(height: 20),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      fixedSize: Size(150, 45),
+                                      backgroundColor: Color(0xFFEDF1D6),
+                                      foregroundColor: Color(
+                                        0xFF40513B,
+                                      ).withOpacity(0.5),
+                                    ),
+                                    child: Text('Log in'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {},
+                                    style: ElevatedButton.styleFrom(
+                                      fixedSize: Size(150, 45),
+                                      backgroundColor: Color(0xFF40513B),
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    child: Text('Sign up'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 40),
+                        ],
+                      ),
                     ),
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: Size(150, 45),
-                            backgroundColor: Color(0xFFEDF1D6),
-                            foregroundColor: Color(0xFF40513B).withOpacity(0.5),
-                          ),
-                          child: Text('Log in'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: Size(150, 45),
-                            backgroundColor: Color(0xFF40513B),
-                            foregroundColor: Colors.white,
-                          ),
-                          child: Text('Sign up'),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 40),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
