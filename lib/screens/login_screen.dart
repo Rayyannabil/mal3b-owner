@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mal3b/screens/custom_input_component.dart';
+import 'package:mal3b/components/custom_input_component.dart';
+import 'package:mal3b/helpers/size_helper.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
