@@ -23,20 +23,22 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: getVerticalSpace(context, 90)),
-          GestureDetector(
-            onTap: () => print('tapped'),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  'Skip',
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                ),
-                SizedBox(width: getHorizontalSpace(context, 12)),
-                Icon(Icons.arrow_forward_rounded, color: Colors.white),
-                SizedBox(width: getHorizontalSpace(context, 20)),
-              ],
+          SizedBox(height: getVerticalSpace(context, 20)),
+          SafeArea(
+            child: GestureDetector(
+              onTap: () => print('tapped'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Skip',
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                  SizedBox(width: getHorizontalSpace(context, 12)),
+                  Icon(Icons.arrow_forward_rounded, color: Colors.white),
+                  SizedBox(width: getHorizontalSpace(context, 20)),
+                ],
+              ),
             ),
           ),
 
@@ -111,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Text('Remember me'),
                             ],
                           ),
-                          SizedBox(height: getVerticalSpace(context, 20)),
+                          Spacer(),
                           Expanded(
                             child: Align(
                               alignment: Alignment.bottomCenter,
@@ -175,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: getVerticalSpace(context, 50)),
+                          SizedBox(height: 30),
                         ],
                       ),
                     ),
