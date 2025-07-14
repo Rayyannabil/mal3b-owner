@@ -5,7 +5,7 @@ class DioClient {
   static final DioClient _instance = DioClient._internal();
   factory DioClient() => _instance;
 
-  static const String baseUrl = "https://192.168.1.1:3000/"; 
+  static const String baseUrl = "http://192.168.1.4:8080/"; 
 
   late Dio dio;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
