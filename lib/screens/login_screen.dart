@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           SizedBox(height: getVerticalSpace(context, 15)),
                           CustomInput(text: 'Phone Number', isObsecure: false),
-                          SizedBox(height: getVerticalSpace(context, 50)),
+                          SizedBox(height: getVerticalSpace(context, 20)),
                           CustomInput(text: 'Password', isObsecure: true),
                           SizedBox(height: getVerticalSpace(context, 20)),
 
