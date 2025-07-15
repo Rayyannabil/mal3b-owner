@@ -58,115 +58,126 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
                   color: Colors.white,
                 ),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 40, left: 20, right: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomInput(text: 'Full Name', isObsecure: false),
-                            SizedBox(height: getVerticalSpace(context, 20)),
-                            CustomInput(
-                              text: 'Phone Number',
-                              isObsecure: false,
-                            ),
-                            SizedBox(height: getVerticalSpace(context, 20)),
-                            CustomInput(text: 'Password', isObsecure: true),
-                            SizedBox(height: getVerticalSpace(context, 20)),
-                            CustomInput(
-                              text: 'Confirm Password',
-                              isObsecure: true,
-                            ),
-                            SizedBox(height: getVerticalSpace(context, 20)),
-                            Row(
-                              children: [
-                                Checkbox(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  value: _rememberMe,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _rememberMe = value ?? false;
-                                    });
-                                  },
-                                  checkColor: Color(0xFF609966),
-                                  fillColor: MaterialStateProperty.resolveWith((
-                                    states,
-                                  ) {
-                                    return Color(0xFFE3F2C1);
-                                  }),
-                                ),
-                                Text('Remember me'),
-                              ],
-                            ),
-                            Spacer(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Expanded(
-                                  child: CustomButton(
-                                    onPressed: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        PageRouteBuilder(
-                                          transitionDuration: Duration(
-                                            milliseconds: 500,
-                                          ),
-                                          pageBuilder: (_, __, ___) =>
-                                              const LoginScreen(),
-                                          transitionsBuilder:
-                                              (_, animation, __, child) {
-                                                final tween =
-                                                    Tween(
-                                                      begin: Offset(-1.0, 0.0),
-                                                      end: Offset.zero,
-                                                    ).chain(
-                                                      CurveTween(
-                                                        curve: Curves.ease,
-                                                      ),
-                                                    );
-                                                return SlideTransition(
-                                                  position: animation.drive(
-                                                    tween,
-                                                  ),
-                                                  child: child,
-                                                );
-                                              },
-                                        ),
-                                      );
-                                    },
-                                    bgColor: CustomColors.customWhite,
-                                    fgColor: CustomColors.secondary.withOpacity(
-                                      0.5,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: 40,
+                            left: 20,
+                            right: 20,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomInput(text: 'Full Name', isObsecure: false),
+                              SizedBox(height: getVerticalSpace(context, 20)),
+                              CustomInput(
+                                text: 'Phone Number',
+                                isObsecure: false,
+                              ),
+                              SizedBox(height: getVerticalSpace(context, 20)),
+                              CustomInput(text: 'Password', isObsecure: true),
+                              SizedBox(height: getVerticalSpace(context, 20)),
+                              CustomInput(
+                                text: 'Confirm Password',
+                                isObsecure: true,
+                              ),
+                              SizedBox(height: getVerticalSpace(context, 20)),
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(6),
                                     ),
-                                    text: const Text('Log in'),
+                                    value: _rememberMe,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _rememberMe = value ?? false;
+                                      });
+                                    },
+                                    checkColor: Color(0xFF609966),
+                                    fillColor:
+                                        MaterialStateProperty.resolveWith((
+                                          states,
+                                        ) {
+                                          return Color(0xFFE3F2C1);
+                                        }),
                                   ),
-                                ),
-
-                                SizedBox(
-                                  width: getHorizontalSpace(context, 25),
-                                ),
-
-                                Expanded(
-                                  child: CustomButton(
-                                    onPressed: () {},
-                                    bgColor: CustomColors.secondary,
-                                    fgColor: CustomColors.white,
-                                    text: const Text('Sign up'),
+                                  Text('Remember me'),
+                                ],
+                              ),
+                              Spacer(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                    child: CustomButton(
+                                      onPressed: () {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          PageRouteBuilder(
+                                            transitionDuration: Duration(
+                                              milliseconds: 500,
+                                            ),
+                                            pageBuilder: (_, __, ___) =>
+                                                const LoginScreen(),
+                                            transitionsBuilder:
+                                                (_, animation, __, child) {
+                                                  final tween =
+                                                      Tween(
+                                                        begin: Offset(
+                                                          -1.0,
+                                                          0.0,
+                                                        ),
+                                                        end: Offset.zero,
+                                                      ).chain(
+                                                        CurveTween(
+                                                          curve: Curves.ease,
+                                                        ),
+                                                      );
+                                                  return SlideTransition(
+                                                    position: animation.drive(
+                                                      tween,
+                                                    ),
+                                                    child: child,
+                                                  );
+                                                },
+                                          ),
+                                        );
+                                      },
+                                      bgColor: CustomColors.customWhite,
+                                      fgColor: CustomColors.secondary
+                                          .withOpacity(0.5),
+                                      text: const Text('Log in'),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 30),
-                          ],
+
+                                  SizedBox(
+                                    width: getHorizontalSpace(context, 25),
+                                  ),
+
+                                  Expanded(
+                                    child: CustomButton(
+                                      onPressed: () {},
+                                      bgColor: CustomColors.secondary,
+                                      fgColor: CustomColors.white,
+                                      text: const Text('Sign up'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 30),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -64,125 +64,135 @@ class _LoginScreenState extends State<LoginScreen> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
                 color: Colors.white,
               ),
-              child: CustomScrollView(
-                slivers: [
-                  SliverFillRemaining(
-                    hasScrollBody: false,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
 
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 20.0,
-                        right: 20.0,
-                        top: 30,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: Image.asset(
-                              'assets/images/football.png',
-                              width: getImageHeight(context),
-                              height: getImageHeight(context),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 20.0,
+                          right: 20.0,
+                          top: 30,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Image.asset(
+                                'assets/images/football.png',
+                                width: getImageHeight(context),
+                                height: getImageHeight(context),
+                              ),
                             ),
-                          ),
-                          SizedBox(height: getVerticalSpace(context, 15)),
-                          CustomInput(text: 'Phone Number', isObsecure: false),
-                          SizedBox(height: getVerticalSpace(context, 20)),
-                          CustomInput(text: 'Password', isObsecure: true),
-                          SizedBox(height: getVerticalSpace(context, 20)),
+                            SizedBox(height: getVerticalSpace(context, 15)),
+                            CustomInput(
+                              text: 'Phone Number',
+                              isObsecure: false,
+                            ),
+                            SizedBox(height: getVerticalSpace(context, 20)),
+                            CustomInput(text: 'Password', isObsecure: true),
+                            SizedBox(height: getVerticalSpace(context, 20)),
 
-                          Row(
-                            children: [
-                              Checkbox(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  value: _rememberMe,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _rememberMe = value ?? false;
+                                    });
+                                  },
+                                  checkColor: Color(0xFF609966),
+                                  fillColor: MaterialStateProperty.resolveWith((
+                                    states,
+                                  ) {
+                                    return Color(0xFFE3F2C1);
+                                  }),
                                 ),
-                                value: _rememberMe,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _rememberMe = value ?? false;
-                                  });
-                                },
-                                checkColor: Color(0xFF609966),
-                                fillColor: MaterialStateProperty.resolveWith((
-                                  states,
-                                ) {
-                                  return Color(0xFFE3F2C1);
-                                }),
-                              ),
-                              Text('Remember me'),
-                            ],
-                          ),
-                          Spacer(),
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: CustomButton(
-                                      onPressed: () {},
+                                Text('Remember me'),
+                              ],
+                            ),
+                            Spacer(),
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: CustomButton(
+                                        onPressed: () {},
 
-                                      bgColor: CustomColors.customWhite,
-                                      fgColor: CustomColors.secondary
-                                          .withOpacity(0.5),
-                                      text: const Text('Log in'),
+                                        bgColor: CustomColors.customWhite,
+                                        fgColor: CustomColors.secondary
+                                            .withOpacity(0.5),
+                                        text: const Text('Log in'),
+                                      ),
                                     ),
-                                  ),
 
-                                  SizedBox(
-                                    width: getHorizontalSpace(context, 25),
-                                  ),
+                                    SizedBox(
+                                      width: getHorizontalSpace(context, 25),
+                                    ),
 
-                                  Expanded(
-                                    child: CustomButton(
-                                      onPressed: () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          PageRouteBuilder(
-                                            transitionDuration: Duration(
-                                              milliseconds: 500,
+                                    Expanded(
+                                      child: CustomButton(
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            PageRouteBuilder(
+                                              transitionDuration: Duration(
+                                                milliseconds: 500,
+                                              ),
+                                              pageBuilder: (_, __, ___) =>
+                                                  const SignUpScreen(),
+                                              transitionsBuilder:
+                                                  (_, animation, __, child) {
+                                                    final tween =
+                                                        Tween(
+                                                          begin: Offset(
+                                                            1.0,
+                                                            0.0,
+                                                          ),
+                                                          end: Offset.zero,
+                                                        ).chain(
+                                                          CurveTween(
+                                                            curve: Curves.ease,
+                                                          ),
+                                                        );
+                                                    return SlideTransition(
+                                                      position: animation.drive(
+                                                        tween,
+                                                      ),
+                                                      child: child,
+                                                    );
+                                                  },
                                             ),
-                                            pageBuilder: (_, __, ___) =>
-                                                const SignUpScreen(),
-                                            transitionsBuilder:
-                                                (_, animation, __, child) {
-                                                  final tween =
-                                                      Tween(
-                                                        begin: Offset(1.0, 0.0),
-                                                        end: Offset.zero,
-                                                      ).chain(
-                                                        CurveTween(
-                                                          curve: Curves.ease,
-                                                        ),
-                                                      );
-                                                  return SlideTransition(
-                                                    position: animation.drive(
-                                                      tween,
-                                                    ),
-                                                    child: child,
-                                                  );
-                                                },
-                                          ),
-                                        );
-                                      },
-                                      bgColor: CustomColors.secondary,
-                                      fgColor: CustomColors.white,
-                                      text: const Text('Sign up'),
+                                          );
+                                        },
+                                        bgColor: CustomColors.secondary,
+                                        fgColor: CustomColors.white,
+                                        text: const Text('Sign up'),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 30),
-                        ],
+                            SizedBox(height: 30),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
