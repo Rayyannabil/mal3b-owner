@@ -227,122 +227,123 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomColors.primary,
-      body: BlocListener<AuthenticationCubit, AuthenticationState>(
-        listener: (context, state) {
-          if (state is AuthenticationSignInSuccess) {
-            ToastService().showToast(
-              message: state.msg,
-              type: ToastType.success,
-            );
-          } else if (state is AuthenticationSignInError) {
-            ToastService().showToast(message: state.msg, type: ToastType.error);
-          }
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: getVerticalSpace(context, 20)),
-            SafeArea(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  right: getHorizontalSpace(context, 20),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Skip',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                    SizedBox(width: getHorizontalSpace(context, 12)),
-                    Icon(Icons.arrow_forward_rounded, color: Colors.white),
-                  ],
-                ),
+
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: getVerticalSpace(context, 20)),
+          SafeArea(
+            child: GestureDetector(
+              onTap: () => print('tapped'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Skip',
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                  SizedBox(width: getHorizontalSpace(context, 12)),
+                  Icon(Icons.arrow_forward_rounded, color: Colors.white),
+                  SizedBox(width: getHorizontalSpace(context, 20)),
+                ],
               ),
             ),
-            SizedBox(height: getVerticalSpace(context, 70)),
-            Padding(
-              padding: EdgeInsets.only(left: getHorizontalSpace(context, 30)),
-              child: Text(
-                'Log in',
-                style: TextStyle(color: CustomColors.white, fontSize: 32),
-              ),
+          ),
+
+          // Fixed Login text
+          SizedBox(height: getVerticalSpace(context, 70)),
+          Padding(
+            padding: EdgeInsetsGeometry.only(
+              left: getHorizontalSpace(context, 30),
             ),
-            SizedBox(height: getVerticalSpace(context, 30)),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
-                  color: Colors.white,
-                ),
-                child: Form(
-                  key: _formKey,
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverFillRemaining(
-                        hasScrollBody: false,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                            vertical: 30,
+            child: Text(
+              'Log in',
+              style: TextStyle(color: CustomColors.white, fontSize: 32),
+            ),
+          ),
+
+          SizedBox(height: getVerticalSpace(context, 30)),
+
+          // Scrollable content
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
+                color: Colors.white,
+              ),
+              child: CustomScrollView(
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20.0,
+                        right: 20.0,
+                        top: 30,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              'assets/images/football.png',
+                              width: getImageHeight(context),
+                              height: getImageHeight(context),
+                            ),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          SizedBox(height: getVerticalSpace(context, 15)),
+                          CustomInput(text: 'Phone Number', isObsecure: false),
+                          SizedBox(height: getVerticalSpace(context, 20)),
+                          CustomInput(text: 'Password', isObsecure: true),
+                          SizedBox(height: getVerticalSpace(context, 20)),
+
+                          Row(
                             children: [
-                              CustomInput(
-                                text: 'Phone Number',
-                                isObsecure: false,
-                                onSubmit: (value) => phone = value!,
-                                validator: (value) => value!.isEmpty
-                                    ? 'Please enter phone number'
-                                    : null,
+                              Checkbox(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                value: _rememberMe,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _rememberMe = value ?? false;
+                                  });
+                                },
+                                checkColor: Color(0xFF609966),
+                                fillColor: MaterialStateProperty.resolveWith((
+                                  states,
+                                ) {
+                                  return Color(0xFFE3F2C1);
+                                }),
                               ),
-                              SizedBox(height: getVerticalSpace(context, 20)),
-                              CustomInput(
-                                text: 'Password',
-                                isObsecure: true,
-                                onSubmit: (value) => password = value!,
-                                validator: (value) => value!.length < 6
-                                    ? 'Password too short'
-                                    : null,
-                              ),
-                              SizedBox(height: getVerticalSpace(context, 20)),
-                              Row(
-                                children: [
-                                  Checkbox(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    value: rememberMe,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        rememberMe = value ?? false;
-                                      });
-                                    },
-                                    checkColor: CustomColors.primary,
-                                    fillColor: MaterialStateProperty.all(
-                                      Color(0xFFE3F2C1),
-                                    ),
-                                  ),
-                                  Text('Remember me'),
-                                ],
-                              ),
-                              Spacer(),
-                              Row(
+                              Text('Remember me'),
+                            ],
+                          ),
+                          Spacer(),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: CustomButton(
-                                      onPressed: login,
+                                      onPressed: () {},
+
                                       bgColor: CustomColors.customWhite,
                                       fgColor: CustomColors.secondary
                                           .withOpacity(0.5),
                                       text: const Text('Log in'),
                                     ),
                                   ),
+
                                   SizedBox(
                                     width: getHorizontalSpace(context, 25),
                                   ),
+
                                   Expanded(
                                     child: CustomButton(
                                       onPressed: () {
@@ -382,18 +383,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 30),
-                            ],
+                            ),
                           ),
-                        ),
+                          SizedBox(height: 30),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
