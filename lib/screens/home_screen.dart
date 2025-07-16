@@ -166,16 +166,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.only(left: 20, top: 40),
                           child: Row(
                             children: [
-                              Image.asset(
-                                'assets/images/star.png',
-                                width: 20,
-                                height: 20,
-                              ),
                               Text(
                                 '4.5',
                                 style: TextStyle(
                                   color: CustomColors.customWhite,
                                 ),
+                              ),
+                              SizedBox(width: getHorizontalSpace(context, 5)),
+                              Image.asset(
+                                'assets/images/star.png',
+                                width: 20,
+                                height: 20,
                               ),
                             ],
                           ),
