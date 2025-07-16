@@ -75,10 +75,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get errorPasswordMismatch => 'كلمة المرور ليست متطابقة';
 
   @override
-  String get landingTitle => 'الأقرب - الأكثر شهرة - الأرخص';
+  String get landingTitle => 'الأقرب - الأشهر - أوفر سعر';
 
   @override
-  String get landingSubtitle => 'يقدم لك تطبيق ملعب الملاعب بناءً على موقعك وتقييمات المستخدمين والعروض المتاحة — حتى لا تضيع وقتك.';
+  String get landingSubtitle => 'ملعب بيظبطك! بيجبلك أقرب ملعب، اللي عليه أحلى تقييم، وكمان اللي فيه عروض — كله من موبايلك وبثواني!';
 
   @override
   String get en => 'EN';
