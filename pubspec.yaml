@@ -47,6 +47,7 @@ dependencies:
   geocoding: ^4.0.0
   fluttertoast: ^8.2.12
   flutter_svg: ^2.2.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
@@ -76,6 +77,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true 
 
   # To add assets to your application, add an assets section, like this:
   assets:
