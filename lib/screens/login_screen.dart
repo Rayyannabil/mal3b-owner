@@ -420,6 +420,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               const Spacer(),
+                              SizedBox(height: 10),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,

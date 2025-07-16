@@ -56,6 +56,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
+import 'package:mal3b/screens/home_screen.dart';
 import 'package:mal3b/screens/login_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
 
@@ -103,7 +104,7 @@ class Mal3bApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         debugShowCheckedModeBanner: false,
-        home: const LoginScreen(),
+        home: const HomeScreen(),
       ),
     );
   }
