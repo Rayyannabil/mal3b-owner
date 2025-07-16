@@ -126,7 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SizedBox(height: getVerticalSpace(context, 70)),
             Padding(
-              padding: EdgeInsets.only(right: getHorizontalSpace(context, 30)),
+              padding: EdgeInsetsDirectional.only(
+                start: getHorizontalSpace(context, 30),
+              ),
               child: Text(
                 AppLocalizations.of(context)!.loginTitle,
                 style: const TextStyle(color: CustomColors.white, fontSize: 32),

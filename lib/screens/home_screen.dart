@@ -23,9 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
-    return Scaffold(
-      body: Center(child: Text(AppLocalizations.of(context)!.homeScreen)),
-    );
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
