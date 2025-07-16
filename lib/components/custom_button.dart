@@ -6,24 +6,27 @@ class CustomButton extends StatelessWidget {
     required this.onPressed,
     required this.bgColor,
     required this.fgColor,
-    required this.text,
+    required this.child,
   });
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color bgColor;
   final Color fgColor;
-  final Text text;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        fixedSize: Size(150, 45),
+        fixedSize: const Size(150, 45),
         backgroundColor: bgColor,
         foregroundColor: fgColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
       ),
-      child: text,
+      child: Center(child: child),
     );
   }
 }
