@@ -13,7 +13,7 @@ class CustomButton extends StatelessWidget {
     this.borderSide,
   });
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color bgColor;
   final Color fgColor;
   final double? radius;
@@ -36,7 +36,7 @@ class CustomButton extends StatelessWidget {
         foregroundColor: fgColor,
         side: borderSide,
       ),
-      child: text,
+      child: Center(child: child),
     );
   }
 }

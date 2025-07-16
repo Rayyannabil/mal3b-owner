@@ -5,8 +5,8 @@ import 'package:mal3b/components/custom_input_component.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
-import 'package:mal3b/screens/home_screen.dart';
 import 'package:mal3b/screens/sign_up_screen.dart';
+import 'package:mal3b/screens/test_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
 import '../l10n/app_localizations.dart';
 
@@ -29,6 +29,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login() {
+    if (phoneController.text.isEmpty && passwordController.text.isEmpty) {
+      ToastService().showToast(
+        message: 'املى بياناتك يا نجم',
+        type: ToastType.error,
+      );
+      return;
+    }
+
     if (phoneController.text.isEmpty) {
       ToastService().showToast(
         message: AppLocalizations.of(context)!.errorEnterPhone,
@@ -36,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     }
+
     if (!RegExp(r'^\d{11,}$').hasMatch(phoneController.text)) {
       ToastService().showToast(
         message: AppLocalizations.of(context)!.errorValidPhone,
@@ -43,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     }
+
     if (passwordController.text.isEmpty) {
       ToastService().showToast(
         message: AppLocalizations.of(context)!.errorEnterPassword,
@@ -50,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     }
+
     if (passwordController.text.length < 8) {
       ToastService().showToast(
         message: AppLocalizations.of(context)!.errorPasswordLength,
@@ -57,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     }
+
     context.read<AuthenticationCubit>().login(
       phone: phoneController.text,
       password: passwordController.text,
@@ -71,15 +83,20 @@ class _LoginScreenState extends State<LoginScreen> {
         listener: (context, state) {
           if (state is AuthenticationSignInSuccess) {
             ToastService().showToast(
-              message: state.msg,
+              message: "تم تسجيل الدخول يا نجم",
               type: ToastType.success,
             );
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const HomeScreen()),
+              MaterialPageRoute(builder: (_) => const MyWidget()),
             );
           } else if (state is AuthenticationSignInError) {
-            ToastService().showToast(message: state.msg, type: ToastType.error);
+            ToastService().showToast(
+              message: state.msg.endsWith("يا نجم")
+                  ? state.msg
+                  : "${state.msg} يا نجم",
+              type: ToastType.error,
+            );
           }
         },
         child: Column(
@@ -125,7 +142,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(50),
-
                   child: CustomScrollView(
                     slivers: [
                       SliverFillRemaining(

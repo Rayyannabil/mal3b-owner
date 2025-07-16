@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,58 +9,24 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   AuthenticationCubit() : super(AuthenticationInitial());
 
   Dio dio = DioClient().dio;
-  FlutterSecureStorage storage = FlutterSecureStorage();
+  FlutterSecureStorage storage = const FlutterSecureStorage();
 
-  void signup({required name, required phone, required password}) async {
+  void signup({
+    required String name,
+    required String phone,
+    required String password,
+  }) async {
+    Dio dioAuth = Dio();
+
     emit(AuthenticationLoading());
-    dio.options.headers = {'content-type': 'application/json'};
+    dioAuth.options.headers = {'content-type': 'application/json'};
     try {
-      final response = await dio.post(
-        "${DioClient.baseUrl}/signup",
-        data: {
-          "name": name,
-          "phone": phone,
-          "password": password,
-          "address": "address",
-        },
+      final response = await dioAuth.post(
+        "${DioClient.baseUrl}auth/signup",
+        data: {"name": name, "phone": phone, "password": password},
       );
+
       if (response.statusCode == 201) {
-        final storage = FlutterSecureStorage();
-        log("Access Token: ${response.data['accessToken']}");
-        log("Refresh Token: ${response.data['refreshToken']}");
-
-        storage.write(key: "accessToken", value: response.data['accessToken']);
-        storage.write(
-          key: "refreshToken",
-          value: response.data['refreshToken'],
-        );
-        emit(AuthenticationSignUpSuccess());
-      } else {
-        emit(AuthenticationSignUpError(msg: response.data['message']));
-      }
-    } on DioException catch (e) {
-      if (e.response != null) {
-        emit(AuthenticationSignUpError(msg: e.response!.data['message']));
-      } else {
-        emit(AuthenticationSignUpError(msg: "حدث خطأ غير متوقع"));
-      }
-    } catch (e) {
-      emit(AuthenticationSignUpError(msg: 'حدث خطأ غير متوقع'));
-    }
-  }
-
-  void login({required String phone, required String password}) async {
-    emit(AuthenticationLoading());
-    dio.options.headers = {'content-type': 'application/json'};
-    try {
-      final response = await dio.post(
-        "${DioClient.baseUrl}/login",
-        data: {"phone": phone, "password": password},
-      );
-      if (response.statusCode == 200) {
-        final storage = FlutterSecureStorage();
-        log("Access Token: ${response.data['accessToken']}");
-        log("Refresh Token: ${response.data['refreshToken']}");
         await storage.write(
           key: "accessToken",
           value: response.data['accessToken'],
@@ -71,26 +35,66 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
           key: "refreshToken",
           value: response.data['refreshToken'],
         );
-        emit(AuthenticationSignInSuccess(msg: "تم تسجيل الدخول بنجاح"));
+        emit(AuthenticationSignUpSuccess());
       } else {
-        emit(
-          AuthenticationSignInError(
-            msg: response.data['message'] ?? "حدث خطأ غير متوقع",
-          ),
-        );
+        final msg = response.data['message'] ?? "فيه حاجة غلط حصلت يا نجم";
+        emit(AuthenticationSignUpError(msg: _withYaNegm(msg)));
       }
     } on DioException catch (e) {
-      if (e.response != null) {
-        emit(
-          AuthenticationSignInError(
-            msg: e.response!.data['message'] ?? "حدث خطأ غير متوقع",
-          ),
-        );
+      if (e.response != null && e.response?.data != null) {
+        final msg = e.response!.data['message'] ?? "فيه مشكلة حصلت يا نجم";
+        emit(AuthenticationSignUpError(msg: _withYaNegm(msg)));
       } else {
-        emit(AuthenticationSignInError(msg: "انشئ حساب"));
+        emit(AuthenticationSignUpError(msg: "حصلت مشكلة في الاتصال يا نجم"));
       }
     } catch (e) {
-      emit(AuthenticationSignInError(msg: "حدث خطأ غير متوقع"));
+      emit(AuthenticationSignUpError(msg: "فيه حاجة غلط حصلت يا نجم"));
     }
+  }
+
+  void login({required String phone, required String password}) async {
+    Dio dioAuth = DioClient().createCleanDio();
+
+    emit(AuthenticationLoading());
+    dioAuth.options.headers = {'content-type': 'application/json'};
+    try {
+      final response = await dioAuth.post(
+        "${DioClient.baseUrl}auth/login",
+        data: {"phone": phone, "password": password},
+      );
+
+      if (response.statusCode == 201) {
+        await storage.write(
+          key: "accessToken",
+          value: response.data['accessToken'],
+        );
+        await storage.write(
+          key: "refreshToken",
+          value: response.data['refreshToken'],
+        );
+        emit(AuthenticationSignInSuccess(msg: "تم تسجيل الدخول يا نجم"));
+      } else {
+        final msg = response.data['message'] ?? "محاولتك فشلت يا نجم";
+        emit(AuthenticationSignInError(msg: _withYaNegm(msg)));
+      }
+    } on DioException catch (e) {
+      if (e.response != null && e.response?.data != null) {
+        final msg = e.response!.data['message'] ?? "محاولتك فشلت يا نجم";
+        emit(AuthenticationSignInError(msg: _withYaNegm(msg)));
+      } else {
+        emit(AuthenticationSignInError(msg: "سجل حساب الأول يا نجم"));
+      }
+    } catch (e) {
+      emit(AuthenticationSignInError(msg: "فيه حاجة غلط حصلت يا نجم"));
+    }
+  }
+
+  /// Helper to make sure error ends with 'يا نجم'
+  String _withYaNegm(String msg) {
+    msg = msg.trim();
+    if (!msg.endsWith('يا نجم')) {
+      return '$msg يا نجم';
+    }
+    return msg;
   }
 }

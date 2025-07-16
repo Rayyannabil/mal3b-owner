@@ -17,7 +17,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -25,7 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    fullNameController.dispose();
+    nameController.dispose();
     phoneController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -33,13 +33,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void signup() {
-    if (fullNameController.text.isEmpty || fullNameController.text.length < 3) {
+    if (nameController.text.isEmpty &&
+        phoneController.text.isEmpty &&
+        passwordController.text.isEmpty &&
+        confirmPasswordController.text.isEmpty) {
+      ToastService().showToast(
+        message: 'املى بياناتك كلها يا نجم',
+        type: ToastType.error,
+      );
+      return;
+    }
+
+    if (nameController.text.isEmpty) {
+      ToastService().showToast(
+        message: 'اكتب اسمك الأول يا نجم',
+        type: ToastType.error,
+      );
+      return;
+    }
+
+    if (nameController.text.length < 3) {
       ToastService().showToast(
         message: AppLocalizations.of(context)!.errorEnterFullName,
         type: ToastType.error,
       );
       return;
     }
+
     if (phoneController.text.isEmpty) {
       ToastService().showToast(
         message: AppLocalizations.of(context)!.errorEnterPhone,
@@ -47,6 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
       return;
     }
+
     if (!RegExp(r'^\d{11,}$').hasMatch(phoneController.text)) {
       ToastService().showToast(
         message: AppLocalizations.of(context)!.errorValidPhone,
@@ -54,6 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
       return;
     }
+
     if (passwordController.text.isEmpty) {
       ToastService().showToast(
         message: AppLocalizations.of(context)!.errorEnterPassword,
@@ -61,6 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
       return;
     }
+
     if (passwordController.text.length < 8) {
       ToastService().showToast(
         message: AppLocalizations.of(context)!.errorPasswordLength,
@@ -68,6 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
       return;
     }
+
     if (confirmPasswordController.text.isEmpty) {
       ToastService().showToast(
         message: AppLocalizations.of(context)!.errorEnterConfirmPassword,
@@ -75,6 +99,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
       return;
     }
+
     if (passwordController.text != confirmPasswordController.text) {
       ToastService().showToast(
         message: AppLocalizations.of(context)!.errorPasswordMismatch,
@@ -82,8 +107,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
       return;
     }
-    context.read<AuthenticationCubit>().signup(
-      name: fullNameController.text,
+
+    BlocProvider.of<AuthenticationCubit>(context).signup(
+      name: nameController.text,
       phone: phoneController.text,
       password: passwordController.text,
     );
@@ -93,7 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomColors.primary,
-      body: BlocListener<AuthenticationCubit, AuthenticationState>(
+      body: BlocConsumer<AuthenticationCubit, AuthenticationState>(
         listener: (context, state) {
           if (state is AuthenticationSignUpSuccess) {
             ToastService().showToast(
@@ -105,10 +131,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
               MaterialPageRoute(builder: (_) => const LoginScreen()),
             );
           } else if (state is AuthenticationSignUpError) {
-            ToastService().showToast(message: state.msg, type: ToastType.error);
+            String msg = state.msg.trim();
+            if (!msg.endsWith('يا نجم')) {
+              msg = '$msg يا نجم';
+            }
+            ToastService().showToast(message: msg, type: ToastType.error);
           }
         },
-        child: SafeArea(
+        builder: (context, state) => SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -144,16 +174,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(50),
-
                     child: CustomScrollView(
                       slivers: [
                         SliverFillRemaining(
                           hasScrollBody: false,
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 40,
-                              left: 20,
-                              right: 20,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                              vertical: 40,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +191,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     context,
                                   )!.fullNameHint,
                                   isObsecure: false,
-                                  controller: fullNameController,
+                                  controller: nameController,
                                 ),
                                 SizedBox(height: getVerticalSpace(context, 25)),
                                 CustomInput(
@@ -190,40 +218,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                                 SizedBox(height: getVerticalSpace(context, 25)),
                                 const Spacer(),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Expanded(
-                                      child: CustomButton(
-                                        onPressed: () {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            PageRouteBuilder(
-                                              transitionDuration:
-                                                  const Duration(
-                                                    milliseconds: 500,
-                                                  ),
-                                              pageBuilder: (_, __, ___) =>
-                                                  const LoginScreen(),
-                                              transitionsBuilder:
-                                                  (_, animation, __, child) {
-                                                    final tween =
-                                                        Tween(
-                                                          begin: const Offset(
-                                                            -1.0,
-                                                            0.0,
-                                                          ),
-                                                          end: Offset.zero,
-                                                        ).chain(
-                                                          CurveTween(
-                                                            curve: Curves.ease,
-                                                          ),
-                                                        );
+                                BlocBuilder<AuthenticationCubit, AuthenticationState>(
+                                  builder: (context, state) {
+                                    return Row(
+                                      children: [
+                                        Expanded(
+                                          child: CustomButton(
+                                            onPressed: () {
+                                              Navigator.pushReplacement(
+                                                context,
+                                                PageRouteBuilder(
+                                                  transitionDuration:
+                                                      const Duration(milliseconds: 500),
+                                                  pageBuilder: (_, __, ___) =>
+                                                      const LoginScreen(),
+                                                  transitionsBuilder: (_, animation, __, child) {
+                                                    final tween = Tween(
+                                                      begin: const Offset(-1.0, 0.0),
+                                                      end: Offset.zero,
+                                                    ).chain(
+                                                      CurveTween(curve: Curves.ease),
+                                                    );
                                                     return SlideTransition(
-                                                      position: animation.drive(
-                                                        tween,
-                                                      ),
+                                                      position: animation.drive(tween),
                                                       child: child,
                                                     );
                                                   },
