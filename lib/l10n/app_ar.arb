@@ -1,0 +1,28 @@
+{
+  "homeScreen": "الشاشة الرئيسية",
+  "skip": "تخطي",
+  "login": "تسجيل الدخول",
+  "loginTitle": "تسجيل الدخول",
+  "phoneHint": "اكتب رقم تليفونك",
+  "password": "كلمة المرور",
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "createAccount": "إنشاء حساب جديد",
+  "signup": "إنشاء حساب جديد",
+  "signupTitle": "إنشاء حساب جديد",
+  "fullNameHint": "اكتب اسمك كامل",
+  "mobileHint": "رقم موبايلك",
+  "confirmPassword": "تأكيد كلمة المرور",
+  "loginSuccess": "تم تسجيل الدخول بنجاح!",
+  "signupSuccess": "تم إنشاء الحساب بنجاح!",
+  "errorEnterPhone": "الرجاء إدخال رقم الهاتف",
+  "errorValidPhone": "الرجاء إدخال رقم هاتف صحيح",
+  "errorEnterPassword": "الرجاء إدخال كلمة المرور",
+  "errorPasswordLength": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+  "errorEnterFullName": "الرجاء إدخال اسمك الكامل",
+  "errorEnterConfirmPassword": "الرجاء إعادة إدخال كلمة المرور",
+  "errorPasswordMismatch": "كلمة المرور ليست متطابقة",
+  "landingTitle": "الأقرب - الأشهر - أوفر سعر",
+  "landingSubtitle": "ملعب بيظبطك! بيجبلك أقرب ملعب، اللي عليه أحلى تقييم، وكمان اللي فيه عروض — كله من موبايلك وبثواني!"
+  "en": "EN",
+  "ar": "AR"
+}

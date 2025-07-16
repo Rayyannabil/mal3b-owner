@@ -8,6 +8,7 @@ import 'package:mal3b/logic/cubit/authentication_cubit.dart';
 import 'package:mal3b/screens/home_screen.dart';
 import 'package:mal3b/screens/sign_up_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
+import '../l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,28 +31,28 @@ class _LoginScreenState extends State<LoginScreen> {
   void login() {
     if (phoneController.text.isEmpty) {
       ToastService().showToast(
-        message: 'الرجاء إدخال رقم الهاتف',
+        message: AppLocalizations.of(context)!.errorEnterPhone,
         type: ToastType.error,
       );
       return;
     }
     if (!RegExp(r'^\d{11,}$').hasMatch(phoneController.text)) {
       ToastService().showToast(
-        message: 'الرجاء إدخال رقم هاتف صحيح',
+        message: AppLocalizations.of(context)!.errorValidPhone,
         type: ToastType.error,
       );
       return;
     }
     if (passwordController.text.isEmpty) {
       ToastService().showToast(
-        message: 'الرجاء إدخال كلمة المرور',
+        message: AppLocalizations.of(context)!.errorEnterPassword,
         type: ToastType.error,
       );
       return;
     }
     if (passwordController.text.length < 8) {
       ToastService().showToast(
-        message: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل',
+        message: AppLocalizations.of(context)!.errorPasswordLength,
         type: ToastType.error,
       );
       return;
@@ -92,9 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     SizedBox(width: getVerticalSpace(context, 20)),
-                    const Text(
-                      'تخطي',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    Text(
+                      AppLocalizations.of(context)!.skip,
+                      style: const TextStyle(fontSize: 20, color: Colors.white),
                     ),
                     SizedBox(width: getHorizontalSpace(context, 12)),
                     const Icon(
@@ -109,9 +110,9 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(height: getVerticalSpace(context, 70)),
             Padding(
               padding: EdgeInsets.only(right: getHorizontalSpace(context, 30)),
-              child: const Text(
-                'تسجيل الدخول',
-                style: TextStyle(color: CustomColors.white, fontSize: 32),
+              child: Text(
+                AppLocalizations.of(context)!.loginTitle,
+                style: const TextStyle(color: CustomColors.white, fontSize: 32),
               ),
             ),
             SizedBox(height: getVerticalSpace(context, 30)),
@@ -147,23 +148,23 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               SizedBox(height: getVerticalSpace(context, 15)),
                               CustomInput(
-                                text: 'اكتب رقم تليفونك',
+                                text: AppLocalizations.of(context)!.phoneHint,
                                 isObsecure: false,
                                 keyboardType: TextInputType.phone,
                                 controller: phoneController,
                               ),
                               SizedBox(height: getVerticalSpace(context, 20)),
                               CustomInput(
-                                text: 'كلمة المرور',
+                                text: AppLocalizations.of(context)!.password,
                                 isObsecure: true,
                                 controller: passwordController,
                               ),
-                              SizedBox(height: getVerticalSpace(context, 20)),
+                              SizedBox(height: getVerticalSpace(context, 30)),
                               Align(
                                 alignment: Alignment.topRight,
                                 child: Text(
-                                  "نسيت كلمة المرور؟",
-                                  style: TextStyle(
+                                  AppLocalizations.of(context)!.forgotPassword,
+                                  style: const TextStyle(
                                     decoration: TextDecoration.underline,
                                     fontFamily: "MadaniArabic",
                                     color: CustomColors.primary,
@@ -183,7 +184,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                       bgColor: CustomColors.customWhite,
                                       fgColor: CustomColors.secondary
                                           .withOpacity(0.5),
-                                      text: const Text('تسجيل الدخول'),
+                                      text: Text(
+                                        AppLocalizations.of(context)!.login,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
@@ -226,9 +232,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                       },
                                       bgColor: CustomColors.secondary,
                                       fgColor: CustomColors.white,
-                                      text: const Text(
-                                        'إنشاء حساب جديد',
-                                        style: TextStyle(fontSize: 12),
+                                      text: Text(
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.createAccount,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),

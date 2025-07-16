@@ -7,6 +7,7 @@ import 'package:mal3b/helpers/size_helper.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
 import 'package:mal3b/screens/login_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
+import '../l10n/app_localizations.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -34,49 +35,49 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void signup() {
     if (fullNameController.text.isEmpty || fullNameController.text.length < 3) {
       ToastService().showToast(
-        message: 'الرجاء إدخال اسمك الكامل',
+        message: AppLocalizations.of(context)!.errorEnterFullName,
         type: ToastType.error,
       );
       return;
     }
     if (phoneController.text.isEmpty) {
       ToastService().showToast(
-        message: 'الرجاء إدخال رقم الهاتف',
+        message: AppLocalizations.of(context)!.errorEnterPhone,
         type: ToastType.error,
       );
       return;
     }
     if (!RegExp(r'^\d{11,}$').hasMatch(phoneController.text)) {
       ToastService().showToast(
-        message: 'الرجاء إدخال رقم هاتف صحيح',
+        message: AppLocalizations.of(context)!.errorValidPhone,
         type: ToastType.error,
       );
       return;
     }
     if (passwordController.text.isEmpty) {
       ToastService().showToast(
-        message: 'الرجاء إدخال كلمة المرور',
+        message: AppLocalizations.of(context)!.errorEnterPassword,
         type: ToastType.error,
       );
       return;
     }
     if (passwordController.text.length < 8) {
       ToastService().showToast(
-        message: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل',
+        message: AppLocalizations.of(context)!.errorPasswordLength,
         type: ToastType.error,
       );
       return;
     }
     if (confirmPasswordController.text.isEmpty) {
       ToastService().showToast(
-        message: 'الرجاء إعادة إدخال كلمة المرور',
+        message: AppLocalizations.of(context)!.errorEnterConfirmPassword,
         type: ToastType.error,
       );
       return;
     }
     if (passwordController.text != confirmPasswordController.text) {
       ToastService().showToast(
-        message: 'كلمة المرور ليست متطابقة',
+        message: AppLocalizations.of(context)!.errorPasswordMismatch,
         type: ToastType.error,
       );
       return;
@@ -96,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         listener: (context, state) {
           if (state is AuthenticationSignUpSuccess) {
             ToastService().showToast(
-              message: 'تم إنشاء الحساب بنجاح!',
+              message: AppLocalizations.of(context)!.signupSuccess,
               type: ToastType.success,
             );
             Navigator.pushReplacement(
@@ -116,9 +117,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   SizedBox(width: getVerticalSpace(context, 20)),
-                  const Text(
-                    'تخطي',
-                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  Text(
+                    AppLocalizations.of(context)!.skip,
+                    style: const TextStyle(fontSize: 20, color: Colors.white),
                   ),
                   SizedBox(width: getHorizontalSpace(context, 12)),
                   const Icon(Icons.arrow_forward_rounded, color: Colors.white),
@@ -127,9 +128,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 29, top: 70, bottom: 30),
-                child: const Text(
-                  'إنشاء حساب جديد',
-                  style: TextStyle(color: Colors.white, fontSize: 32),
+                child: Text(
+                  AppLocalizations.of(context)!.signupTitle,
+                  style: const TextStyle(color: Colors.white, fontSize: 32),
                 ),
               ),
               Expanded(
@@ -158,30 +159,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CustomInput(
-                                  text: 'اكتب إسمك كامل',
+                                  text: AppLocalizations.of(
+                                    context,
+                                  )!.fullNameHint,
                                   isObsecure: false,
                                   controller: fullNameController,
                                 ),
-                                SizedBox(height: getVerticalSpace(context, 20)),
+                                SizedBox(height: getVerticalSpace(context, 25)),
                                 CustomInput(
-                                  text: 'رقم موبايلك',
+                                  text: AppLocalizations.of(
+                                    context,
+                                  )!.mobileHint,
                                   isObsecure: false,
                                   keyboardType: TextInputType.phone,
                                   controller: phoneController,
                                 ),
-                                SizedBox(height: getVerticalSpace(context, 20)),
+                                SizedBox(height: getVerticalSpace(context, 25)),
                                 CustomInput(
-                                  text: 'كلمة المرور',
+                                  text: AppLocalizations.of(context)!.password,
                                   isObsecure: true,
                                   controller: passwordController,
                                 ),
-                                SizedBox(height: getVerticalSpace(context, 20)),
+                                SizedBox(height: getVerticalSpace(context, 25)),
                                 CustomInput(
-                                  text: 'تأكيد كلمة المرور',
+                                  text: AppLocalizations.of(
+                                    context,
+                                  )!.confirmPassword,
                                   isObsecure: true,
                                   controller: confirmPasswordController,
                                 ),
-                                SizedBox(height: getVerticalSpace(context, 20)),
+                                SizedBox(height: getVerticalSpace(context, 25)),
                                 const Spacer(),
                                 Row(
                                   mainAxisAlignment:
@@ -226,7 +233,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         bgColor: CustomColors.customWhite,
                                         fgColor: CustomColors.secondary
                                             .withOpacity(0.5),
-                                        text: const Text('تسجيل الدخول'),
+                                        text: Text(
+                                          AppLocalizations.of(context)!.login,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     SizedBox(
@@ -237,9 +249,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         onPressed: signup,
                                         bgColor: CustomColors.secondary,
                                         fgColor: CustomColors.white,
-                                        text: const Text(
-                                          'إنشاء حساب جديد',
-                                          style: TextStyle(fontSize: 12),
+                                        text: Text(
+                                          AppLocalizations.of(context)!.signup,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),

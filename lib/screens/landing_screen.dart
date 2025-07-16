@@ -1,0 +1,134 @@
+import 'package:flutter/material.dart';
+import 'package:mal3b/components/custom_button.dart';
+import 'package:mal3b/constants/colors.dart';
+import 'package:mal3b/helpers/size_helper.dart';
+import 'package:mal3b/main.dart';
+import 'package:mal3b/screens/login_screen.dart';
+import 'package:mal3b/screens/sign_up_screen.dart';
+import '../l10n/app_localizations.dart';
+
+class LandingScreen extends StatelessWidget {
+  const LandingScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              children: [
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: CustomColors.primary,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: InkWell(
+                            onTap: () {
+                              if (language.value == "ar") {
+                                language.value = "en";
+                              } else {
+                                language.value = "ar";
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: ValueListenableBuilder(
+                                valueListenable: language,
+                                builder: (context, value, child) => Text(
+                                  language.value == "ar"
+                                      ? AppLocalizations.of(context)!.en
+                                      : AppLocalizations.of(context)!.ar,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: getVerticalSpace(context, 30)),
+                Image.asset(
+                  "assets/images/landingImage.png",
+                  height: getImageLandingHeight(context),
+                  width: getImageLandingHeight(context),
+                ),
+                SizedBox(height: getVerticalSpace(context, 18)),
+                Text(
+                  AppLocalizations.of(context)!.landingTitle,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: getFontTitleSize(context),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  AppLocalizations.of(context)!.landingSubtitle,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: getFontSubTitleSize(context),
+                    color: Color(0xffA9A9A9),
+                  ),
+                ),
+                SizedBox(height: getVerticalSpace(context, 25)),
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    },
+                    radius: 999999,
+                    bgColor: CustomColors.primary,
+                    fgColor: Colors.white,
+                    text: Text(
+                      AppLocalizations.of(context)!.login,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                SizedBox(height: getVerticalSpace(context, 18)),
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    elevation: 0,
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: CustomColors.primary,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => SignUpScreen()),
+                      );
+                    },
+                    radius: 999999,
+                    bgColor: CustomColors.white,
+                    fgColor: CustomColors.primary,
+                    text: Text(
+                      AppLocalizations.of(context)!.signup,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
