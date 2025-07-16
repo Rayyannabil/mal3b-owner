@@ -1,4 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> 
+    <!-- Required for background location access on Android 10 (API
+        level 29) and above --> 
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <application
         android:label="mal3b"
         android:name="${applicationName}"
@@ -30,6 +35,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA8F4R57g07CBTi7riIbZkIWjeZbrnQGhI"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
@@ -42,4 +50,5 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+    
 </manifest>

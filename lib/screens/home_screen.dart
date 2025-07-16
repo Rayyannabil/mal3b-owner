@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mal3b/services/location_service.dart';
 import 'package:mal3b/components/card_component.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
@@ -12,11 +13,33 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController searchController = TextEditingController();
+  String _locationText = 'الموقع'; // Default text for location
+
+  @override
+  void initState() {
+    super.initState();
+    _determinePosition(); // Call location service when the screen initializes
+  }
 
   @override
   void dispose() {
     searchController.dispose();
     super.dispose();
+  }
+
+  // Method to determine the current position
+  Future<void> _determinePosition() async {
+    try {
+      String address = await LocationService().determinePosition();
+      setState(() {
+        _locationText = address;
+      });
+    } catch (e) {
+      setState(() {
+        _locationText = 'خطأ: ${e.toString()}';
+      });
+      // Toast messages are now handled within LocationService
+    }
   }
 
   @override
@@ -92,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: getVerticalSpace(context, 39),
                         width: getHorizontalSpace(context, 178),
                         child: Text(
-                          'الموقع',
+                          _locationText, // Display fetched location or status
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: CustomColors.secondary.withOpacity(0.5),
