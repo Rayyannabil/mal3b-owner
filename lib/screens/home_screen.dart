@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:mal3b/components/card_component.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
@@ -21,6 +22,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: prefer_const_constructors
+    return Scaffold(
+      body: Center(child: Text(AppLocalizations.of(context)!.homeScreen)),
+    );
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(

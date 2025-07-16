@@ -60,11 +60,11 @@ class _ToastComponentState extends State<ToastComponent>
   Color get _bgColor {
     switch (widget.type) {
       case ToastType.success:
-        return Colors.green;
+        return Color(0xFFA4BE7B);
       case ToastType.error:
-        return Colors.red;
+        return  Color(0xFFF05454); 
       case ToastType.info:
-        return Colors.blue; // ✅ لون info
+        return Color(0xFF6DA9E4);
     }
   }
 
@@ -75,7 +75,7 @@ class _ToastComponentState extends State<ToastComponent>
       case ToastType.error:
         return Icons.error;
       case ToastType.info:
-        return Icons.info; // ✅ أيقونة info
+        return Icons.info; 
     }
   }
 
