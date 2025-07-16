@@ -36,7 +36,7 @@ class CustomButton extends StatelessWidget {
         foregroundColor: fgColor,
         side: borderSide,
       ),
-      child: Center(child: child),
+      child: text,
     );
   }
 }

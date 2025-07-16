@@ -4,7 +4,6 @@ import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
 import 'package:mal3b/main.dart';
 import 'package:mal3b/screens/login_screen.dart';
-import 'package:mal3b/screens/sign_up_screen.dart';
 import '../l10n/app_localizations.dart';
 
 class LandingScreen extends StatelessWidget {
@@ -110,11 +109,7 @@ class LandingScreen extends StatelessWidget {
                       width: 1,
                       color: CustomColors.primary,
                     ),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => SignUpScreen()),
-                      );
-                    },
+                    onPressed: () {},
                     radius: 999999,
                     bgColor: CustomColors.white,
                     fgColor: CustomColors.primary,

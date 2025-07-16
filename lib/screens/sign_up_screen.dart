@@ -218,7 +218,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                                 SizedBox(height: getVerticalSpace(context, 25)),
                                 const Spacer(),
-                                BlocBuilder<AuthenticationCubit, AuthenticationState>(
+                                BlocBuilder<
+                                  AuthenticationCubit,
+                                  AuthenticationState
+                                >(
                                   builder: (context, state) {
                                     return Row(
                                       children: [
@@ -229,55 +232,81 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                 context,
                                                 PageRouteBuilder(
                                                   transitionDuration:
-                                                      const Duration(milliseconds: 500),
+                                                      const Duration(
+                                                        milliseconds: 500,
+                                                      ),
                                                   pageBuilder: (_, __, ___) =>
                                                       const LoginScreen(),
-                                                  transitionsBuilder: (_, animation, __, child) {
-                                                    final tween = Tween(
-                                                      begin: const Offset(-1.0, 0.0),
-                                                      end: Offset.zero,
-                                                    ).chain(
-                                                      CurveTween(curve: Curves.ease),
-                                                    );
-                                                    return SlideTransition(
-                                                      position: animation.drive(tween),
-                                                      child: child,
-                                                    );
-                                                  },
+                                                  transitionsBuilder:
+                                                      (
+                                                        _,
+                                                        animation,
+                                                        __,
+                                                        child,
+                                                      ) {
+                                                        final tween =
+                                                            Tween(
+                                                              begin:
+                                                                  const Offset(
+                                                                    -1.0,
+                                                                    0.0,
+                                                                  ),
+                                                              end: Offset.zero,
+                                                            ).chain(
+                                                              CurveTween(
+                                                                curve:
+                                                                    Curves.ease,
+                                                              ),
+                                                            );
+                                                        return SlideTransition(
+                                                          position: animation
+                                                              .drive(tween),
+                                                          child: child,
+                                                        );
+                                                      },
+                                                ),
+                                              );
+                                            },
+                                            bgColor: CustomColors.customWhite,
+                                            fgColor: CustomColors.secondary
+                                                .withOpacity(0.5),
+                                            text: Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.login,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          );
-                                        },
-                                        bgColor: CustomColors.customWhite,
-                                        fgColor: CustomColors.secondary
-                                            .withOpacity(0.5),
-                                        text: Text(
-                                          AppLocalizations.of(context)!.login,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: getHorizontalSpace(context, 25),
-                                    ),
-                                    Expanded(
-                                      child: CustomButton(
-                                        onPressed: signup,
-                                        bgColor: CustomColors.secondary,
-                                        fgColor: CustomColors.white,
-                                        text: Text(
-                                          AppLocalizations.of(context)!.signup,
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
+                                        SizedBox(
+                                          width: getHorizontalSpace(
+                                            context,
+                                            25,
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  ],
+                                        Expanded(
+                                          child: CustomButton(
+                                            onPressed: signup,
+                                            bgColor: CustomColors.secondary,
+                                            fgColor: CustomColors.white,
+                                            text: Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.signup,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 30),
+                                      ],
+                                    );
+                                  },
                                 ),
-                                const SizedBox(height: 30),
                               ],
                             ),
                           ),
