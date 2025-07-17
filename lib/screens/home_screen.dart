@@ -148,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: getVerticalSpace(context, 36)),
+                  SizedBox(height: getVerticalSpace(context, 10)),
 
                   // main card - cairo
                   Center(
