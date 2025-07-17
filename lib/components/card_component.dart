@@ -67,13 +67,16 @@ class CardComponent extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            cardText,
-                            style: TextStyle(
-                              fontSize: 18, // Adjusted font size
-                              fontWeight: FontWeight.bold,
-                              color: CustomColors
-                                  .secondary, // Assuming secondary is the dark green
+                          Padding(
+                            padding: const EdgeInsetsDirectional.only(top: 5),
+                            child: Text(
+                              cardText,
+                              style: TextStyle(
+                                fontSize: 18, // Adjusted font size
+                                fontWeight: FontWeight.bold,
+                                color: CustomColors
+                                    .secondary, // Assuming secondary is the dark green
+                              ),
                             ),
                           ),
                           Text(
