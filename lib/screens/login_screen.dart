@@ -256,7 +256,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           context,
                                         )!.createAccount,
                                         style: const TextStyle(
-                                          fontSize: 12,
+                                          
+                                          fontSize: 10,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),

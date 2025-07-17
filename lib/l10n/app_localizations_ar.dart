@@ -81,6 +81,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get landingSubtitle => 'ملعب بيظبطك! بيجبلك أقرب ملعب، اللي عليه أحلى تقييم، وكمان اللي فيه عروض — كله من موبايلك وبثواني!';
 
   @override
+  String get offers => 'عروض';
+
+  @override
+  String get best => 'الأفضل';
+  
+  @override
+  String get nearest => 'الأقرب';
+
+  @override
   String get en => 'EN';
 
   @override

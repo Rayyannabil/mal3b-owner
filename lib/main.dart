@@ -4,6 +4,7 @@ import 'package:mal3b/constants/colors.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mal3b/l10n/app_localizations.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
+import 'package:mal3b/screens/home_screen.dart';
 import 'package:mal3b/screens/landing_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
 
@@ -52,7 +53,7 @@ class Mal3bApp extends StatelessWidget {
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             debugShowCheckedModeBanner: false,
-            home: LandingScreen(),
+            home: HomeScreen(),
           ),
         );
       },

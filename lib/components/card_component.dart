@@ -70,20 +70,32 @@ class CardComponent extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                cardText,
-                                style: TextStyle(
-                                  fontSize: 20, // Adjusted font size
-                                  fontWeight: FontWeight.bold,
-                                  color: CustomColors
-                                      .secondary, // Assuming secondary is the dark green
+                              Padding(
+                                padding: const EdgeInsetsDirectional.only(
+                                  start: 10,
+                                  end: 10,
+                                ),
+                                child: Text(
+                                  cardText,
+                                  style: TextStyle(
+                                    fontSize: 18, // Adjusted font size
+                                    fontWeight: FontWeight.bold,
+                                    color: CustomColors
+                                        .secondary, // Assuming secondary is the dark green
+                                  ),
                                 ),
                               ),
-                              Text(
-                                '$cardPrice جنية / الساعة',
-                                style: TextStyle(
-                                  fontSize: 14, // Adjusted font size
-                                  color: CustomColors.primary,
+                              Padding(
+                                padding: const EdgeInsetsDirectional.only(
+                                  start: 10,
+                                  end: 10,
+                                ),
+                                child: Text(
+                                  '$cardPrice جنية / الساعة',
+                                  style: TextStyle(
+                                    fontSize: 14, // Adjusted font size
+                                    color: CustomColors.primary,
+                                  ),
                                 ),
                               ),
                             ],

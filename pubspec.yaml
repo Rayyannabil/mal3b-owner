@@ -48,6 +48,7 @@ dependencies:
   fluttertoast: ^8.2.12
   flutter_svg: ^2.2.0
   intl: ^0.20.2
+  
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1

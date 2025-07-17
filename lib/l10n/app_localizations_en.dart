@@ -30,7 +30,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgotPassword => 'Forgot password?';
 
   @override
-  String get createAccount => 'Create New Account';
+  String get createAccount => 'Sign Up';
 
   @override
   String get signup => 'Sign Up';
@@ -79,6 +79,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get landingSubtitle => 'The Mal3ab app provides you with stadiums based on your location, user ratings, and available offers — so you don\'t waste your time.';
+  
+  @override
+  String get offers => 'Offers';
+
+  @override
+  String get best => 'The Best';
+  
+  @override
+  String get nearest => 'The Nearest';
 
   @override
   String get en => 'EN';

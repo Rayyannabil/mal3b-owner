@@ -140,7 +140,7 @@ abstract class AppLocalizations {
   /// No description provided for @createAccount.
   ///
   /// In en, this message translates to:
-  /// **'Create New Account'**
+  /// **'Sign Up'**
   String get createAccount;
 
   /// No description provided for @signup.
@@ -238,6 +238,10 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The Mal3ab app provides you with stadiums based on your location, user ratings, and available offers — so you don\'t waste your time.'**
   String get landingSubtitle;
+
+  String get offers;
+  String get best;
+  String get nearest;
 
   /// No description provided for @en.
   ///
