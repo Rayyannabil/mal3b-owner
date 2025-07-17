@@ -22,18 +22,11 @@ double getFontSubTitleSize(BuildContext context) {
   return 20; // Large phones / phablets
 }
 
-double getLogoWidth(BuildContext context) {
-  if (ScreenHelper.isXs(context)) return 140; // Very small phones
-  if (ScreenHelper.isSm(context)) return 160; // Small phones
-  if (ScreenHelper.isMd(context)) return 190; // Medium phones
-  return 220; // Large phones / phablets
-}
-
-double getLogoHeight(BuildContext context) {
-  if (ScreenHelper.isXs(context)) return 110; // Very small phones
-  if (ScreenHelper.isSm(context)) return 130; // Small phones
-  if (ScreenHelper.isMd(context)) return 150; // Medium phones
-  return 180; // Large phones / phablets
+double getIconWidth(BuildContext context) {
+  if (ScreenHelper.isXs(context)) return 25; // Very small phones
+  if (ScreenHelper.isSm(context)) return 28; // Small phones
+  if (ScreenHelper.isMd(context)) return 32; // Medium phones
+  return 40; // Large phones / phablets
 }
 
 double getImageHeight(BuildContext context) {
@@ -41,6 +34,13 @@ double getImageHeight(BuildContext context) {
   if (ScreenHelper.isSm(context)) return 180; // Small phones
   if (ScreenHelper.isMd(context)) return 230; // Medium phones
   return 310; // Large phones / phablets
+}
+
+double getProfileImageWidth(BuildContext context) {
+  if (ScreenHelper.isXs(context)) return 80; // Very small phones
+  if (ScreenHelper.isSm(context)) return 120; // Small phones
+  if (ScreenHelper.isMd(context)) return 180; // Medium phones
+  return 350; // Large phones / phablets (max width)
 }
 
 double getImageLandingHeight(BuildContext context) {
