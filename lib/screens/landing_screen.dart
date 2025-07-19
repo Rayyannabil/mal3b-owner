@@ -24,47 +24,6 @@ class LandingScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: CustomColors.primary,
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: InkWell(
-                                  onTap: () {
-                                    if (language.value == "ar") {
-                                      language.value = "en";
-                                    } else {
-                                      language.value = "ar";
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: ValueListenableBuilder(
-                                      valueListenable: language,
-                                      builder: (context, value, child) => Text(
-                                        language.value == "ar"
-                                            ? AppLocalizations.of(context)!.en
-                                            : AppLocalizations.of(context)!.ar,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: getVerticalSpace(context, 30)),
                       Image.asset(
                         "assets/images/landingImage.png",
                         height: getImageLandingHeight(context),
