@@ -8,6 +8,7 @@ import 'package:mal3b/l10n/app_localizations.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
 import 'package:mal3b/screens/home_screen.dart';
 import 'package:mal3b/screens/landing_screen.dart';
+import 'package:mal3b/screens/notifications_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
 
 void main() {
@@ -27,7 +28,7 @@ class Mal3bApp extends StatelessWidget {
         return BlocProvider(
           create: (context) => AuthenticationCubit(),
           child: MaterialApp(
-            navigatorKey: ToastService().navigatorKey, 
+            navigatorKey: ToastService().navigatorKey,
             theme: ThemeData(
               primaryColor: CustomColors.primary,
               scaffoldBackgroundColor: CustomColors.white,
@@ -55,7 +56,7 @@ class Mal3bApp extends StatelessWidget {
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             debugShowCheckedModeBanner: false,
-            home: LandingScreen(),
+            home: NotificationsScreen(),
           ),
         );
       },
