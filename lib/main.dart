@@ -10,7 +10,7 @@ import 'package:mal3b/screens/landing_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
 
 void main() {
-  runApp(DevicePreview(enabled: true, builder: (context) => const Mal3bApp()));
+  runApp((const Mal3bApp()));
 }
 
 ValueNotifier<String> language = ValueNotifier<String>("en");
@@ -54,7 +54,7 @@ class Mal3bApp extends StatelessWidget {
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             debugShowCheckedModeBanner: false,
-            home: HomeScreen(),
+            home: LandingScreen(),
           ),
         );
       },
