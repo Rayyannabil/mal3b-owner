@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,7 +11,7 @@ import 'package:mal3b/screens/landing_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
 
 void main() {
-  runApp((const Mal3bApp()));
+  runApp(const Mal3bApp());
 }
 
 ValueNotifier<String> language = ValueNotifier<String>("en");
@@ -54,6 +55,7 @@ class Mal3bApp extends StatelessWidget {
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             debugShowCheckedModeBanner: false,
+            home: LandingScreen(),
             home: LandingScreen(),
           ),
         );
