@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mal3b/helpers/size_helper.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton({
@@ -28,7 +29,7 @@ class CustomButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         elevation: elevation ?? 3,
-        fixedSize: Size(width ?? 150, 45),
+        fixedSize: Size(width ?? 150, getButtonHeight(context)),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radius ?? 16),
         ),
