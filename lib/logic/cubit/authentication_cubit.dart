@@ -63,7 +63,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         data: {"phone": phone, "password": password},
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         await storage.write(
           key: "accessToken",
           value: response.data['accessToken'],
