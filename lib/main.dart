@@ -56,7 +56,6 @@ class Mal3bApp extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             debugShowCheckedModeBanner: false,
             home: LandingScreen(),
-            home: LandingScreen(),
           ),
         );
       },
