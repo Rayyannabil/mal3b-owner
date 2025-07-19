@@ -27,8 +27,7 @@ class Mal3bApp extends StatelessWidget {
         return BlocProvider(
           create: (context) => AuthenticationCubit(),
           child: MaterialApp(
-            builder: DevicePreview.appBuilder,
-            navigatorKey: ToastService().navigatorKey, // Add this
+            navigatorKey: ToastService().navigatorKey, 
             theme: ThemeData(
               primaryColor: CustomColors.primary,
               scaffoldBackgroundColor: CustomColors.white,
