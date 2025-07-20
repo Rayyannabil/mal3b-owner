@@ -9,37 +9,24 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        centerTitle: true,
+        leading: Icon(
+          Icons.arrow_back_rounded,
+          color: CustomColors.primary,
+          size: 30,
+          textDirection: TextDirection.rtl,
+        ),
+        title: Text(
+          'الإشعارات',
+          style: TextStyle(color: CustomColors.primary, fontSize: 22),
+        ),
+      ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         // whole page
         children: [
-          // appbar
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Center(
-                    child: Text(
-                      'الإشعارات',
-                      style: TextStyle(
-                        color: CustomColors.primary,
-                        fontSize: 22,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_back_rounded,
-                    color: CustomColors.primary,
-                    size: 30,
-                    textDirection: TextDirection.rtl,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: getVerticalSpace(context, 46.5)),
           // today
           Padding(
             padding: const EdgeInsets.all(20),
@@ -50,9 +37,8 @@ class NotificationsScreen extends StatelessWidget {
           ),
           // notification 1
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text('لديك خصم 50% على أي حجز'),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SvgPicture.asset(
@@ -61,6 +47,7 @@ class NotificationsScreen extends StatelessWidget {
                   height: 40,
                 ),
               ),
+              Text('لديك خصم 50% على أي حجز'),
             ],
           ),
           // divider
@@ -74,11 +61,11 @@ class NotificationsScreen extends StatelessWidget {
               color: Colors.grey,
             ),
           ),
+
           // notification 2
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text('لديك خصم 50% على أي حجز'),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SvgPicture.asset(
@@ -87,25 +74,21 @@ class NotificationsScreen extends StatelessWidget {
                   height: 40,
                 ),
               ),
+              Text('لديك خصم 50% على أي حجز'),
             ],
           ),
-
           // yesterday
           Padding(
             padding: const EdgeInsets.all(20),
             child: Text(
-              'أمس',
+              'الأمس',
               style: TextStyle(color: CustomColors.primary, fontSize: 24),
             ),
           ),
           // notification 1
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                'لديك خصم 30% على أي حجز',
-                style: TextStyle(color: Colors.grey),
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SvgPicture.asset(
@@ -113,6 +96,10 @@ class NotificationsScreen extends StatelessWidget {
                   width: 40,
                   height: 40,
                 ),
+              ),
+              Text(
+                'لديك خصم 30% على أي حجز',
+                style: TextStyle(color: Colors.grey),
               ),
             ],
           ),

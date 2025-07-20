@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/l10n/app_localizations.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
+import 'package:mal3b/screens/booking_screen.dart';
 import 'package:mal3b/screens/landing_screen.dart';
 import 'package:mal3b/screens/notifications_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
@@ -51,7 +52,7 @@ class Mal3bApp extends StatelessWidget {
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         debugShowCheckedModeBanner: false,
-        home: LandingScreen(),
+        home: BookingScreen(),
       ),
     );
   }
