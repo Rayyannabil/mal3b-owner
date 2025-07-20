@@ -5,7 +5,6 @@ import 'package:mal3b/components/custom_input_component.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
-import 'package:mal3b/screens/home_screen.dart';
 import 'package:mal3b/screens/sign_up_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
 import '../l10n/app_localizations.dart';
@@ -86,9 +85,10 @@ class _LoginScreenState extends State<LoginScreen> {
               message: "تم تسجيل الدخول يا نجم",
               type: ToastType.success,
             );
-            Navigator.pushReplacement(
+            Navigator.pushNamedAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (_) => const HomeScreen()),
+              '/home',
+              (route) => false,
             );
           } else if (state is AuthenticationSignInError) {
             ToastService().showToast(
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               const Spacer(),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
