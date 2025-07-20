@@ -86,4 +86,11 @@ class LocationService {
       return Future.error('حدث خطأ في الوصول للموقع: ${e.toString()}');
     }
   }
+
+  Future getLongAndLat() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      return position;
+  }
 }
