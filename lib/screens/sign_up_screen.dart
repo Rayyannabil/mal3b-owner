@@ -5,7 +5,6 @@ import 'package:mal3b/components/custom_input_component.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
-import 'package:mal3b/screens/login_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
 import '../l10n/app_localizations.dart';
 
@@ -20,8 +19,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
@@ -126,10 +124,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               message: AppLocalizations.of(context)!.signupSuccess,
               type: ToastType.success,
             );
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const LoginScreen()),
-            );
+            Navigator.pushReplacementNamed(context, '/login');
           } else if (state is AuthenticationSignUpError) {
             String msg = state.msg.trim();
             if (!msg.endsWith('يا نجم')) {
@@ -142,46 +137,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: getVerticalSpace(context, 20)),
-            SafeArea(
-              child: Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        SizedBox(width: getVerticalSpace(context, 20)),
-                        Text(
-                          AppLocalizations.of(context)!.skip,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                        ),
-                        SizedBox(width: getHorizontalSpace(context, 12)),
-                        const Icon(
-                          Icons.arrow_forward_rounded,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: getHorizontalSpace(context, 20)),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsetsDirectional.only(
-                        start: 29,
-                        top: 70,
-                        bottom: 30,
-                      ),
-                      child: Text(
-                        AppLocalizations.of(context)!.signupTitle,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(width: getVerticalSpace(context, 20)),
+                      Text(
+                        AppLocalizations.of(context)!.skip,
                         style: const TextStyle(
+                          fontSize: 20,
                           color: Colors.white,
-                          fontSize: 32,
                         ),
                       ),
+                      SizedBox(width: getHorizontalSpace(context, 12)),
+                      const Icon(
+                        Icons.arrow_forward_rounded,
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: getHorizontalSpace(context, 20)),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.only(
+                      start: 29,
+                      top: 70,
+                      bottom: 30,
                     ),
-                  ],
-                ),
+                    child: Text(
+                      AppLocalizations.of(context)!.signupTitle,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Expanded(
@@ -199,17 +192,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SliverFillRemaining(
                         hasScrollBody: false,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                            vertical: 40,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CustomInput(
-                                text: AppLocalizations.of(
-                                  context,
-                                )!.fullNameHint,
+                                text: AppLocalizations.of(context)!.fullNameHint,
                                 isObsecure: false,
                                 controller: nameController,
                               ),
@@ -228,83 +216,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ),
                               SizedBox(height: getVerticalSpace(context, 25)),
                               CustomInput(
-                                text: AppLocalizations.of(
-                                  context,
-                                )!.confirmPassword,
+                                text: AppLocalizations.of(context)!.confirmPassword,
                                 isObsecure: true,
                                 controller: confirmPasswordController,
                               ),
                               SizedBox(height: getVerticalSpace(context, 25)),
                               const Spacer(),
-                              BlocBuilder<
-                                AuthenticationCubit,
-                                AuthenticationState
-                              >(
+                              BlocBuilder<AuthenticationCubit, AuthenticationState>(
                                 builder: (context, state) {
                                   return Row(
                                     children: [
                                       Expanded(
                                         child: CustomButton(
                                           onPressed: () {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              PageRouteBuilder(
-                                                transitionDuration:
-                                                    const Duration(
-                                                      milliseconds: 500,
-                                                    ),
-                                                pageBuilder: (_, __, ___) =>
-                                                    const LoginScreen(),
-                                                transitionsBuilder:
-                                                    (_, animation, __, child) {
-                                                      final tween =
-                                                          Tween(
-                                                            begin: const Offset(
-                                                              -1.0,
-                                                              0.0,
-                                                            ),
-                                                            end: Offset.zero,
-                                                          ).chain(
-                                                            CurveTween(
-                                                              curve:
-                                                                  Curves.ease,
-                                                            ),
-                                                          );
-                                                      return SlideTransition(
-                                                        position: animation
-                                                            .drive(tween),
-                                                        child: child,
-                                                      );
-                                                    },
-                                              ),
-                                            );
+                                            Navigator.pushReplacementNamed(context, '/login');
                                           },
                                           bgColor: CustomColors.customWhite,
-                                          fgColor: CustomColors.secondary
-                                              .withOpacity(0.5),
+                                          fgColor: CustomColors.secondary.withOpacity(0.5),
                                           text: Text(
                                             AppLocalizations.of(context)!.login,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                            style: const TextStyle(fontWeight: FontWeight.bold),
                                           ),
                                         ),
                                       ),
-                                      SizedBox(
-                                        width: getHorizontalSpace(context, 25),
-                                      ),
+                                      SizedBox(width: getHorizontalSpace(context, 25)),
                                       Expanded(
                                         child: CustomButton(
                                           onPressed: signup,
                                           bgColor: CustomColors.secondary,
                                           fgColor: CustomColors.white,
                                           text: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            )!.signup,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                            AppLocalizations.of(context)!.signup,
+                                            style: const TextStyle(fontWeight: FontWeight.bold),
                                           ),
                                         ),
                                       ),
