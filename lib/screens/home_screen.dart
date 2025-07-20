@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_svg/svg.dart' hide Svg;
 import 'package:mal3b/services/location_service.dart';
 import 'package:mal3b/components/card_component.dart';
