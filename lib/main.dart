@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/l10n/app_localizations.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
+import 'package:mal3b/logic/cubit/stadium_cubit.dart';
 import 'package:mal3b/screens/home_screen.dart';
 import 'package:mal3b/screens/booking_screen.dart';
 import 'package:mal3b/screens/landing_screen.dart';
@@ -31,6 +32,7 @@ class Mal3bApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AuthenticationCubit()),
+        BlocProvider(create: (_) => StadiumCubit()),
         // Add other cubits here
       ],
       child: MaterialApp(
