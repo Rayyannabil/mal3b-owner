@@ -6,7 +6,6 @@ import 'package:mal3b/components/custom_input_component.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
-import 'package:mal3b/screens/login_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
 import '../l10n/app_localizations.dart';
 
@@ -54,10 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               message: AppLocalizations.of(context)!.signupSuccess,
               type: ToastType.success,
             );
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const LoginScreen()),
-            );
+            Navigator.pushReplacementNamed(context, '/login');
           } else if (state is AuthenticationSignUpError) {
             String msg = state.msg.trim();
             if (!msg.endsWith('يا نجم')) {

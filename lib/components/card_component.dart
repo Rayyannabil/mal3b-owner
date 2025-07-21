@@ -10,60 +10,48 @@ class CardComponent extends StatelessWidget {
     required this.cardPrice,
     required this.cardRating,
   });
-  final String cardImage;
+
+  final String? cardImage;
   final String cardText;
-  final String cardPrice;
-  final String cardRating;
+  final int cardPrice;
+  final double? cardRating;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // first card
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
-              // card body
               Container(
                 width: getHorizontalSpace(context, 270),
                 height: getVerticalSpace(context, 310),
                 decoration: BoxDecoration(
-                  color: Color(0xFFE8F5E9), // Light green color from the image
-                  borderRadius: BorderRadius.circular(
-                    40,
-                  ), // Adjusted border radius
+                  color: const Color(0xFFE8F5E9),
+                  borderRadius: BorderRadius.circular(40),
                 ),
                 child: Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.start, // Align content to the start
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(
-                        10.0,
-                      ), // Padding around the image
+                      padding: const EdgeInsets.all(10.0),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          40,
-                        ), // Rounded corners for the image
-                        child: Image.asset(
-                          cardImage,
-                          width: getHorizontalSpace(
-                            context,
-                            230,
-                          ), // Adjusted width for image
-                          height: getVerticalSpace(
-                            context,
-                            150,
-                          ), // Adjusted height for image
-                          fit: BoxFit.cover,
-                        ),
+                        borderRadius: BorderRadius.circular(40),
+                        child: cardImage != null
+                            ? Image.network(
+                                cardImage!,
+                                width: getHorizontalSpace(context, 230),
+                                height: getVerticalSpace(context, 150),
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.broken_image),
+                              )
+                            : const Icon(Icons.image_not_supported),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 5,
-                      ), // Padding for text content
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -72,34 +60,34 @@ class CardComponent extends StatelessWidget {
                             child: Text(
                               cardText,
                               style: TextStyle(
-                                fontSize: 18, // Adjusted font size
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: CustomColors
-                                    .secondary, // Assuming secondary is the dark green
+                                color: CustomColors.secondary,
                               ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Text(
                             '$cardPrice جنية / الساعة',
                             style: TextStyle(
-                              fontSize: 14, // Adjusted font size
+                              fontSize: 14,
                               color: CustomColors.primary,
                             ),
                           ),
-                          SizedBox(
-                            height: getVerticalSpace(context, 5),
-                          ), // Space before rating
+                          SizedBox(height: getVerticalSpace(context, 5)),
                         ],
                       ),
                     ),
-                    // Rating at the bottom center
                     Padding(
                       padding: const EdgeInsetsDirectional.only(top: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            cardRating,
+                            (cardRating != null
+                                    ? cardRating!.toStringAsFixed(1)
+                                    : "0.0")
+                                .toString(),
                             style: TextStyle(
                               fontSize: 14,
                               color: CustomColors.primary,
@@ -108,7 +96,7 @@ class CardComponent extends StatelessWidget {
                           SizedBox(width: getHorizontalSpace(context, 10)),
                           Image.asset(
                             'assets/images/star.png',
-                            width: 20, // Adjusted star size
+                            width: 20,
                             height: 20,
                             color: CustomColors.primary,
                           ),

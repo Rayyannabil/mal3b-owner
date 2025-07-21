@@ -52,11 +52,7 @@ class LandingScreen extends StatelessWidget {
                         width: double.infinity,
                         child: CustomButton(
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => LoginScreen(),
-                              ),
-                            );
+                            Navigator.of(context).pushNamed('/login');
                           },
                           radius: 999999,
                           bgColor: CustomColors.primary,
@@ -77,11 +73,7 @@ class LandingScreen extends StatelessWidget {
                             color: CustomColors.primary,
                           ),
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => SignUpScreen(),
-                              ),
-                            );
+                            Navigator.of(context).pushNamed('/signup');
                           },
                           radius: 999999,
                           bgColor: CustomColors.white,

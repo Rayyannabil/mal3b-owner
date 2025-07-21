@@ -6,7 +6,7 @@ class DioClient {
   static final DioClient _instance = DioClient._internal();
   factory DioClient() => _instance;
 
-  static const String baseUrl = "http://192.168.1.62:8080/";
+  static const String baseUrl = "http://192.168.1.10:8080/";
 
   late Dio dio;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
@@ -35,7 +35,6 @@ class DioClient {
           return handler.next(options);
         },
         onError: (DioException error, handler) async {
-          // Handle token refresh on 401 Unauthorized
           if (error.response?.statusCode == 401) {
             final refreshToken = await _storage.read(key: 'refreshToken');
             final accessToken = await _storage.read(key: 'accessToken');
@@ -56,7 +55,7 @@ class DioClient {
                 )..interceptors.clear();
 
                 final response = await refreshDio.post(
-                  '/auth/refresh',
+                  '/auth/refresh-token',
                   data: {'refreshToken': refreshToken},
                 );
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -37,7 +39,9 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         );
         emit(AuthenticationSignUpSuccess());
       } else {
-        final msg = response.data['message'] ?? "فيه حاجة غلط حصلت يا نجم";
+        final msg = _normalizeMessage(
+          response.data['message'] ?? "فيه حاجة غلط حصلت يا نجم",
+        );
         emit(AuthenticationSignUpError(msg: _withYaNegm(msg)));
       }
     } on DioException catch (e) {
@@ -74,18 +78,33 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         );
         emit(AuthenticationSignInSuccess(msg: "تم تسجيل الدخول يا نجم"));
       } else {
-        final msg = response.data['message'] ?? "محاولتك فشلت يا نجم";
+        final msg = _normalizeMessage(
+          response.data['message'] ?? "محاولتك فشلت يا نجم",
+        );
         emit(AuthenticationSignInError(msg: _withYaNegm(msg)));
       }
     } on DioException catch (e) {
       if (e.response != null && e.response?.data != null) {
-        final msg = e.response!.data['message'] ?? "محاولتك فشلت يا نجم";
+        final msg = _normalizeMessage(
+          e.response!.data['message'] ?? "محاولتك فشلت يا نجم",
+        );
         emit(AuthenticationSignInError(msg: _withYaNegm(msg)));
       } else {
         emit(AuthenticationSignInError(msg: "سجل حساب الأول يا نجم"));
       }
     } catch (e) {
       emit(AuthenticationSignInError(msg: "فيه حاجة غلط حصلت يا نجم"));
+    }
+  }
+
+  /// Helper to normalize the API error message
+  String _normalizeMessage(dynamic message) {
+    if (message is List) {
+      return message.join(', ');
+    } else if (message is String) {
+      return message;
+    } else {
+      return "حصلت مشكلة غير متوقعة";
     }
   }
 
