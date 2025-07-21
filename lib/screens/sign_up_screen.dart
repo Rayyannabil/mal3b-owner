@@ -176,7 +176,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           )
                                           .regExp(
                                             RegExp(
-                                              r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$',
+                                              r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$'
+,
                                             ),
                                             "كلمة السر لازم تكون فيها حروف كبيرة وصغيرة وأرقام",
                                           )
