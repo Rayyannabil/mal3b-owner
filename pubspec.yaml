@@ -28,32 +28,26 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  flutter_bloc: ^9.1.1
-  flutter_secure_storage: ^9.2.4
-  form_validator: ^2.1.1
+  cupertino_icons: ^1.0.8
   device_preview: ^1.2.0
   dio: ^5.8.0+1
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.4.6
-  flutter:
-    sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
+  flutter_secure_storage: ^9.2.4
+  flutter_svg: ^2.2.0
+  fluttertoast: ^8.2.12
+  form_validator: ^2.1.1
+  geocoding: ^4.0.0
   geolocator: ^14.0.2
   google_maps_flutter: ^2.12.3
-  geocoding: ^4.0.0
-  fluttertoast: ^8.2.12
-  flutter_svg: ^2.2.0
   intl: ^0.20.2
-  
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
-  flutter_test:
-    sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -61,6 +55,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
 
 flutter_icons:
   android: true
@@ -70,7 +66,6 @@ flutter_icons:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -78,21 +73,18 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  generate: true 
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    
+
     - assets/images/
     - assets/
-   
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
@@ -107,7 +99,6 @@ flutter:
           weight: 700
         - asset: assets/fonts/Madani-Arabic-Semi-Bold.ttf
           weight: 600
-  #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 flutter_native_splash:

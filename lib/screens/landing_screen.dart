@@ -47,7 +47,7 @@ class LandingScreen extends StatelessWidget {
                           color: Color(0xffA9A9A9),
                         ),
                       ),
-                      SizedBox(height: getVerticalSpace(context, 25)),
+                      SizedBox(height: getVerticalSpace(context, 35)),
                       SizedBox(
                         width: double.infinity,
                         child: CustomButton(
@@ -67,7 +67,7 @@ class LandingScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: getVerticalSpace(context, 18)),
+                      SizedBox(height: getVerticalSpace(context, 30)),
                       SizedBox(
                         width: double.infinity,
                         child: CustomButton(

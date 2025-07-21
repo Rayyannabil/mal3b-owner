@@ -42,7 +42,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       }
     } on DioException catch (e) {
       if (e.response != null && e.response?.data != null) {
-        final msg = e.response!.data['message'] ?? "فيه مشكلة حصلت يا نجم";
+        final msg = e.response!.data['message'][0] ?? "فيه مشكلة حصلت يا نجم";
         emit(AuthenticationSignUpError(msg: _withYaNegm(msg)));
       } else {
         emit(AuthenticationSignUpError(msg: "حصلت مشكلة في الاتصال يا نجم"));

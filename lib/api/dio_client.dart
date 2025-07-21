@@ -6,7 +6,7 @@ class DioClient {
   static final DioClient _instance = DioClient._internal();
   factory DioClient() => _instance;
 
-  static const String baseUrl = "http://192.168.1.6:8080/";
+  static const String baseUrl = "http://192.168.1.196:8080/";
 
   late Dio dio;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
@@ -14,7 +14,7 @@ class DioClient {
   DioClient._internal() {
     final baseOptions = BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 10), 
+      connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 15),
       sendTimeout: const Duration(seconds: 10),
       headers: {
@@ -42,16 +42,18 @@ class DioClient {
 
             if (refreshToken != null && accessToken != null) {
               try {
-                final refreshDio = Dio(BaseOptions(
-                  baseUrl: baseUrl,
-                  connectTimeout: const Duration(seconds: 10),
-                  receiveTimeout: const Duration(seconds: 10),
-                  sendTimeout: const Duration(seconds: 10),
-                  headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                  },
-                ))..interceptors.clear();
+                final refreshDio = Dio(
+                  BaseOptions(
+                    baseUrl: baseUrl,
+                    connectTimeout: const Duration(seconds: 10),
+                    receiveTimeout: const Duration(seconds: 10),
+                    sendTimeout: const Duration(seconds: 10),
+                    headers: {
+                      'Accept': 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                  ),
+                )..interceptors.clear();
 
                 final response = await refreshDio.post(
                   '/auth/refresh',
@@ -64,8 +66,14 @@ class DioClient {
                   final newAccessToken = response.data['accessToken'];
                   final newRefreshToken = response.data['refreshToken'];
 
-                  await _storage.write(key: 'accessToken', value: newAccessToken);
-                  await _storage.write(key: 'refreshToken', value: newRefreshToken);
+                  await _storage.write(
+                    key: 'accessToken',
+                    value: newAccessToken,
+                  );
+                  await _storage.write(
+                    key: 'refreshToken',
+                    value: newRefreshToken,
+                  );
 
                   // Retry original request with updated token
                   final options = error.requestOptions;
@@ -92,15 +100,17 @@ class DioClient {
   }
 
   Dio createCleanDio() {
-    return Dio(BaseOptions(
-      baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 15),
-      sendTimeout: const Duration(seconds: 10),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    ));
+    return Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 15),
+        sendTimeout: const Duration(seconds: 10),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      ),
+    );
   }
 }

@@ -28,6 +28,10 @@ class CustomButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(
+          vertical: getVerticalSpace(context, 12),
+          horizontal: getHorizontalSpace(context, 20),
+        ),
         elevation: elevation ?? 3,
         fixedSize: Size(width ?? 150, getButtonHeight(context)),
         shape: RoundedRectangleBorder(
