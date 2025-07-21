@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mal3b/components/custom_button.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
-import 'package:mal3b/main.dart';
-import 'package:mal3b/screens/login_screen.dart';
-import 'package:mal3b/screens/sign_up_screen.dart';
 import '../l10n/app_localizations.dart';
 
 class LandingScreen extends StatelessWidget {
