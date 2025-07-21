@@ -20,7 +20,7 @@ void main() async {
   final token = await storage.read(key: "accessToken");
 
   final String initialRoute = (token == null || token.isEmpty)
-      ? '/landing'
+      ? '/signup'
       : '/home';
 
   runApp(Mal3bApp(initialRoute: initialRoute));
