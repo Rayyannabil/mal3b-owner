@@ -202,64 +202,70 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildMainCard() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Container(
-        width: double.infinity,
-        height: getImageHeight(context),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(40),
-          image: DecorationImage(
-            image: AssetImage('assets/images/championship.png'),
-            fit: BoxFit.fill,
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.3),
-              BlendMode.darken,
+      child: GestureDetector(
+        onTap: () {
+                                      Navigator.of(context).pushNamed('/booking');
+
+        },
+        child: Container(
+          width: double.infinity,
+          height: getImageHeight(context),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            image: DecorationImage(
+              image: AssetImage('assets/images/championship.png'),
+              fit: BoxFit.fill,
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.3),
+                BlendMode.darken,
+              ),
             ),
           ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: 20, start: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: getVerticalSpace(context, 39)),
-                  const Text(
-                    'القاهرة',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: CustomColors.customWhite,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 20, start: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: getVerticalSpace(context, 39)),
+                    const Text(
+                      'القاهرة',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: CustomColors.customWhite,
+                      ),
                     ),
-                  ),
-                  const Text(
-                    '300 جنيه / الساعة',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: CustomColors.customWhite,
+                    const Text(
+                      '300 جنيه / الساعة',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: CustomColors.customWhite,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsetsDirectional.only(
-                start: 20,
-                end: 20,
-                top: 40,
+              Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  start: 20,
+                  end: 20,
+                  top: 40,
+                ),
+                child: Row(
+                  children: [
+                    const Text(
+                      '4.5',
+                      style: TextStyle(color: CustomColors.customWhite),
+                    ),
+                    SizedBox(width: getHorizontalSpace(context, 5)),
+                    Image.asset('assets/images/star.png', width: 20, height: 20),
+                  ],
+                ),
               ),
-              child: Row(
-                children: [
-                  const Text(
-                    '4.5',
-                    style: TextStyle(color: CustomColors.customWhite),
-                  ),
-                  SizedBox(width: getHorizontalSpace(context, 5)),
-                  Image.asset('assets/images/star.png', width: 20, height: 20),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

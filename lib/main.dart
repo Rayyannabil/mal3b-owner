@@ -5,6 +5,7 @@ import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/l10n/app_localizations.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
+import 'package:mal3b/screens/booking_screen.dart';
 import 'package:mal3b/screens/home_screen.dart';
 import 'package:mal3b/screens/landing_screen.dart';
 import 'package:mal3b/screens/login_screen.dart';
@@ -74,6 +75,7 @@ class Mal3bApp extends StatelessWidget {
           '/home': (context) => const HomeScreen(),
           '/profile': (context) => const ProfileScreen(),
           '/notifications': (context) => const NotificationsScreen(),
+          '/booking': (context) => const BookingScreen(),
         },
       ),
     );
