@@ -8,6 +8,7 @@ import 'package:mal3b/components/custom_input_component.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
+import 'package:mal3b/screens/home_screen.dart';
 import 'package:mal3b/screens/sign_up_screen.dart';
 import 'package:mal3b/screens/test_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
@@ -55,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
             );
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const MyWidget()),
+              MaterialPageRoute(builder: (_) => const HomeScreen()),
             );
           } else if (state is AuthenticationSignInError) {
             ToastService().showToast(
