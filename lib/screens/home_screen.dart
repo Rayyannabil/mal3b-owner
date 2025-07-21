@@ -40,7 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
       });
 
       final location = await LocationService().getLongAndLat();
-      context.read<StadiumCubit>().fetchAllData(location.latitude, location.longitude);
+      context.read<StadiumCubit>().fetchAllData(
+        location.latitude,
+        location.longitude,
+      );
     } catch (e) {
       setState(() {
         _locationText = 'خطأ: ${e.toString()}';
@@ -62,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           if (state is StadiumLoaded) {
-           log(state.stadiums.toString());
+            log(state.stadiums.toString());
           }
 
           return Column(
@@ -89,18 +92,30 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              ClipOval(
-                                child: Image.asset(
-                                  'assets/images/profile.jpg',
-                                  height: getIconWidth(context) * 1.75,
-                                  fit: BoxFit.cover,
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed('/profile');
+                                },
+                                child: ClipOval(
+                                  child: Image.asset(
+                                    'assets/images/profile.jpg',
+                                    height: getIconWidth(context) * 1.75,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 40),
-                              SvgPicture.asset(
-                                "assets/images/notification.svg",
-                                width: getIconWidth(context),
-                                height: getIconWidth(context),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(
+                                    context,
+                                  ).pushNamed('/notifications');
+                                },
+                                child: SvgPicture.asset(
+                                  "assets/images/notification.svg",
+                                  width: getIconWidth(context),
+                                  height: getIconWidth(context),
+                                ),
                               ),
                             ],
                           ),
@@ -114,7 +129,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0,
+                            ),
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
@@ -125,7 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text(
                                   _locationText,
                                   style: TextStyle(
-                                    color: CustomColors.secondary.withOpacity(0.5),
+                                    color: CustomColors.secondary.withOpacity(
+                                      0.5,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -188,9 +207,13 @@ class _HomeScreenState extends State<HomeScreen> {
         height: getImageHeight(context),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40),
-          image: const DecorationImage(
+          image: DecorationImage(
             image: AssetImage('assets/images/championship.png'),
             fit: BoxFit.fill,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.3),
+              BlendMode.darken,
+            ),
           ),
         ),
         child: Row(
@@ -204,20 +227,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: getVerticalSpace(context, 39)),
                   const Text(
                     'القاهرة',
-                    style: TextStyle(fontSize: 24, color: CustomColors.customWhite),
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: CustomColors.customWhite,
+                    ),
                   ),
                   const Text(
                     '300 جنيه / الساعة',
-                    style: TextStyle(fontSize: 16, color: CustomColors.customWhite),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: CustomColors.customWhite,
+                    ),
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsetsDirectional.only(start: 20, end: 20, top: 40),
+              padding: const EdgeInsetsDirectional.only(
+                start: 20,
+                end: 20,
+                top: 40,
+              ),
               child: Row(
                 children: [
-                  const Text('4.5', style: TextStyle(color: CustomColors.customWhite)),
+                  const Text(
+                    '4.5',
+                    style: TextStyle(color: CustomColors.customWhite),
+                  ),
                   SizedBox(width: getHorizontalSpace(context, 5)),
                   Image.asset('assets/images/star.png', width: 20, height: 20),
                 ],

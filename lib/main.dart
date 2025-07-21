@@ -6,9 +6,9 @@ import 'package:mal3b/l10n/app_localizations.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
 import 'package:mal3b/screens/home_screen.dart';
-import 'package:mal3b/screens/booking_screen.dart';
 import 'package:mal3b/screens/landing_screen.dart';
 import 'package:mal3b/screens/login_screen.dart';
+import 'package:mal3b/screens/profile_screen.dart';
 import 'package:mal3b/screens/sign_up_screen.dart';
 import 'package:mal3b/screens/notifications_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
@@ -18,7 +18,9 @@ void main() async {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final token = await storage.read(key: "accessToken");
 
-  final String initialRoute = (token == null || token.isEmpty) ? '/landing' : '/home';
+  final String initialRoute = (token == null || token.isEmpty)
+      ? '/landing'
+      : '/home';
 
   runApp(Mal3bApp(initialRoute: initialRoute));
 }
@@ -70,8 +72,9 @@ class Mal3bApp extends StatelessWidget {
           '/login': (context) => const LoginScreen(),
           '/signup': (context) => const SignUpScreen(),
           '/home': (context) => const HomeScreen(),
+          '/profile': (context) => const ProfileScreen(),
+          '/notifications': (context) => const NotificationsScreen(),
         },
-        
       ),
     );
   }

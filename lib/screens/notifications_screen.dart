@@ -11,11 +11,16 @@ class NotificationsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        leading: Icon(
-          Icons.arrow_back_rounded,
-          color: CustomColors.primary,
-          size: 30,
-          textDirection: TextDirection.rtl,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(
+            Icons.arrow_back_rounded,
+            color: CustomColors.primary,
+            size: 30,
+            textDirection: TextDirection.rtl,
+          ),
         ),
         title: Text(
           'الإشعارات',
