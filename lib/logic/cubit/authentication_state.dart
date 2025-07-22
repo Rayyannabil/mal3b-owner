@@ -41,8 +41,8 @@ final class AccountDeleteFailed extends AuthenticationState {
 }
 
 final class AccountDetailsGotSuccessfully extends AuthenticationState {
-  // final UserProfileModel user;
-  // AccountDetailsGotSuccessfully({required this.user});
+  final UserProfileModel user;
+  AccountDetailsGotSuccessfully({required this.user});
 }
 
 final class AccountDetailsLoading extends AuthenticationState {}

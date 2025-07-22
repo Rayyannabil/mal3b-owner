@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mal3b/api/dio_client.dart';
+import 'package:mal3b/models/user_profile_model.dart';
 
 part 'authentication_state.dart';
 
@@ -44,7 +45,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       }
     } on DioException catch (e) {
       if (e.response != null && e.response?.data != null) {
-        final msg = e.response!.data['message'][0] ?? "فيه مشكلة حصلت يا نجم";
+        final msg = e.response!.data['message'] ?? "فيه مشكلة حصلت يا نجم";
         emit(AuthenticationSignUpError(msg: _withYaNegm(msg)));
       } else {
         emit(AuthenticationSignUpError(msg: "حصلت مشكلة في الاتصال يا نجم"));
@@ -66,6 +67,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       );
 
       if (response.statusCode == 200) {
+        // Save tokens
         await storage.write(
           key: "accessToken",
           value: response.data['accessToken'],
@@ -74,6 +76,14 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
           key: "refreshToken",
           value: response.data['refreshToken'],
         );
+
+        // Extract and save user info if present
+        final userData = response.data['user'];
+        if (userData != null) {
+          await storage.write(key: "userName", value: userData['name'] ?? '');
+          await storage.write(key: "userPhone", value: userData['phone'] ?? '');
+        }
+
         emit(AuthenticationSignInSuccess(msg: "تم تسجيل الدخول يا نجم"));
       } else {
         final msg = _normalizeMessage(
@@ -95,7 +105,18 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     }
   }
 
-  /// Helper to normalize the API error message
+  void logout() async {
+    try {
+      // Clear all stored user data
+      await storage.deleteAll();
+      _cachedUserProfile = null;
+
+      emit(AuthenticationLoggedOut());
+    } catch (e) {
+      emit(AuthenticationLogoutError(msg: "فشل تسجيل الخروج يا نجم"));
+    }
+  }
+
   String _normalizeMessage(dynamic message) {
     if (message is List) {
       return message.join(', ');
@@ -106,12 +127,96 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     }
   }
 
-  /// Helper to make sure error ends with 'يا نجم'
   String _withYaNegm(String msg) {
     msg = msg.trim();
     if (!msg.endsWith('يا نجم')) {
       return '$msg يا نجم';
     }
     return msg;
+  }
+
+  UserProfileModel? _cachedUserProfile;
+
+  Future<UserProfileModel?> getProfileDetails({
+    bool forceRefresh = false,
+  }) async {
+    emit(AccountDetailsLoading());
+
+    if (!forceRefresh && _cachedUserProfile != null) {
+      emit(AccountDetailsGotSuccessfully(user: _cachedUserProfile!));
+      return _cachedUserProfile;
+    }
+
+    final accessToken = await storage.read(key: "accessToken");
+
+    try {
+      final response = await dio.get(
+        "${DioClient.baseUrl}user/details",
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $accessToken",
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final userProfile = UserProfileModel.fromJson(response.data);
+        _cachedUserProfile = userProfile;
+        emit(AccountDetailsGotSuccessfully(user: userProfile));
+        return userProfile;
+      } else {
+        emit(AccountDetailsGotFailed(msg: "فشل تحميل البيانات"));
+        return null;
+      }
+    } catch (e) {
+      emit(AccountDetailsGotFailed(msg: "حدث خطأ غير متوقع"));
+      return null;
+    }
+  }
+
+  void updateProfile({required String name, required String phone}) async {
+    emit(AccountDetailsUpdateLoading());
+    try {
+      final accessToken = await storage.read(key: "accessToken");
+
+      final response = await dio.post(
+        "${DioClient.baseUrl}user/edit-details",
+        data: {"name": name, "phone": phone},
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $accessToken",
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        _cachedUserProfile = UserProfileModel(name: name, phone: phone);
+        await storage.write(key: "userName", value: name);
+        await storage.write(key: "userPhone", value: phone);
+
+        emit(AccountDetailsUpdatedSuccess());
+        await getProfileDetails(forceRefresh: true);
+      } else {
+        emit(
+          AccountDetailsUpdatedFailed(
+            msg: response.data['message'] ?? "فشل تحديث البيانات",
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        emit(
+          AccountDetailsUpdatedFailed(
+            msg: e.response!.data['message'] ?? "فشل تحديث البيانات",
+          ),
+        );
+      } else {
+        emit(AccountDetailsUpdatedFailed(msg: "حدث خطأ غير متوقع"));
+      }
+    } catch (e) {
+      emit(AccountDetailsUpdatedFailed(msg: "حدث خطأ غير متوقع"));
+    }
   }
 }
