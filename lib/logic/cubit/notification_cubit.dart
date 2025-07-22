@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -12,26 +15,23 @@ class NotificationCubit extends Cubit<NotificationState> {
   final Dio dio = DioClient().dio;
   final FlutterSecureStorage storage = FlutterSecureStorage();
 
-  Future<void> fetchNotifications() async{
+  Future<void> fetchNotifications() async {
     emit(NotificationLoading());
-    try{
+    try {
+      final token = await storage.read(key: 'accessToken');
       final response = await dio.get(
-        '${DioClient.baseUrl}notifications',
-        // options: Options(
-        //   headers: {"Authorization":"Bearer $token"}
-          
-        // )
-        );
-        if(response.statusCode == 200){
-          emit(NotificationSuccess(response.data));
-        }
-        else {
+        '${DioClient.baseUrl}user/notification',
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+      );
+      
+      if (response.statusCode == 200) {
+        print(response.data);
+         emit(NotificationSuccess(List<Map<String, dynamic>>.from(response.data)));
+      } else {
         emit(NotificationError(msg: "حدث خطأأثناء تحميل الإشعارات يا نجم"));
       }
-    }
-    catch(e){
+    } catch (e) {
       emit(NotificationError(msg: "فشل في تحميل الإشعارات يا نجم"));
     }
   }
 }
-

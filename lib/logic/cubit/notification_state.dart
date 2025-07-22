@@ -6,7 +6,7 @@ sealed class NotificationState {}
 final class NotificationInitial extends NotificationState {}
 
 final class NotificationSuccess extends NotificationState{
-  final List notifications;
+final List<Map<dynamic, dynamic>> notifications;
   NotificationSuccess(this.notifications);
 }
 
