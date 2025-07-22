@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mal3b/constants/colors.dart';
@@ -13,9 +14,17 @@ import 'package:mal3b/screens/profile_screen.dart';
 import 'package:mal3b/screens/sign_up_screen.dart';
 import 'package:mal3b/screens/notifications_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
+import 'package:device_preview/device_preview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // or any color
+      statusBarIconBrightness: Brightness.dark, // For Android
+      statusBarBrightness: Brightness.light, // For iOS
+    ),
+  );
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final token = await storage.read(key: "accessToken");
 
@@ -23,7 +32,12 @@ void main() async {
       ? '/signup'
       : '/home';
 
-  runApp(Mal3bApp(initialRoute: initialRoute));
+  runApp(
+    DevicePreview(
+      enabled: true,
+      builder: (context) => Mal3bApp(initialRoute: initialRoute),
+    ),
+  );
 }
 
 class Mal3bApp extends StatelessWidget {
@@ -39,6 +53,7 @@ class Mal3bApp extends StatelessWidget {
         // Add other cubits here
       ],
       child: MaterialApp(
+        builder: DevicePreview.appBuilder,
         navigatorKey: ToastService().navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

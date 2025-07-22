@@ -45,13 +45,7 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: Text(
-                  'حسابي',
-                  style: TextStyle(color: CustomColors.primary, fontSize: 24),
-                ),
-              ),
+
               Align(
                 alignment: Alignment.center,
                 child: Padding(

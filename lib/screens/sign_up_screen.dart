@@ -175,10 +175,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             "اقل حاجه 8 حروف يا نجم",
                                           )
                                           .regExp(
-                                            RegExp(
-                                              r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$',
-                                            ),
-                                            "كلمة السر لازم تكون فيها حروف كبيرة وصغيرة وأرقام",
+                                            RegExp("[A-Z]"),
+                                            "لازم يكون في حرف كبير يا نجم",
+                                          )
+                                          .regExp(
+                                            RegExp("[a-z]"),
+                                            "لازم يكون في حرف صغير يا نجم",
+                                          )
+                                          .regExp(
+                                            RegExp("[0-9]"),
+                                            "لازم يكون في رقم يا نجم",
+                                          )
+                                          .regExp(
+                                            RegExp("[^a-zA-Z0-9]"),
+                                            "لازم يكون في رمز خاص يا نجم",
                                           )
                                           .required()
                                           .build(),
@@ -271,7 +281,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           child: state is AuthenticationLoading
                                               ? Center(
                                                   child:
-                                                      CircularProgressIndicator(),
+                                                      CircularProgressIndicator(
+                                                        color: CustomColors
+                                                            .primary,
+                                                      ),
                                                 )
                                               : CustomButton(
                                                   onPressed: signup,
