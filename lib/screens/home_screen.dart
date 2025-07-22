@@ -288,11 +288,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 20,
                       height: 20,
                     ),
-                    Image.asset(
-                      'assets/images/star.png',
-                      width: 20,
-                      height: 20,
-                    ),
                   ],
                 ),
               ),

@@ -308,7 +308,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () {
                             context.read<AuthenticationCubit>().logout();
                             Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/landing', // Or '/login'
+                              '/login', // Or '/login'
                               (route) => false,
                             );
                           },

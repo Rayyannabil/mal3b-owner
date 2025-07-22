@@ -127,7 +127,7 @@ class BookingScreen extends StatelessWidget {
                       onPressed: () {},
                       bgColor: CustomColors.primary,
                       fgColor: Colors.white,
-                      text: const Text('Next'),
+                      text: const Text('إستمرار'),
                     ),
                     SizedBox(height: getVerticalSpace(context, 25)),
                   ],
