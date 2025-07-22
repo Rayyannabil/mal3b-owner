@@ -56,8 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
         location.longitude,
       );
     } catch (e) {
+      log('Error determining position: $e');
       setState(() {
-        _locationText = 'خطأ: ${e.toString()}';
+        _locationText = 'الموقع غير معروف';
       });
     }
   }
@@ -156,11 +157,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               height: getVerticalSpace(context, 39),
                               child: Center(
-                                child: Text(
-                                  _locationText,
-                                  style: TextStyle(
-                                    color: CustomColors.secondary.withOpacity(
-                                      0.5,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0,
+                                  ),
+                                  child: Text(
+                                    _locationText,
+                                    style: TextStyle(
+                                      color: CustomColors.secondary.withOpacity(
+                                        0.5,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -222,6 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).pushNamed('/booking');
+          Navigator.of(context).pushNamed('/booking');
         },
         child: Container(
           width: double.infinity,
@@ -276,6 +283,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(color: CustomColors.customWhite),
                     ),
                     SizedBox(width: getHorizontalSpace(context, 5)),
+                    Image.asset(
+                      'assets/images/star.png',
+                      width: 20,
+                      height: 20,
+                    ),
                     Image.asset(
                       'assets/images/star.png',
                       width: 20,

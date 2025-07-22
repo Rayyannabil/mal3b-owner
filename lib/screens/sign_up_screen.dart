@@ -281,7 +281,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           child: state is AuthenticationLoading
                                               ? Center(
                                                   child:
-                                                      CircularProgressIndicator(),
+                                                      CircularProgressIndicator(
+                                                        color: CustomColors
+                                                            .primary,
+                                                      ),
                                                 )
                                               : CustomButton(
                                                   onPressed: signup,
