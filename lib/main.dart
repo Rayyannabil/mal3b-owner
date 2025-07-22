@@ -7,6 +7,7 @@ import 'package:mal3b/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mal3b/l10n/app_localizations.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
+import 'package:mal3b/logic/cubit/notification_cubit.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
 import 'package:mal3b/screens/booking_screen.dart';
 import 'package:mal3b/screens/edit_profile_screen.dart';
@@ -56,6 +57,8 @@ class Mal3bApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => AuthenticationCubit()),
         BlocProvider(create: (_) => StadiumCubit()),
+        BlocProvider(create: (_) => NotificationCubit()),
+        // Add other cubits here
       ],
       child: MaterialApp(
         builder: DevicePreview.appBuilder,
