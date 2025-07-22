@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart' hide Svg;
@@ -23,7 +24,34 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    // sendOTP("+201125437521");
     _determinePosition();
+  }
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String verificationId = '';
+  int? resendToken;
+  Future<void> sendOTP(String phoneNumber, {bool isResend = false}) async {
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 60),
+      forceResendingToken: isResend ? resendToken : null,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        // Optional: Auto-sign in if SMS auto-detected
+        await _auth.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        print('Error: ${e.message}');
+      },
+      codeSent: (String verId, int? newToken) {
+        verificationId = verId;
+        resendToken = newToken;
+        print('OTP sent!');
+      },
+      codeAutoRetrievalTimeout: (String verId) {
+        verificationId = verId;
+      },
+    );
   }
 
   @override
