@@ -24,7 +24,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: CustomColors.white,
         centerTitle: true,
         leading: GestureDetector(
           onTap: () {

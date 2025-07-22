@@ -1,8 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart' hide Svg;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mal3b/services/location_service.dart';
 import 'package:mal3b/components/card_component.dart';
 import 'package:mal3b/constants/colors.dart';
@@ -19,11 +19,22 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController searchController = TextEditingController();
   String _locationText = 'الموقع';
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
+
+  String? _userName;
+  String? _userPhone;
 
   @override
   void initState() {
     super.initState();
+    _loadUserData();
     _determinePosition();
+  }
+
+  Future<void> _loadUserData() async {
+    _userName = await storage.read(key: "userName") ?? '';
+    _userPhone = await storage.read(key: "userPhone") ?? '';
+    setState(() {});
   }
 
   @override
@@ -45,8 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
         location.longitude,
       );
     } catch (e) {
+      log('Error determining position: $e');
       setState(() {
-        _locationText = 'خطأ: ${e.toString()}';
+        _locationText = 'الموقع غير معروف';
       });
     }
   }
@@ -94,7 +106,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).pushNamed('/profile');
+                                  Navigator.of(context).pushNamed(
+                                    '/profile',
+                                    arguments: {
+                                      'name': _userName ?? '',
+                                      'phone': _userPhone ?? '',
+                                    },
+                                  );
                                 },
                                 child: ClipOval(
                                   child: Image.asset(
@@ -139,11 +157,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               height: getVerticalSpace(context, 39),
                               child: Center(
-                                child: Text(
-                                  _locationText,
-                                  style: TextStyle(
-                                    color: CustomColors.secondary.withOpacity(
-                                      0.5,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0,
+                                  ),
+                                  child: Text(
+                                    _locationText,
+                                    style: TextStyle(
+                                      color: CustomColors.secondary.withOpacity(
+                                        0.5,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -204,8 +227,8 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.all(10.0),
       child: GestureDetector(
         onTap: () {
-                                      Navigator.of(context).pushNamed('/booking');
-
+          Navigator.of(context).pushNamed('/booking');
+          Navigator.of(context).pushNamed('/booking');
         },
         child: Container(
           width: double.infinity,
@@ -260,7 +283,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(color: CustomColors.customWhite),
                     ),
                     SizedBox(width: getHorizontalSpace(context, 5)),
-                    Image.asset('assets/images/star.png', width: 20, height: 20),
+                    Image.asset(
+                      'assets/images/star.png',
+                      width: 20,
+                      height: 20,
+                    ),
+                    Image.asset(
+                      'assets/images/star.png',
+                      width: 20,
+                      height: 20,
+                    ),
                   ],
                 ),
               ),
