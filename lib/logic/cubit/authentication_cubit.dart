@@ -107,7 +107,18 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
   void logout() async {
     try {
+      final accessToken = storage.read(key: "accessToken");
       // Clear all stored user data
+      await dio.post(
+        "${DioClient.baseUrl}user/logout",
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $accessToken",
+            "Content-Type": "application/json",
+          },
+        ),
+      );
+
       await storage.deleteAll();
       _cachedUserProfile = null;
 
