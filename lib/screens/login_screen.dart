@@ -32,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login() {
-    log(passwordController.text);
     if (_formKey.currentState!.validate()) {
       context.read<AuthenticationCubit>().login(
         phone: phoneController.text,

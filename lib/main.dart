@@ -1,3 +1,5 @@
+import 'package:easy_notify/easy_notify.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,12 +20,44 @@ import 'package:mal3b/screens/payment_screen.dart';
 import 'package:mal3b/screens/profile_screen.dart';
 import 'package:mal3b/screens/sign_up_screen.dart';
 import 'package:mal3b/screens/notifications_screen.dart';
+import 'package:mal3b/services/notification_wrapper.dart';
 import 'package:mal3b/services/toast_service.dart';
 import 'package:device_preview/device_preview.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  final notification = message.notification;
+  if (notification != null) {
+    EasyNotify.showBasicNotification(
+      id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      title: notification.title ?? 'No title (background)',
+      body: notification.body ?? 'No body (background)',
+    );
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  await EasyNotify.init();
+  await EasyNotifyPermissions.requestAll();
+
+  Future<void> _firebaseMessagingBackgroundHandler(
+    RemoteMessage message,
+  ) async {
+    await Firebase.initializeApp();
+    final notification = message.notification;
+    if (notification != null) {
+      EasyNotify.showBasicNotification(
+        id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title: notification.title ?? 'No title (background)',
+        body: notification.body ?? 'No body (background)',
+      );
+    }
+  }
+
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // or any color
@@ -40,10 +74,7 @@ void main() async {
       : '/home';
 
   runApp(
-    DevicePreview(
-      enabled: true,
-      builder: (context) => Mal3bApp(initialRoute: initialRoute),
-    ),
+    NotificationListenerWrapper(child: Mal3bApp(initialRoute: initialRoute)),
   );
 }
 

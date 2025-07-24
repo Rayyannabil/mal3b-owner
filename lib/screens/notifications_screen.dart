@@ -57,7 +57,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           Expanded(
             child: BlocBuilder<NotificationCubit, NotificationState>(
               builder: (context, state) {
-                log(state.toString());
                 if (state is NotificationLoading) {
                   return const Center(
                     child: CircularProgressIndicator(
