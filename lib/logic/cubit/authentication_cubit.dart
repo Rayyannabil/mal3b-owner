@@ -41,12 +41,12 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         final msg = _normalizeMessage(
           response.data['message'] ?? "فيه حاجة غلط حصلت يا نجم",
         );
-        emit(AuthenticationSignUpError(msg: _withYaNegm(msg)));
+        emit(AuthenticationSignUpError(msg: (msg)));
       }
     } on DioException catch (e) {
       if (e.response != null && e.response?.data != null) {
         final msg = e.response!.data['message'] ?? "فيه مشكلة حصلت يا نجم";
-        emit(AuthenticationSignUpError(msg: _withYaNegm(msg)));
+        emit(AuthenticationSignUpError(msg: (msg)));
       } else {
         emit(AuthenticationSignUpError(msg: "حصلت مشكلة في الاتصال يا نجم"));
       }
@@ -89,14 +89,14 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         final msg = _normalizeMessage(
           response.data['message'] ?? "محاولتك فشلت يا نجم",
         );
-        emit(AuthenticationSignInError(msg: _withYaNegm(msg)));
+        emit(AuthenticationSignInError(msg: (msg)));
       }
     } on DioException catch (e) {
       if (e.response != null && e.response?.data != null) {
         final msg = _normalizeMessage(
           e.response!.data['message'] ?? "محاولتك فشلت يا نجم",
         );
-        emit(AuthenticationSignInError(msg: _withYaNegm(msg)));
+        emit(AuthenticationSignInError(msg: (msg)));
       } else {
         emit(AuthenticationSignInError(msg: "سجل حساب الأول يا نجم"));
       }
@@ -136,14 +136,6 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     } else {
       return "حصلت مشكلة غير متوقعة";
     }
-  }
-
-  String _withYaNegm(String msg) {
-    msg = msg.trim();
-    if (!msg.endsWith('يا نجم')) {
-      return '$msg يا نجم';
-    }
-    return msg;
   }
 
   UserProfileModel? _cachedUserProfile;
