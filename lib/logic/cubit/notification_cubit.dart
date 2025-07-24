@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -28,7 +25,7 @@ class NotificationCubit extends Cubit<NotificationState> {
         print(response.data);
          emit(NotificationSuccess(List<Map<String, dynamic>>.from(response.data)));
       } else {
-        emit(NotificationError(msg: "حدث خطأأثناء تحميل الإشعارات يا نجم"));
+        emit(NotificationError(msg: "حدث خطأ أثناء تحميل الإشعارات يا نجم"));
       }
     } catch (e) {
       emit(NotificationError(msg: "فشل في تحميل الإشعارات يا نجم"));

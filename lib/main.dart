@@ -11,11 +11,14 @@ import 'package:mal3b/logic/cubit/notification_cubit.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
 import 'package:mal3b/screens/booking_screen.dart';
 import 'package:mal3b/screens/edit_profile_screen.dart';
+import 'package:mal3b/screens/forgot_password_screen.dart';
 import 'package:mal3b/screens/home_screen.dart';
 import 'package:mal3b/screens/landing_screen.dart';
 import 'package:mal3b/screens/login_screen.dart';
+import 'package:mal3b/screens/otp_screen.dart';
 import 'package:mal3b/screens/payment_screen.dart';
 import 'package:mal3b/screens/profile_screen.dart';
+import 'package:mal3b/screens/profile_screen_skip.dart';
 import 'package:mal3b/screens/sign_up_screen.dart';
 import 'package:mal3b/screens/notifications_screen.dart';
 import 'package:mal3b/services/toast_service.dart';
@@ -23,7 +26,10 @@ import 'package:device_preview/device_preview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    name: "test",
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // or any color
@@ -123,6 +129,22 @@ class Mal3bApp extends StatelessWidget {
               );
             case '/payment':
               return MaterialPageRoute(builder: (_) => const PaymentScreen());
+            case '/forgot-password':
+              return MaterialPageRoute(
+                builder: (_) => const ForgotPasswordScreen(),
+              );
+            case '/profile-screen-skip':
+              return MaterialPageRoute(
+                builder: (_) => const ProfileScreenSkip(),
+              );
+            case '/otp-screen':
+              final args = settings.arguments as Map<String, String>;
+              return MaterialPageRoute(
+                builder: (_) => OtpScreen(
+                  phoneNumber: args['phone'] ?? '',
+                  verificationId: args['verificationId'] ?? '',
+                ),
+              );
             default:
               return MaterialPageRoute(builder: (_) => const LandingScreen());
           }

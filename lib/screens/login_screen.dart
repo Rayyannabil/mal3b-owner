@@ -74,7 +74,9 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: getVerticalSpace(context, 20)),
               SafeArea(
                 child: GestureDetector(
-                  onTap: () => print('tapped'),
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/home');
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -194,16 +196,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                 SizedBox(height: getVerticalSpace(context, 30)),
                                 Align(
                                   alignment: Alignment.topRight,
-                                  child: Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.forgotPassword,
-                                    style: const TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      fontFamily: "MadaniArabic",
-                                      color: CustomColors.primary,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(
+                                        context,
+                                      ).pushNamed('/forgot-password');
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.forgotPassword,
+                                      style: const TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        fontFamily: "MadaniArabic",
+                                        color: CustomColors.primary,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   ),
                                 ),

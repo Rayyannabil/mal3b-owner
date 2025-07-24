@@ -5,6 +5,7 @@ import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
 import 'package:mal3b/models/user_profile_model.dart';
+import 'package:mal3b/screens/profile_screen_skip.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String name;
@@ -305,10 +306,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(
                         height: getVerticalSpace(context, 55),
                         child: GestureDetector(
-                          onTap: () {
-                            context.read<AuthenticationCubit>().logout();
+                          onTap: () async {
+                            await context.read<AuthenticationCubit>().logout();
                             Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/login', // Or '/login'
+                              '/login',
                               (route) => false,
                             );
                           },
@@ -345,7 +346,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             )
-          : Center(child: Text("في مشكله شكلها يا نجم")),
+          : ProfileScreenSkip(),
     );
   }
 }

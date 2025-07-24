@@ -105,7 +105,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     }
   }
 
-  void logout() async {
+  Future<void> logout() async {
     try {
       final accessToken = storage.read(key: "accessToken");
       // Clear all stored user data
