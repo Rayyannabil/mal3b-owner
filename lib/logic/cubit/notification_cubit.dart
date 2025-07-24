@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
@@ -50,7 +49,7 @@ class NotificationCubit extends Cubit<NotificationState> {
           NotificationSuccess(List<Map<String, dynamic>>.from(response.data)),
         );
       } else {
-        emit(NotificationError(msg: "حدث خطأأثناء تحميل الإشعارات يا نجم"));
+        emit(NotificationError(msg: "حدث خطأ أثناء تحميل الإشعارات يا نجم"));
       }
     } catch (e) {
       emit(NotificationError(msg: "فشل في تحميل الإشعارات يا نجم"));

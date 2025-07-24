@@ -71,24 +71,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SafeArea(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(width: getVerticalSpace(context, 20)),
-                      Text(
-                        AppLocalizations.of(context)!.skip,
-                        style: const TextStyle(
-                          fontSize: 20,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/home');
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(width: getVerticalSpace(context, 20)),
+                        Text(
+                          AppLocalizations.of(context)!.skip,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(width: getHorizontalSpace(context, 12)),
+                        const Icon(
+                          Icons.arrow_forward_rounded,
                           color: Colors.white,
                         ),
-                      ),
-                      SizedBox(width: getHorizontalSpace(context, 12)),
-                      const Icon(
-                        Icons.arrow_forward_rounded,
-                        color: Colors.white,
-                      ),
-                      SizedBox(width: getHorizontalSpace(context, 20)),
-                    ],
+                        SizedBox(width: getHorizontalSpace(context, 20)),
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
