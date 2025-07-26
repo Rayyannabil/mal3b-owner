@@ -27,8 +27,8 @@ import 'package:mal3b/services/notification_wrapper.dart';
 import 'package:mal3b/services/toast_service.dart';
 import 'package:device_preview/device_preview.dart';
 
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
   final notification = message.notification;
   if (notification != null) {
     EasyNotify.showBasicNotification(
@@ -41,10 +41,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    name: "test",
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await EasyNotify.init();
+  await EasyNotifyPermissions.requestAll();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // or any color
@@ -120,9 +121,7 @@ class Mal3bApp extends StatelessWidget {
             case '/home':
               return MaterialPageRoute(builder: (_) => const HomeScreen());
             case '/profile':
-              return MaterialPageRoute(
-                builder: (_) => ProfileScreen(),
-              );
+              return MaterialPageRoute(builder: (_) => ProfileScreen());
             case '/notifications':
               return MaterialPageRoute(
                 builder: (_) => const NotificationsScreen(),

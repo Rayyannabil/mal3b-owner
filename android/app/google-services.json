@@ -4,7 +4,7 @@
     "project_id": "mal3abapp-39dd2",
     "storage_bucket": "mal3abapp-39dd2.firebasestorage.app"
   },
-  "client": [                                       
+  "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:1002201533105:android:f34736fdcc37db535d3090",
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDBqmpucPL-aoq0CbSKd_mcIVDYg_7_7NU"
+          "current_key": "AIzaSyBFa0twiD7NbxZ6AjEZK4LUUgc1kPHYtd8"
         }
       ],
       "services": {

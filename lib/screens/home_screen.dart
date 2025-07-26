@@ -34,8 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadUserData();
     _determinePosition();
     BlocProvider.of<NotificationCubit>(context).saveFCM();
-
-    
   }
 
   Future<void> _loadUserData() async {
@@ -80,7 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
           List<dynamic> topRated = [];
 
           if (state is StadiumLoading) {
-            return const Center(child: CircularProgressIndicator(color: CustomColors.primary,));
+            return const Center(
+              child: CircularProgressIndicator(color: CustomColors.primary),
+            );
           }
 
           if (state is StadiumLoaded) {
@@ -135,7 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.of(
                                     context,
                                   ).pushNamed('/notifications');
-                                  
                                 },
                                 child: SvgPicture.asset(
                                   "assets/images/notification.svg",
@@ -235,7 +234,6 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.all(10.0),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).pushNamed('/booking');
           Navigator.of(context).pushNamed('/booking');
         },
         child: Container(

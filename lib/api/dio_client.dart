@@ -56,7 +56,7 @@ class DioClient {
 
                 final response = await refreshDio.post(
                   '/auth/refresh-token',
-                  data: {'refreshToken': refreshToken},
+                  data: {'token': refreshToken},
                 );
 
                 if (response.statusCode == 200 &&
