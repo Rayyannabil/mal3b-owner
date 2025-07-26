@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'mal3abapp-39dd2.firebasestorage.app',
     iosBundleId: 'com.example.mal3b',
   );
+
 }

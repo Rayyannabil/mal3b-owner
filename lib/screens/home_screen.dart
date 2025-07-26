@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:easy_notify/easy_notify.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart' hide Svg;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mal3b/api/dio_client.dart';
 import 'package:mal3b/logic/cubit/notification_cubit.dart';
 import 'package:mal3b/services/location_service.dart';
 import 'package:mal3b/components/card_component.dart';
@@ -34,8 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadUserData();
     _determinePosition();
     BlocProvider.of<NotificationCubit>(context).saveFCM();
-
-    
   }
 
   Future<void> _loadUserData() async {
@@ -80,7 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
           List<dynamic> topRated = [];
 
           if (state is StadiumLoading) {
-            return const Center(child: CircularProgressIndicator(color: CustomColors.primary,));
+            return const Center(
+              child: CircularProgressIndicator(color: CustomColors.primary),
+            );
           }
 
           if (state is StadiumLoaded) {
@@ -135,7 +137,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.of(
                                     context,
                                   ).pushNamed('/notifications');
-                                  
                                 },
                                 child: SvgPicture.asset(
                                   "assets/images/notification.svg",
@@ -235,7 +236,6 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.all(10.0),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).pushNamed('/booking');
           Navigator.of(context).pushNamed('/booking');
         },
         child: Container(
