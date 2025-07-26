@@ -42,7 +42,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    name: "test",
     options: DefaultFirebaseOptions.currentPlatform,
   );
   SystemChrome.setSystemUIOverlayStyle(
