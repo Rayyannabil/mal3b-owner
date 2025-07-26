@@ -18,7 +18,6 @@ class NotificationCubit extends Cubit<NotificationState> {
   void saveFCM() async {
     dio.options.headers = {'Content-Type': 'application/json'};
     String? token = await FirebaseMessaging.instance.getToken();
-    log("FCM Token: $token");
     final storage = FlutterSecureStorage();
     final accessToken = await storage.read(key: "accessToken");
 

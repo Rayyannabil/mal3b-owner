@@ -32,8 +32,7 @@ class StadiumCubit extends Cubit<StadiumState> {
         nearestStadiums: nearestResponse.data as List<dynamic>,
         topRatedStadiums: topRatedResponse.data as List<dynamic>,
       ));
-      log(nearestResponse.toString());
-      log(topRatedResponse.toString());
+      
     } catch (e) {
       log('Error fetching stadiums: $e');
       emit(StadiumError("فشل تحميل بيانات الملاعب يا نجم"));

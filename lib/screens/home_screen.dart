@@ -241,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTitle(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 29),
+      padding: const EdgeInsets.symmetric(horizontal: 29,vertical: 15),
       child: Text(
         text,
         style: const TextStyle(
@@ -261,114 +261,117 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  return Column(
-    children: [
-      SizedBox(
-        height: getImageHeight(context),
-        child: PageView.builder(
-          controller: _pageController,
-          itemCount: topRated.length,
-          itemBuilder: (context, index) {
-            final item = topRated[index];
-            final rating = (item['rating'] is int)
-                ? (item['rating'] as int).toDouble()
-                : (item['rating'] ?? 0.0) as double;
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushNamed('/booking');
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(40),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(
-                        'assets/images/championship.png',
-                        fit: BoxFit.cover,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black.withOpacity(0.2),
-                              Colors.black.withOpacity(0.6),
-                            ],
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: Column(
+      children: [
+        SizedBox(
+          height: getImageHeight(context),
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: topRated.length,
+            itemBuilder: (context, index) {
+              final item = topRated[index];
+              final rating = (item['rating'] is int)
+                  ? (item['rating'] as int).toDouble()
+                  : (item['rating'] ?? 0.0) as double;
+    
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/booking');
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(40),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.asset(
+                          'assets/images/championship.png',
+                          fit: BoxFit.cover,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.2),
+                                Colors.black.withOpacity(0.6),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item['name'] ?? 'غير معروف',
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              '${item['price'] ?? "10"} جنيه/الساعة',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            const Spacer(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SmoothPageIndicator(
-                                  controller: _pageController,
-                                  count: topRated.length,
-                                  effect: WormEffect(
-                                    dotHeight: 8,
-                                    dotWidth: 8,
-                                    spacing: 6,
-                                    activeDotColor: Colors.white,
-                                    dotColor: Colors.white38,
-                                  ),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item['name'] ?? 'غير معروف',
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      rating.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                '${item['price'] ?? "10"} جنيه/الساعة',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                              const Spacer(),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SmoothPageIndicator(
+                                    controller: _pageController,
+                                    count: topRated.length,
+                                    effect: WormEffect(
+                                      dotHeight: 8,
+                                      dotWidth: 8,
+                                      spacing: 6,
+                                      activeDotColor: Colors.white,
+                                      dotColor: Colors.white38,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        rating.toString(),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Image.asset(
+                                        'assets/images/star.png',
+                                        width: 18,
+                                        height: 18,
                                         color: Colors.white,
                                       ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Image.asset(
-                                      'assets/images/star.png',
-                                      width: 18,
-                                      height: 18,
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      )
-                    ],
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
-    ],
+      ],
+    ),
   );
 }
 
