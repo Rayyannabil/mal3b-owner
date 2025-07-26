@@ -13,7 +13,7 @@ class CardComponent extends StatelessWidget {
 
   final String? cardImage;
   final String cardText;
-  final int cardPrice;
+  final String cardPrice;
   final double? cardRating;
 
   @override
@@ -39,7 +39,8 @@ class CardComponent extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(40),
                         child: cardImage != null
-                            ? Image.network(
+                        //make it image network after test
+                            ? Image.asset(
                                 cardImage!,
                                 width: getHorizontalSpace(context, 230),
                                 height: getVerticalSpace(context, 150),

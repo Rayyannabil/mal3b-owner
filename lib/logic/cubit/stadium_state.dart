@@ -8,12 +8,10 @@ class StadiumLoading extends StadiumState {}
 
 /// Combined state for loading all stadium data at once
 class StadiumAllLoaded extends StadiumState {
-  final List<dynamic> allStadiums;
   final List<dynamic> nearestStadiums;
   final List<dynamic> topRatedStadiums;
 
   StadiumAllLoaded({
-    required this.allStadiums,
     required this.nearestStadiums,
     required this.topRatedStadiums,
   });

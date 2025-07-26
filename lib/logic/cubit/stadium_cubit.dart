@@ -15,7 +15,7 @@ class StadiumCubit extends Cubit<StadiumState> {
 
     try {
       final nearestResponse = await dio.get(
-        '${DioClient.baseUrl}field/get-recent',
+        '${DioClient.baseUrl}field/nearest',
         queryParameters: {
           'latitude': lat,
           'longitude': lon,
@@ -26,15 +26,14 @@ class StadiumCubit extends Cubit<StadiumState> {
         '${DioClient.baseUrl}field/best-rating',
       );
 
-      final allResponse = await dio.get(
-        '${DioClient.baseUrl}field',
-      );
+      
 
       emit(StadiumAllLoaded(
-        allStadiums: allResponse.data as List<dynamic>,
         nearestStadiums: nearestResponse.data as List<dynamic>,
         topRatedStadiums: topRatedResponse.data as List<dynamic>,
       ));
+      log(nearestResponse.toString());
+      log(topRatedResponse.toString());
     } catch (e) {
       log('Error fetching stadiums: $e');
       emit(StadiumError("فشل تحميل بيانات الملاعب يا نجم"));
