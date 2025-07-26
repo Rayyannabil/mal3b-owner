@@ -120,11 +120,8 @@ class Mal3bApp extends StatelessWidget {
             case '/home':
               return MaterialPageRoute(builder: (_) => const HomeScreen());
             case '/profile':
-              final args = settings.arguments as Map<String, String>?;
-              final name = args?['name'] ?? '';
-              final phone = args?['phone'] ?? '';
               return MaterialPageRoute(
-                builder: (_) => ProfileScreen(name: name, phone: phone),
+                builder: (_) => ProfileScreen(),
               );
             case '/notifications':
               return MaterialPageRoute(

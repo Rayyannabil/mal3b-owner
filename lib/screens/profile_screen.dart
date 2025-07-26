@@ -8,10 +8,8 @@ import 'package:mal3b/models/user_profile_model.dart';
 import 'package:mal3b/screens/profile_screen_skip.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final String name;
-  final String phone;
 
-  const ProfileScreen({super.key, required this.name, required this.phone});
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -276,8 +274,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Navigator.of(context).pushNamed(
                                   '/edit-profile',
                                   arguments: {
-                                    'name': widget.name,
-                                    'phone': widget.phone,
+                                    'name': state.user.name,
+                                    'phone': state.user.phone,
                                   },
                                 );
                               },
