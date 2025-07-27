@@ -27,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final PageController _pageController;
   Timer? _timer;
+  bool _scrollForward = true;
 
   final TextEditingController searchController = TextEditingController();
   String _locationText = 'الموقع';
@@ -52,25 +53,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _startAutoSlide() {
-  _timer = Timer.periodic(const Duration(seconds: 4), (Timer timer) {
-    if (!_pageController.hasClients) return;
+    _timer = Timer.periodic(const Duration(seconds: 4), (Timer timer) {
+      if (!_pageController.hasClients) return;
 
-    final nextPage = _pageController.page!.round() + 1;
-    if (nextPage < _pageController.positions.first.viewportDimension) {
-      _pageController.animateToPage(
-        nextPage,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      _pageController.animateToPage(
-        0,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    }
-  });
-}
+      final nextPage = _pageController.page!.round() + 1;
+      if (nextPage < _pageController.positions.first.viewportDimension) {
+        _pageController.animateToPage(
+          nextPage,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        _pageController.animateToPage(
+          0,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
   @override
   void dispose() {
     searchController.dispose();
@@ -88,9 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
       final location = await LocationService().getLongAndLat();
       context.read<StadiumCubit>().fetchAllData(
-            location.latitude,
-            location.longitude,
-          );
+        location.latitude,
+        location.longitude,
+      );
     } catch (e) {
       log('Error determining position: $e');
       setState(() {
@@ -164,7 +166,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(width: 40),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).pushNamed('/notifications');
+                                  Navigator.of(
+                                    context,
+                                  ).pushNamed('/notifications');
                                 },
                                 child: SvgPicture.asset(
                                   "assets/images/notification.svg",
@@ -184,7 +188,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0,
+                            ),
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
@@ -193,11 +199,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: getVerticalSpace(context, 39),
                               child: Center(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0,
+                                  ),
                                   child: Text(
                                     _locationText,
                                     style: TextStyle(
-                                      color: CustomColors.secondary.withOpacity(0.5),
+                                      color: CustomColors.secondary.withOpacity(
+                                        0.5,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -241,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTitle(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 29,vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 29, vertical: 15),
       child: Text(
         text,
         style: const TextStyle(
@@ -252,8 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
- Widget _buildMainCard(List<dynamic> topRated) {
+Widget _buildMainCard(List<dynamic> topRated) {
   if (topRated.isEmpty) {
     return const Padding(
       padding: EdgeInsets.all(16.0),
@@ -270,12 +279,40 @@ class _HomeScreenState extends State<HomeScreen> {
           child: PageView.builder(
             controller: _pageController,
             itemCount: topRated.length,
+            onPageChanged: (index) {
+              final isEnd = index == topRated.length - 1;
+              final isStart = index == 0;
+
+              // Toggle scroll direction when reaching ends
+              if (_scrollForward && isEnd) {
+                _scrollForward = false;
+              } else if (!_scrollForward && isStart) {
+                _scrollForward = true;
+              }
+
+              // Add delay before moving to next/previous page
+              Future.delayed(Duration(seconds: (isEnd || isStart) ? 3 : 1), () {
+                if (!mounted) return;
+
+                if (_scrollForward && index < topRated.length - 1) {
+                  _pageController.nextPage(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                  );
+                } else if (!_scrollForward && index > 0) {
+                  _pageController.previousPage(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              });
+            },
             itemBuilder: (context, index) {
               final item = topRated[index];
               final rating = (item['rating'] is int)
                   ? (item['rating'] as int).toDouble()
                   : (item['rating'] ?? 0.0) as double;
-    
+
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: GestureDetector(
@@ -358,10 +395,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   ),
                                 ],
-                              )
+                              ),
                             ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -374,7 +411,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 }
-
 
   Widget _buildCardList(List<dynamic> items) {
     if (items.isEmpty) {

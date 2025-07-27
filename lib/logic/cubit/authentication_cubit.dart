@@ -23,7 +23,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     dioAuth.options.headers = {'content-type': 'application/json'};
     try {
       final response = await dioAuth.post(
-        "${DioClient.baseUrl}auth/signup",
+        "${DioClient.baseUrl}owner/auth/signup",
         data: {"name": name, "phone": phone, "password": password},
       );
 
@@ -62,7 +62,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     dioAuth.options.headers = {'content-type': 'application/json'};
     try {
       final response = await dioAuth.post(
-        "${DioClient.baseUrl}auth/login",
+        "${DioClient.baseUrl}owner/auth/login",
         data: {"phone": phone, "password": password},
       );
 
