@@ -8,7 +8,7 @@ import 'package:mal3b/components/custom_button.dart';
 import 'package:mal3b/components/custom_input_component.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
-import 'package:mal3b/screens/home_screen.dart';
+import 'package:mal3b/screens/add_stadium.dart';
 import 'package:mal3b/services/toast_service.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -71,7 +71,7 @@ class _OtpScreenState extends State<OtpScreen> {
         AuthenticationSignInSuccess(msg: 'تم التحقق بنجاح يا نجم'),
       );
 
-      Navigator.of(context).pushNamedAndRemoveUntil('/home', (r) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil('/add-stadium', (r) => false);
     } catch (e) {
       ToastService().showToast(
         message: 'الكود غير صحيح يا نجم',
@@ -100,7 +100,7 @@ class _OtpScreenState extends State<OtpScreen> {
               type: ToastType.success,
             );
             Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => HomeScreen()),
+              MaterialPageRoute(builder: (context) => AddStadium()),
               (route) => false,
             );
           } else if (state is AuthenticationSignUpError) {

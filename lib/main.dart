@@ -15,7 +15,6 @@ import 'package:mal3b/screens/booking_screen.dart';
 import 'package:mal3b/screens/edit_profile_screen.dart';
 import 'package:mal3b/screens/forgot_password_screen.dart';
 import 'package:mal3b/screens/home_screen.dart';
-import 'package:mal3b/screens/landing_screen.dart';
 import 'package:mal3b/screens/login_screen.dart';
 import 'package:mal3b/screens/otp_screen.dart';
 import 'package:mal3b/screens/payment_screen.dart';
@@ -58,7 +57,7 @@ void main() async {
 
   // Default route
   final String initialRoute = (token == null || token.isEmpty)
-      ? '/landing'
+      ? '/login'
       : '/home';
 
   runApp(
@@ -112,8 +111,7 @@ class Mal3bApp extends StatelessWidget {
         initialRoute: initialRoute,
         onGenerateRoute: (settings) {
           switch (settings.name) {
-            case '/landing':
-              return MaterialPageRoute(builder: (_) => const LandingScreen());
+           
             case '/login':
               return MaterialPageRoute(builder: (_) => const LoginScreen());
             case '/signup':
@@ -154,7 +152,7 @@ class Mal3bApp extends StatelessWidget {
                 ),
               );
             default:
-              return MaterialPageRoute(builder: (_) => const LandingScreen());
+              return MaterialPageRoute(builder: (_) => const LoginScreen());
           }
         },
       ),
