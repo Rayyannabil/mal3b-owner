@@ -9,7 +9,7 @@ import 'package:mal3b/helpers/size_helper.dart';
 import 'package:mal3b/logic/cubit/notification_cubit.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
 import 'package:mal3b/screens/add_stadium.dart';
-import 'package:mal3b/screens/get_bookings.dart';
+import 'package:mal3b/screens/my_fields.dart';
 import 'package:mal3b/services/location_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,42 +21,43 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  String _locationText = 'الموقع';
-  final FlutterSecureStorage storage = const FlutterSecureStorage();
+  // String _locationText = 'الموقع';
+  // final FlutterSecureStorage storage = const FlutterSecureStorage();
   
 
   final List<Widget> _screens = const [
-     GetBookings(),
+   
     AddStadium(),
+     MyFields(),
    
   ];
 
   @override
   void initState() {
     super.initState();
-    _determinePosition();
+    // _determinePosition();
     BlocProvider.of<NotificationCubit>(context).saveFCM();
   }
 
 
-  Future<void> _determinePosition() async {
-    try {
-      String address = await LocationService().determinePosition();
-      final location = await LocationService().getLongAndLat();
+  // Future<void> _determinePosition() async {
+  //   try {
+  //     String address = await LocationService().determinePosition();
+  //     final location = await LocationService().getLongAndLat();
 
-      setState(() => _locationText = address);
+  //     setState(() => _locationText = address);
 
-      context.read<StadiumCubit>().fetchAllData(
-            location.latitude,
-            location.longitude,
-          );
-    } catch (e) {
-      log('Error determining position: $e');
-      setState(() {
-        _locationText = 'الموقع غير معروف';
-      });
-    }
-  }
+  //     context.read<StadiumCubit>().fetchAllData(
+  //           location.latitude,
+  //           location.longitude,
+  //         );
+  //   } catch (e) {
+  //     log('Error determining position: $e');
+  //     setState(() {
+  //       _locationText = 'الموقع غير معروف';
+  //     });
+  //   }
+  // }
 
   Widget _buildHeader() {
     return Directionality(
@@ -127,13 +128,13 @@ class _HomeScreenState extends State<HomeScreen> {
          
           
            BottomNavigationBarItem(
-            icon: Icon(Icons.add_box),
+            icon: Icon(Icons.add),
             label: 'إضافة ملعب',
            
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book_online),
-            label: 'الحجوزات',
+            icon: Icon(Icons.stadium),
+            label: 'الملاعب',
             backgroundColor: CustomColors.primary
           ),
         ],

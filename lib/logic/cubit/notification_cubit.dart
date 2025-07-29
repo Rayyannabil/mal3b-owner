@@ -16,22 +16,22 @@ class NotificationCubit extends Cubit<NotificationState> {
   final FlutterSecureStorage storage = FlutterSecureStorage();
 
   void saveFCM() async {
-    dio.options.headers = {'Content-Type': 'application/json'};
-    String? token = await FirebaseMessaging.instance.getToken();
-    final storage = FlutterSecureStorage();
-    final accessToken = await storage.read(key: "accessToken");
+    // dio.options.headers = {'Content-Type': 'application/json'};
+    // String? token = await FirebaseMessaging.instance.getToken();
+    // final storage = FlutterSecureStorage();
+    // final accessToken = await storage.read(key: "accessToken");
 
-    try {
-      // ignore: unused_local_variable
-      final response = await dio.post(
-        "${DioClient.baseUrl}user/store-fcm",
-        data: {"token": token},
-        options: Options(headers: {"Authorization": "Bearer $accessToken"}),
-      );
-    } catch (e) {
-      emit(NotificationError(msg: "فشل في حفظ توكن FCM"));
-      throw Exception("فشل في حفظ توكن FCM: $e");
-    }
+    // try {
+    //   // ignore: unused_local_variable
+    //   final response = await dio.post(
+    //     "${DioClient.baseUrl}user/store-fcm",
+    //     data: {"token": token},
+    //     options: Options(headers: {"Authorization": "Bearer $accessToken"}),
+    //   );
+    // } catch (e) {
+    //   emit(NotificationError(msg: "فشل في حفظ توكن FCM"));
+    //   throw Exception("فشل في حفظ توكن FCM: $e");
+    // }
   }
 
   Future<void> fetchNotifications() async {

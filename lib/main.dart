@@ -11,7 +11,6 @@ import 'package:mal3b/l10n/app_localizations.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
 import 'package:mal3b/logic/cubit/notification_cubit.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
-import 'package:mal3b/screens/booking_screen.dart';
 import 'package:mal3b/screens/edit_profile_screen.dart';
 import 'package:mal3b/screens/forgot_password_screen.dart';
 import 'package:mal3b/screens/home_screen.dart';
@@ -124,8 +123,6 @@ class Mal3bApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const NotificationsScreen(),
               );
-            case '/booking':
-              return MaterialPageRoute(builder: (_) => const BookingScreen());
             case '/edit-profile':
               final args = settings.arguments as Map<String, String>?;
               final name = args?['name'] ?? '';
