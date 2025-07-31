@@ -23,14 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   // String _locationText = 'الموقع';
   // final FlutterSecureStorage storage = const FlutterSecureStorage();
-  
 
-  final List<Widget> _screens = const [
-   
-    AddStadium(),
-     MyFields(),
-   
-  ];
+  final List<Widget> _screens = const [AddStadium(), MyFields()];
 
   @override
   void initState() {
@@ -38,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // _determinePosition();
     BlocProvider.of<NotificationCubit>(context).saveFCM();
   }
-
 
   // Future<void> _determinePosition() async {
   //   try {
@@ -97,7 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           SizedBox(width: getHorizontalSpace(context, 10)),
-         
         ],
       ),
     );
@@ -112,30 +104,22 @@ class _HomeScreenState extends State<HomeScreen> {
           _buildHeader(),
           SizedBox(height: getVerticalSpace(context, 60)),
           Expanded(
-            child: IndexedStack(
-              index: _currentIndex,
-              children: _screens,
-            ),
+            child: IndexedStack(index: _currentIndex, children: _screens),
           ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromARGB(255, 239, 239, 239),
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
         selectedItemColor: CustomColors.primary,
         unselectedItemColor: Colors.grey,
         items: const [
-         
-          
-           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'إضافة ملعب',
-           
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'إضافة ملعب'),
           BottomNavigationBarItem(
             icon: Icon(Icons.stadium),
             label: 'الملاعب',
-            backgroundColor: CustomColors.primary
+            backgroundColor: CustomColors.primary,
           ),
         ],
       ),
