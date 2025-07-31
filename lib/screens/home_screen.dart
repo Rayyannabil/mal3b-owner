@@ -29,7 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // _determinePosition();
     BlocProvider.of<NotificationCubit>(context).saveFCM();
   }
 
@@ -113,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
         selectedItemColor: CustomColors.primary,
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.grey.withOpacity(0.5),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.add), label: 'إضافة ملعب'),
           BottomNavigationBarItem(

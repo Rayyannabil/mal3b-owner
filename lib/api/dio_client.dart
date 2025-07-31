@@ -14,12 +14,12 @@ class DioClient {
   DioClient._internal() {
     final baseOptions = BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 15),
-      sendTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 20),
+      receiveTimeout: const Duration(seconds: 20),
+      sendTimeout: const Duration(seconds: 20),
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
       },
     );
 
@@ -44,12 +44,12 @@ class DioClient {
                 final refreshDio = Dio(
                   BaseOptions(
                     baseUrl: baseUrl,
-                    connectTimeout: const Duration(seconds: 10),
-                    receiveTimeout: const Duration(seconds: 10),
-                    sendTimeout: const Duration(seconds: 10),
+                    connectTimeout: const Duration(seconds: 20),
+                    receiveTimeout: const Duration(seconds: 20),
+                    sendTimeout: const Duration(seconds: 20),
                     headers: {
                       'Accept': 'application/json',
-                      'Content-Type': 'application/json',
+                      // 'Content-Type': 'application/json',
                     },
                   ),
                 )..interceptors.clear();
@@ -58,7 +58,9 @@ class DioClient {
                   '/auth/refresh-token',
                   data: {'token': refreshToken},
                 );
-
+                
+                log(response.toString());
+                
                 if (response.statusCode == 200 &&
                     response.data['accessToken'] != null &&
                     response.data['refreshToken'] != null) {

@@ -1,7 +1,18 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:mal3b/components/custom_input_component.dart';
+import 'package:mal3b/components/location_picker.dart';
+import 'package:mal3b/components/time_picker.dart';
+import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:mal3b/l10n/app_localizations.dart';
+import 'package:mal3b/logic/cubit/add_stadium_cubit.dart';
+import 'package:mal3b/services/toast_service.dart';
 
 class AddStadium extends StatefulWidget {
   const AddStadium({super.key});
@@ -134,50 +145,209 @@ class _AddStadiumState extends State<AddStadium> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: Text(
-            'ضيف ملعب',
-            style: TextStyle(fontSize: getFontTitleSize(context) * 1.2),
-          ),
-        ),
-        SizedBox(height: getVerticalSpace(context, 30)),
-        Form(
-          key: _formKey,
+    return BlocConsumer<AddStadiumCubit, AddStadiumState>(
+      listener: (context, state) {
+        if (state is AddStadiumSuccess) {
+          ToastService().showToast(
+            message: 'تمت إضافة الملعب بنجاح',
+
+            type: ToastType.success,
+          );
+          Navigator.pushReplacementNamed(context, '/login');
+        } else if (state is AddStadiumError) {
+          String msg = state.msg.trim();
+          if (!msg.endsWith('يا نجم')) {
+            msg = '$msg يا نجم';
+          }
+          ToastService().showToast(message: msg, type: ToastType.error);
+        }
+      },
+      builder: (context, state) {
+        return SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: CustomInput(
-                  text: 'اسم الملعب',
-                  controller: nameController,
-                  isObsecure: false,
-                  validator: ValidationBuilder(
-                    requiredMessage: "دخل اسم الملعب",
-                  ).required().build(),
+              Center(
+                child: Text(
+                  'ضيف ملعب',
+                  style: TextStyle(
+                    fontSize: getFontTitleSize(context) * 1.5,
+                    fontWeight: FontWeight.bold,
+                    color: CustomColors.secondary,
+                  ),
                 ),
               ),
-                      SizedBox(height: getVerticalSpace(context, 15)),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: CustomInput(
-                  text: 'وصف أو كلام عن الملعب',
-                  controller: desController,
-                  maxLines: 3,
-                  keyboardType: TextInputType.multiline,
-                  isObsecure: false,
-                  validator: ValidationBuilder(
-                    requiredMessage: "دخل اسم الملعب",
-                  ).required().build(),
+              SizedBox(height: getVerticalSpace(context, 30)),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomInput(
+                        text: 'اسم الملعب',
+                        controller: nameController,
+                        isObsecure: false,
+                        validator: ValidationBuilder(
+                          requiredMessage: "دخل اسم الملعب",
+                        ).required().build(),
+                      ),
+                    ),
+                    SizedBox(height: getVerticalSpace(context, 15)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomInput(
+                        text: 'وصف أو كلام عن الملعب',
+                        controller: desController,
+                        maxLines: 3,
+                        keyboardType: TextInputType.multiline,
+                        isObsecure: false,
+                        validator:
+                            ValidationBuilder(requiredMessage: "دخل وصف الملعب")
+                                .required()
+                                .minLength(
+                                  10,
+                                  "الوصف لازم يكون 10 حروف على الأقل",
+                                )
+                                .maxLength(
+                                  300,
+                                  "الوصف طويل جداً (الحد الأقصى 300 حرف)",
+                                )
+                                .build(),
+                      ),
+                    ),
+                    SizedBox(height: getVerticalSpace(context, 15)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomInput(
+                        text: 'سعر/ساعة',
+                        controller: priceController,
+                        isObsecure: false,
+                        validator:
+                            ValidationBuilder(
+                              requiredMessage: "دخل سعر الملعب",
+                            ).required().add((value) {
+                              final number = num.tryParse(value ?? '');
+                              if (number == null) return 'السعر لازم يكون رقم';
+                              return null;
+                            }).build(),
+                      ),
+                    ),
+                    SizedBox(height: getVerticalSpace(context, 15)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: GestureDetector(
+                        onTap: pickImagesAsMultipart,
+                        child: Container(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Colors.grey,
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "ضيف صور الملعب",
+                                style: TextStyle(
+                                  fontSize: getFontSubTitleSize(context),
+                                  color: CustomColors.secondary,
+                                ),
+                              ),
+                              Icon(
+                                base64Images.isEmpty
+                                    ? Icons.add_a_photo_outlined
+                                    : Icons.check_circle_outlined,
+                                color: base64Images.isEmpty
+                                    ? CustomColors.primary
+                                    : Colors.green,
+                                size: getIconWidth(context) * .9,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: getVerticalSpace(context, 20)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: TimeRangePicker(
+                        onTimeRangeSelectedFormatted: (start, end) {
+                          setState(() {
+                            startTime24 = start;
+                            endTime24 = end;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(height: getVerticalSpace(context, 20)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "مكان الملعب",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: CustomColors.secondary,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          LocationPicker(
+                            onLocationPicked: (lat, lng, address) {
+                              setState(() {
+                                latitude = lat;
+                                longitude = lng;
+                                locationText = address;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: getVerticalSpace(context, 20)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: state is AddStadiumLoading
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                color: CustomColors.primary,
+                              ),
+                            )
+                          : ElevatedButton(
+                              onPressed: submitStadium,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: CustomColors.primary,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 24,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text(
+                                "إضافة",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 }

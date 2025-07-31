@@ -59,41 +59,25 @@ class _MyFieldsState extends State<MyFields> {
                             ),
                             SizedBox(height: getVerticalSpace(context, 5)),
                             DatePickerRow(),
+                            SizedBox(height: getVerticalSpace(context, 10)),
                             Row(
                               children: [
-                                // Expanded(
-                                //   child: TextFormField(
-                                //     decoration: InputDecoration(
-                                //       hintText: 'الخصم',
-                                //       enabledBorder: const OutlineInputBorder(
-                                //         borderSide: BorderSide(
-                                //           color: CustomColors.primary,
-                                //         ),
-                                //       ),
-                                //       focusedBorder: const OutlineInputBorder(
-                                //         borderSide: BorderSide(
-                                //           color: Color(0xFF40513B),
-                                //           width: 2,
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
                                 Expanded(
                                   child: TextFormField(
                                     decoration: InputDecoration(
                                       hintText: 'الخصم',
+                                      hintStyle: TextStyle(fontSize: 14),
+                                      isDense: true,
                                       contentPadding: EdgeInsets.symmetric(
-                                        vertical: 6,
-                                        horizontal: 6,
+                                        vertical: 8,
+                                        horizontal: 30,
                                       ), // تقليل الارتفاع
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(
                                           12,
                                         ), // نفس الـ border radius
                                         borderSide: BorderSide(
-                                          color:
-                                              CustomColors.primary, // نفس اللون
+                                          color: Colors.grey, // نفس اللون
                                           width: 1.5, // تخانة الحدود
                                         ),
                                       ),
@@ -108,8 +92,7 @@ class _MyFieldsState extends State<MyFields> {
                                     ),
                                   ),
                                 ),
-
-                                SizedBox(width: 10),
+                                SizedBox(width: 15),
                                 Expanded(
                                   child: TextButton(
                                     onPressed: () {},
@@ -125,7 +108,7 @@ class _MyFieldsState extends State<MyFields> {
                             ),
                           ],
                         ),
-                        Padding(padding: EdgeInsets.only(top: 20)),
+                        Padding(padding: EdgeInsets.only(top: 15)),
                         Divider(indent: 10, endIndent: 10, color: Colors.grey),
                         GestureDetector(
                           child: Align(
@@ -167,7 +150,12 @@ class _MyFieldsState extends State<MyFields> {
                                                     context,
                                                   ).pop(); // Close dialog
                                                 },
-                                                child: Text('إلغاء'),
+                                                child: Text(
+                                                  'إلغاء',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
                                               ),
                                               TextButton(
                                                 onPressed: () {
