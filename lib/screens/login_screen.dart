@@ -71,33 +71,8 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: getVerticalSpace(context, 20)),
-              SafeArea(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/home');
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(width: getVerticalSpace(context, 20)),
-                      Text(
-                        AppLocalizations.of(context)!.skip,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(width: getHorizontalSpace(context, 12)),
-                      const Icon(
-                        Icons.arrow_forward_rounded,
-                        color: Colors.white,
-                      ),
-                      SizedBox(width: getHorizontalSpace(context, 20)),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: getVerticalSpace(context, 70)),
+              
+              SizedBox(height: getVerticalSpace(context, 140)),
               Padding(
                 padding: EdgeInsetsDirectional.only(
                   start: getHorizontalSpace(context, 30),

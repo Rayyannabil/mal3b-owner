@@ -14,7 +14,8 @@ class MyFields extends StatefulWidget {
 class _MyFieldsState extends State<MyFields> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -266,6 +267,7 @@ class _MyFieldsState extends State<MyFields> {
           ),
         ],
       ),
+    ),
     );
   }
 }

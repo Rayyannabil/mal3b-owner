@@ -11,6 +11,7 @@ import 'package:mal3b/logic/cubit/stadium_cubit.dart';
 import 'package:mal3b/screens/add_stadium.dart';
 import 'package:mal3b/screens/my_fields.dart';
 import 'package:mal3b/services/location_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,35 +22,58 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  // String _locationText = 'الموقع';
-  // final FlutterSecureStorage storage = const FlutterSecureStorage();
+  bool _isRequestingLocationPermission = false;
+  late List<Widget> _screens;
 
-  final List<Widget> _screens = const [AddStadium(), MyFields()];
+  Future<void> requestLocationPermission() async {
+    if (_isRequestingLocationPermission) return;
+    _isRequestingLocationPermission = true;
+
+    try {
+      var status = await Permission.location.status;
+
+      if (!status.isGranted) {
+        status = await Permission.location.request();
+
+        if (status.isDenied) {
+          // You can show a dialog here if needed
+          log('📍 Location permission denied.');
+        } else if (status.isPermanentlyDenied) {
+          log('📍 Location permission permanently denied. Opening settings...');
+          await openAppSettings();
+        }
+      } else {
+        log('📍 Location permission already granted.');
+      }
+    } catch (e) {
+      log('❌ Error requesting location permission: $e');
+    } finally {
+      _isRequestingLocationPermission = false;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+
+    // Request location permission on startup
+    requestLocationPermission();
+
+    // Initialize screens
+    _screens = [
+      AddStadium(
+        onSuccess: () {
+          setState(() {
+            _currentIndex = 1;
+          });
+        },
+      ),
+      const MyFields(),
+    ];
+
+    // Save notification token
     BlocProvider.of<NotificationCubit>(context).saveFCM();
   }
-
-  // Future<void> _determinePosition() async {
-  //   try {
-  //     String address = await LocationService().determinePosition();
-  //     final location = await LocationService().getLongAndLat();
-
-  //     setState(() => _locationText = address);
-
-  //     context.read<StadiumCubit>().fetchAllData(
-  //           location.latitude,
-  //           location.longitude,
-  //         );
-  //   } catch (e) {
-  //     log('Error determining position: $e');
-  //     setState(() {
-  //       _locationText = 'الموقع غير معروف';
-  //     });
-  //   }
-  // }
 
   Widget _buildHeader() {
     return Directionality(
@@ -114,7 +138,10 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedItemColor: CustomColors.primary,
         unselectedItemColor: Colors.grey.withOpacity(0.5),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'إضافة ملعب'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'إضافة ملعب',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.stadium),
             label: 'الملاعب',

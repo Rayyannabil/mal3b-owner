@@ -15,7 +15,9 @@ import 'package:mal3b/logic/cubit/add_stadium_cubit.dart';
 import 'package:mal3b/services/toast_service.dart';
 
 class AddStadium extends StatefulWidget {
-  const AddStadium({super.key});
+  final VoidCallback? onSuccess;
+
+  const AddStadium({super.key, this.onSuccess});
 
   @override
   State<AddStadium> createState() => _AddStadiumState();
@@ -42,6 +44,14 @@ class _AddStadiumState extends State<AddStadium> {
 
     if (images == null || images.isEmpty) return;
 
+    if (images.length > 6) {
+      ToastService().showToast(
+        message: 'يمكنك اختيار 6 صور فقط',
+        type: ToastType.error,
+      );
+      return;
+    }
+    
     List<String> base64List = [];
     List<MultipartFile> multipartFiles = [];
 
@@ -49,11 +59,9 @@ class _AddStadiumState extends State<AddStadium> {
       final file = File(image.path);
       final bytes = await file.readAsBytes();
 
-      // Base64 for preview or UI
       final base64 = base64Encode(bytes);
       base64List.add(base64);
 
-      // Multipart file for backend
       final multipartFile = await MultipartFile.fromFile(
         image.path,
         filename: image.name,
@@ -61,7 +69,6 @@ class _AddStadiumState extends State<AddStadium> {
       multipartFiles.add(multipartFile);
     }
 
-    // Store multipartFiles in a variable for later submission
     selectedMultipartImages = multipartFiles;
 
     setState(() {
@@ -76,62 +83,37 @@ class _AddStadiumState extends State<AddStadium> {
           message: 'الرجاء اختيار وقت العمل',
           type: ToastType.error,
         );
-
         return;
       }
+
       if (latitude == null || longitude == null) {
         ToastService().showToast(
           message: 'الرجاء تحديد موقع الملعب',
           type: ToastType.error,
         );
-
         return;
       }
+
       if (base64Images.isEmpty) {
         ToastService().showToast(
           message: 'الرجاء إضافة صور للملعب',
           type: ToastType.error,
         );
-
         return;
       }
 
-      final stadiumData = {
-        "name": nameController.text,
-        "description": desController.text,
-        "price": priceController.text,
-        "images": selectedMultipartImages,
-        "from": startTime24,
-        "to": endTime24,
-
-        "location": locationText,
-        "latitude": latitude,
-        "longitude": longitude,
-      };
-
-      print("🎯 Stadium Data:");
-      print("Name: ${nameController.text}");
-      print("Description: ${desController.text}");
-      print("Price: ${priceController.text}");
-      print(
-        "Images: ${selectedMultipartImages.map((f) => f.filename).toList()}",
-      );
-      print("From: $startTime24");
-      print("To: $endTime24");
-      print("Location: ($latitude, $longitude)");
-
-      // Example:
       context.read<AddStadiumCubit>().addStadium(
-        name: nameController.text.trim(),
-        des: desController.text.trim(),
-        price: double.parse(priceController.text),
-        selectedMultipartImages: selectedMultipartImages,
-        startTime24: startTime24!,
-        endTime24: endTime24!,
-        latitude: latitude!,
-        longitude: longitude!,
-        // locationText: locationText ?? '',
-      );
+            name: nameController.text.trim(),
+            des: desController.text.trim(),
+            price: double.parse(priceController.text),
+            selectedMultipartImages: selectedMultipartImages,
+            startTime24: startTime24!,
+            endTime24: endTime24!,
+            latitude: latitude!,
+            longitude: longitude!,
+            location: locationText!
+            
+          );
     }
   }
 
@@ -150,10 +132,9 @@ class _AddStadiumState extends State<AddStadium> {
         if (state is AddStadiumSuccess) {
           ToastService().showToast(
             message: 'تمت إضافة الملعب بنجاح',
-
             type: ToastType.success,
           );
-          Navigator.pushReplacementNamed(context, '/login');
+          widget.onSuccess?.call();
         } else if (state is AddStadiumError) {
           String msg = state.msg.trim();
           if (!msg.endsWith('يا نجم')) {
@@ -223,14 +204,13 @@ class _AddStadiumState extends State<AddStadium> {
                         text: 'سعر/ساعة',
                         controller: priceController,
                         isObsecure: false,
-                        validator:
-                            ValidationBuilder(
-                              requiredMessage: "دخل سعر الملعب",
-                            ).required().add((value) {
-                              final number = num.tryParse(value ?? '');
-                              if (number == null) return 'السعر لازم يكون رقم';
-                              return null;
-                            }).build(),
+                        validator: ValidationBuilder(
+                          requiredMessage: "دخل سعر الملعب",
+                        ).required().add((value) {
+                          final number = num.tryParse(value ?? '');
+                          if (number == null) return 'السعر لازم يكون رقم';
+                          return null;
+                        }).build(),
                       ),
                     ),
                     SizedBox(height: getVerticalSpace(context, 15)),
