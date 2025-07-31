@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mal3b/components/custom_button.dart';
-import 'package:mal3b/components/custom_input_component.dart';
+import 'package:mal3b/components/date_picker.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
 
@@ -46,7 +45,7 @@ class _MyFieldsState extends State<MyFields> {
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Padding(padding: EdgeInsetsGeometry.only(top: 20)),
+                            Padding(padding: EdgeInsets.only(top: 20)),
                             Align(
                               alignment: Alignment.centerRight,
                               child: Text(
@@ -62,24 +61,54 @@ class _MyFieldsState extends State<MyFields> {
                             DatePickerRow(),
                             Row(
                               children: [
+                                // Expanded(
+                                //   child: TextFormField(
+                                //     decoration: InputDecoration(
+                                //       hintText: 'الخصم',
+                                //       enabledBorder: const OutlineInputBorder(
+                                //         borderSide: BorderSide(
+                                //           color: CustomColors.primary,
+                                //         ),
+                                //       ),
+                                //       focusedBorder: const OutlineInputBorder(
+                                //         borderSide: BorderSide(
+                                //           color: Color(0xFF40513B),
+                                //           width: 2,
+                                //         ),
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
                                 Expanded(
                                   child: TextFormField(
                                     decoration: InputDecoration(
                                       hintText: 'الخصم',
-                                      enabledBorder: const OutlineInputBorder(
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: 6,
+                                        horizontal: 6,
+                                      ), // تقليل الارتفاع
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          12,
+                                        ), // نفس الـ border radius
                                         borderSide: BorderSide(
-                                          color: Colors.grey,
+                                          color:
+                                              CustomColors.primary, // نفس اللون
+                                          width: 1.5, // تخانة الحدود
                                         ),
                                       ),
-                                      focusedBorder: const OutlineInputBorder(
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide(
-                                          color: Color(0xFF40513B),
-                                          width: 2,
+                                          color: CustomColors.primary,
+                                          width:
+                                              2, // نفس التخانة لما يكون focused
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
+
                                 SizedBox(width: 10),
                                 Expanded(
                                   child: TextButton(
@@ -96,7 +125,7 @@ class _MyFieldsState extends State<MyFields> {
                             ),
                           ],
                         ),
-                        Padding(padding: EdgeInsetsGeometry.only(top: 20)),
+                        Padding(padding: EdgeInsets.only(top: 20)),
                         Divider(indent: 10, endIndent: 10, color: Colors.grey),
                         GestureDetector(
                           child: Align(
@@ -249,78 +278,6 @@ class _MyFieldsState extends State<MyFields> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class DatePickerRow extends StatefulWidget {
-  @override
-  _DatePickerRowState createState() => _DatePickerRowState();
-}
-
-class _DatePickerRowState extends State<DatePickerRow> {
-  DateTime? fromDate;
-  DateTime? toDate;
-
-  Future<void> _selectDate(BuildContext context, bool isFromDate) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: isFromDate
-          ? fromDate ?? DateTime.now()
-          : toDate ?? DateTime.now(),
-      firstDate: DateTime(2025),
-      lastDate: DateTime(2100),
-      locale: const Locale('ar'), // Optional: Arabic localization
-    );
-    if (picked != null) {
-      setState(() {
-        if (isFromDate) {
-          fromDate = picked;
-        } else {
-          toDate = picked;
-        }
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: GestureDetector(
-            onTap: () => _selectDate(context, true),
-            child: AbsorbPointer(
-              child: TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'من',
-                  hintText: fromDate == null
-                      ? 'اختر التاريخ'
-                      : '${fromDate!.year}-${fromDate!.month.toString().padLeft(2, '0')}-${fromDate!.day.toString().padLeft(2, '0')}',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(width: 25),
-        Expanded(
-          child: GestureDetector(
-            onTap: () => _selectDate(context, false),
-            child: AbsorbPointer(
-              child: TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'إلى',
-                  hintText: toDate == null
-                      ? 'اختر التاريخ'
-                      : '${toDate!.year}-${toDate!.month.toString().padLeft(2, '0')}-${toDate!.day.toString().padLeft(2, '0')}',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
