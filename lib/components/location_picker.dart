@@ -35,7 +35,7 @@ Future<void> _determinePosition() async {
 widget.onLocationPicked(position.latitude, position.longitude, address);
   } catch (e) {
     setState(() {
-      _locationText = 'فشل في جلب الموقع';
+      _locationText = 'فشل في جلب الموقع فعل إذن الموقع';
     });
   }
 }

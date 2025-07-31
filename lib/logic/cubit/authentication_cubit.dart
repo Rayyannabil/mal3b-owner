@@ -18,9 +18,11 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     required String password,
   }) async {
     Dio dioAuth = Dio();
+        final accessToken = await storage.read(key: "accessToken");
 
     emit(AuthenticationLoading());
-    dioAuth.options.headers = {'content-type': 'application/json'};
+    dioAuth.options.headers = {'content-type': 'application/json',
+    "Authorization": "Bearer $accessToken",};
     try {
       final response = await dioAuth.post(
         "${DioClient.baseUrl}owner/auth/signup",
@@ -57,9 +59,14 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
   void login({required String phone, required String password}) async {
     Dio dioAuth = DioClient().createCleanDio();
+    final accessToken = await storage.read(key: "accessToken");
 
     emit(AuthenticationLoading());
-    dioAuth.options.headers = {'content-type': 'application/json'};
+    dioAuth.options.headers = {
+      'content-type': 'application/json',
+      "Authorization": "Bearer $accessToken",
+    };
+
     try {
       final response = await dioAuth.post(
         "${DioClient.baseUrl}owner/auth/login",

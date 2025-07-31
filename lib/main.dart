@@ -12,10 +12,12 @@ import 'package:mal3b/logic/cubit/add_stadium_cubit.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
 import 'package:mal3b/logic/cubit/notification_cubit.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
+import 'package:mal3b/screens/add_stadium.dart';
 import 'package:mal3b/screens/edit_profile_screen.dart';
 import 'package:mal3b/screens/forgot_password_screen.dart';
 import 'package:mal3b/screens/home_screen.dart';
 import 'package:mal3b/screens/login_screen.dart';
+import 'package:mal3b/screens/my_fields.dart';
 import 'package:mal3b/screens/otp_screen.dart';
 import 'package:mal3b/screens/payment_screen.dart';
 import 'package:mal3b/screens/profile_screen.dart';
@@ -121,6 +123,10 @@ class Mal3bApp extends StatelessWidget {
               return MaterialPageRoute(builder: (_) => const HomeScreen());
             case '/profile':
               return MaterialPageRoute(builder: (_) => ProfileScreen());
+            case '/add-stadium':
+              return MaterialPageRoute(builder: (_) => AddStadium());
+            case '/my-fields':
+              return MaterialPageRoute(builder: (_) => MyFields());
             case '/notifications':
               return MaterialPageRoute(
                 builder: (_) => const NotificationsScreen(),

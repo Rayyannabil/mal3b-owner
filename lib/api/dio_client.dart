@@ -6,7 +6,7 @@ class DioClient {
   static final DioClient _instance = DioClient._internal();
   factory DioClient() => _instance;
 
-  static const String baseUrl = "http://192.168.1.9:8080/";
+  static const String baseUrl = "http://192.168.1.61:8080/";
 
   late Dio dio;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
@@ -14,9 +14,9 @@ class DioClient {
   DioClient._internal() {
     final baseOptions = BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 20),
-      receiveTimeout: const Duration(seconds: 20),
-      sendTimeout: const Duration(seconds: 20),
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      sendTimeout: const Duration(seconds: 10),
       headers: {
         'Accept': 'application/json',
         // 'Content-Type': 'application/json',
@@ -44,9 +44,9 @@ class DioClient {
                 final refreshDio = Dio(
                   BaseOptions(
                     baseUrl: baseUrl,
-                    connectTimeout: const Duration(seconds: 20),
-                    receiveTimeout: const Duration(seconds: 20),
-                    sendTimeout: const Duration(seconds: 20),
+                    connectTimeout: const Duration(seconds: 10),
+                    receiveTimeout: const Duration(seconds: 10),
+                    sendTimeout: const Duration(seconds: 10),
                     headers: {
                       'Accept': 'application/json',
                       // 'Content-Type': 'application/json',
