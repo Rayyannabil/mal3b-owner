@@ -21,9 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  // String _locationText = 'الموقع';
-  // final FlutterSecureStorage storage = const FlutterSecureStorage();
-  
+
 
   final List<Widget> _screens = const [
    
@@ -35,29 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // _determinePosition();
     BlocProvider.of<NotificationCubit>(context).saveFCM();
   }
 
-
-  // Future<void> _determinePosition() async {
-  //   try {
-  //     String address = await LocationService().determinePosition();
-  //     final location = await LocationService().getLongAndLat();
-
-  //     setState(() => _locationText = address);
-
-  //     context.read<StadiumCubit>().fetchAllData(
-  //           location.latitude,
-  //           location.longitude,
-  //         );
-  //   } catch (e) {
-  //     log('Error determining position: $e');
-  //     setState(() {
-  //       _locationText = 'الموقع غير معروف';
-  //     });
-  //   }
-  // }
 
   Widget _buildHeader() {
     return Directionality(
@@ -123,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
         selectedItemColor: CustomColors.primary,
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.grey.withOpacity(0.5),
         items: const [
          
           
