@@ -78,42 +78,29 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildHeader() {
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: Container(
-              height: 110,
-              width: getProfileImageWidth(context) * 1.35,
-              decoration: const BoxDecoration(
-                color: CustomColors.primary,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50),
-                ),
-              ),
-              child: SafeArea(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed('/notifications');
-                      },
-                      child: SvgPicture.asset(
-                        "assets/images/notification.svg",
-                        width: getProfileImageWidth(context),
-                        height: getIconWidth(context) * 1.2,
-                      ),
-                    ),
-                  ],
-                ),
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Container(
+          height: 100, // Reduced height to fit small devices better
+          width: 200,
+          decoration: const BoxDecoration(
+            color: CustomColors.primary,
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50)),
+          ),
+          child: Center(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed('/notifications');
+              },
+              child: SvgPicture.asset(
+                "assets/images/notification.svg",
+                width: getIconWidth(context),
+                height: getIconWidth(context),
+                fit: BoxFit.contain,
               ),
             ),
           ),
-          SizedBox(width: getHorizontalSpace(context, 10)),
-        ],
+        ),
       ),
     );
   }
@@ -125,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           _buildHeader(),
-          SizedBox(height: getVerticalSpace(context, 60)),
+          SizedBox(height: getVerticalSpace(context, 50)),
           Expanded(
             child: IndexedStack(index: _currentIndex, children: _screens),
           ),

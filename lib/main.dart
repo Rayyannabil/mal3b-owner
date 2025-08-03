@@ -12,6 +12,7 @@ import 'package:mal3b/logic/cubit/add_stadium_cubit.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
 import 'package:mal3b/logic/cubit/notification_cubit.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
+import 'package:mal3b/screens/bookings_screen.dart';
 import 'package:mal3b/screens/add_stadium.dart';
 import 'package:mal3b/screens/edit_profile_screen.dart';
 import 'package:mal3b/screens/forgot_password_screen.dart';
@@ -63,7 +64,12 @@ void main() async {
       : '/home';
 
   runApp(
-    NotificationListenerWrapper(child: Mal3bApp(initialRoute: initialRoute)),
+    DevicePreview(
+      enabled: true, // set to false in release mode if needed
+      builder: (context) => NotificationListenerWrapper(
+        child: Mal3bApp(initialRoute: initialRoute),
+      ),
+    ),
   );
 }
 
@@ -82,7 +88,8 @@ class Mal3bApp extends StatelessWidget {
         // Add other cubits here
       ],
       child: MaterialApp(
-        builder: DevicePreview.appBuilder,
+        builder: (context, child) =>
+            DevicePreview.appBuilder(context, child), // ✅ Proper usage,
         navigatorKey: ToastService().navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -114,7 +121,6 @@ class Mal3bApp extends StatelessWidget {
         initialRoute: initialRoute,
         onGenerateRoute: (settings) {
           switch (settings.name) {
-           
             case '/login':
               return MaterialPageRoute(builder: (_) => const LoginScreen());
             case '/signup':
@@ -148,6 +154,8 @@ class Mal3bApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const ProfileScreenSkip(),
               );
+            case '/bookings':
+              return MaterialPageRoute(builder: (_) => const BookingsScreen());
             case '/otp-screen':
               final args = settings.arguments as Map<String, String>;
               return MaterialPageRoute(
