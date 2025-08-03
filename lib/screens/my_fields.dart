@@ -115,9 +115,14 @@ class _MyFieldsState extends State<MyFields> {
                             alignment: Alignment.centerRight,
                             child: Padding(
                               padding: const EdgeInsets.all(5),
-                              child: Text(
-                                'الحجوزات',
-                                style: TextStyle(color: CustomColors.primary),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed('/bookings');
+                                },
+                                child: Text(
+                                  'الحجوزات',
+                                  style: TextStyle(color: CustomColors.primary),
+                                ),
                               ),
                             ),
                           ),
