@@ -179,6 +179,7 @@ class _MyFieldsState extends State<MyFields> {
                                       );
                                     },
                                     child: Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
                                           'حذف ملعب',
@@ -187,7 +188,7 @@ class _MyFieldsState extends State<MyFields> {
                                         SizedBox(
                                           width: getHorizontalSpace(
                                             context,
-                                            170,
+                                            150,
                                           ),
                                         ),
                                         Icon(Icons.delete, color: Colors.red),

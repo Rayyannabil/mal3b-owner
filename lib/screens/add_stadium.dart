@@ -76,7 +76,7 @@ class _AddStadiumState extends State<AddStadium> {
     });
   }
 
-  void submitStadium() {
+  void submitStadium() async  {
     if (_formKey.currentState!.validate()) {
       if (startTime24 == null || endTime24 == null) {
         ToastService().showToast(
@@ -102,7 +102,7 @@ class _AddStadiumState extends State<AddStadium> {
         return;
       }
 
-      context.read<AddStadiumCubit>().addStadium(
+      await context.read<AddStadiumCubit>().addStadium(
             name: nameController.text.trim(),
             des: desController.text.trim(),
             price: double.parse(priceController.text),
@@ -114,6 +114,19 @@ class _AddStadiumState extends State<AddStadium> {
             location: locationText!
             
           );
+           nameController.clear(); 
+           desController.clear(); 
+           priceController.clear(); 
+          setState(() {
+            selectedMultipartImages = [];
+
+           startTime24 = "";
+           endTime24 = "";
+           locationText = "";
+          });
+
+          print(selectedMultipartImages);
+          print(locationText);
     }
   }
 
@@ -313,7 +326,7 @@ class _AddStadiumState extends State<AddStadium> {
                                 ),
                               ),
                               child: const Text(
-                                "إضافة",
+                                "إضافة", 
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,

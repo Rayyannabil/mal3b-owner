@@ -13,6 +13,7 @@ class AddStadiumCubit extends Cubit<AddStadiumState> {
 
   final Dio dio = DioClient().dio;
   final FlutterSecureStorage storage = const FlutterSecureStorage();
+  
 
   String _normalizeMessage(dynamic message) {
     if (message is List) {
@@ -35,6 +36,7 @@ class AddStadiumCubit extends Cubit<AddStadiumState> {
     required double longitude,
     required String location,
   }) async {
+    final accessToken = await storage.read(key: "accessToken");
     emit(AddStadiumLoading());
 
     try {
@@ -42,7 +44,6 @@ class AddStadiumCubit extends Cubit<AddStadiumState> {
       final freshImages = selectedMultipartImages
           .map((file) => file.clone())
           .toList();
-      log("aa");
 
       Future<MultipartFile> compressAndConvert(XFile file) async {
         final result = await FlutterImageCompress.compressWithFile(
@@ -77,35 +78,32 @@ class AddStadiumCubit extends Cubit<AddStadiumState> {
         "address": location,
       });
 
-      log(formData.toString());
       final accessToken = await storage.read(key: "accessToken");
-
+      log(accessToken.toString());
       dio.options.headers = {"Authorization": "Bearer $accessToken"};
       // Remove manual header; Dio will auto-set multipart/form-data.
       final response = await dio.post(
         "${DioClient.baseUrl}owner/add-field",
         data: formData,
       );
-      log("aa");
+      print(accessToken);
+
       log(response.toString());
       log(response.statusCode.toString());
       if (response.statusCode == 201 || response.statusCode == 200) {
-        await storage.write(
+        await storage.read(
           key: "accessToken",
-          value: response.data['accessToken'],
         );
-        await storage.write(
+        await storage.read(
           key: "refreshToken",
-          value: response.data['refreshToken'],
         );
+        
         emit(AddStadiumSuccess(msg: "تم إضافة ملعب بنجاح"));
-        log("aa");
       } else {
         final msg = _normalizeMessage(
           response.data['message'] ?? "فيه حاجة غلط حصلت",
         );
         emit(AddStadiumError(msg: msg));
-        log("aa");
       }
     } on DioException catch (e) {
       if (e.response != null && e.response?.data != null) {
