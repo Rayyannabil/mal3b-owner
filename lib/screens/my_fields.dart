@@ -246,9 +246,9 @@ class _MyFieldsState extends State<MyFields> {
                                                     return AlertDialog(
                                                       backgroundColor:
                                                           Colors.white,
-                                                      title: Text('تحذير'),
+                                                      title: Text('خطأ'),
                                                       content: Text(
-                                                        'هل أنت متأكد أنك تريد حذف الملعب؟',
+                                                        'لا يمكن حذف الملعب ، يوجد حجوزات.',
                                                       ),
                                                       actions: [
                                                         TextButton(
@@ -262,20 +262,6 @@ class _MyFieldsState extends State<MyFields> {
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.black,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                              context,
-                                                            ).pop();
-                                                            print('Deleted');
-                                                          },
-                                                          child: Text(
-                                                            'حذف',
-                                                            style: TextStyle(
-                                                              color: Colors.red,
                                                             ),
                                                           ),
                                                         ),
