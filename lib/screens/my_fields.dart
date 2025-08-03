@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -16,11 +18,11 @@ class MyFields extends StatefulWidget {
 
 class _MyFieldsState extends State<MyFields> {
   String formatTimeArabic(String timeString) {
-  final inputFormat = DateFormat("HH:mm:ss");
-  final outputFormat = DateFormat.jm("en"); 
-  final time = inputFormat.parse(timeString);
-  return outputFormat.format(time);
-}
+    final inputFormat = DateFormat("HH:mm:ss");
+    final outputFormat = DateFormat.jm("en");
+    final time = inputFormat.parse(timeString);
+    return outputFormat.format(time);
+  }
 
   @override
   void initState() {
@@ -46,264 +48,298 @@ class _MyFieldsState extends State<MyFields> {
               ),
             ),
             SizedBox(height: getVerticalSpace(context, 20)),
-            GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40),
+            BlocBuilder<StadiumCubit, StadiumState>(
+              builder: (context, state) {
+                if (state is StadiumLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: CustomColors.primary,
                     ),
-                    content: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(padding: EdgeInsets.only(top: 20)),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  'ضيف عرض',
-                                  style: TextStyle(
-                                    color: CustomColors.primary,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                  );
+                } else if (state is StadiumLoaded) {
+                  final stadiums = state.stadiums;
+
+                  if (stadiums.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "لا توجد ملاعب حتى الآن",
+                        style: TextStyle(
+                          fontFamily: "MadaniArabic",
+                          fontSize: 15,
+                          color: Colors.red,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: stadiums.length,
+                    itemBuilder: (context, index) {
+                      final stadium = stadiums[index];
+
+                      final name = stadium['name'] ?? '';
+                      final id = stadium['id'] ?? '';
+                      final amprice = stadium['price'] ?? '';
+                      final pmprice = stadium['night_price'] ?? '';
+                      final from = formatTimeArabic(stadium['from_time']) ?? '';
+                      final to = formatTimeArabic(stadium['to_time']) ?? '';
+
+                      log(id.toString());
+
+                      return GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(40),
                               ),
-                              SizedBox(height: getVerticalSpace(context, 5)),
-                              DatePickerRow(),
-                              SizedBox(height: getVerticalSpace(context, 10)),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                        hintText: 'الخصم',
-                                        hintStyle: TextStyle(fontSize: 14),
-                                        isDense: true,
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 8,
-                                          horizontal: 30,
-                                        ), // تقليل الارتفاع
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ), // نفس الـ border radius
-                                          borderSide: BorderSide(
-                                            color: Colors.grey, // نفس اللون
-                                            width: 1.5, // تخانة الحدود
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          borderSide: BorderSide(
-                                            color: CustomColors.primary,
-                                            width: 2,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 15),
-                                  Expanded(
-                                    child: TextButton(
-                                      onPressed: () {},
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(padding: EdgeInsets.only(top: 20)),
+                                    Align(
+                                      alignment: Alignment.centerRight,
                                       child: Text(
-                                        'إضافة خصم',
+                                        'ضيف عرض',
                                         style: TextStyle(
                                           color: CustomColors.primary,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Padding(padding: EdgeInsets.only(top: 15)),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                            color: Colors.grey,
-                          ),
-                          GestureDetector(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(
-                                      context,
-                                    ).pushNamed('/bookings');
-                                  },
-                                  child: Text(
-                                    'الحجوزات',
-                                    style: TextStyle(
-                                      color: CustomColors.primary,
+                                    SizedBox(
+                                      height: getVerticalSpace(context, 5),
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            indent: 10,
-                            endIndent: 10,
-                            color: Colors.grey,
-                          ),
-                          GestureDetector(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              backgroundColor: Colors.white,
-                                              title: Text('تحذير'),
-                                              content: Text(
-                                                'هل أنت متأكد أنك تريد حذف الملعب؟',
+                                    DatePickerRow(),
+                                    SizedBox(
+                                      height: getVerticalSpace(context, 10),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: TextFormField(
+                                            decoration: InputDecoration(
+                                              hintText: 'الخصم',
+                                              hintStyle: TextStyle(
+                                                fontSize: 14,
                                               ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(
-                                                      context,
-                                                    ).pop(); // Close dialog
-                                                  },
-                                                  child: Text(
-                                                    'إلغاء',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                    ),
+                                              isDense: true,
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                    vertical: 8,
+                                                    horizontal: 30,
                                                   ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                borderSide: BorderSide(
+                                                  color: Colors.grey,
+                                                  width: 1.5,
                                                 ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(
-                                                      context,
-                                                    ).pop(); // Close dialog
-                                                    // Put delete logic here
-                                                    print('Deleted');
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                borderSide: BorderSide(
+                                                  color: CustomColors.primary,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 15),
+                                        Expanded(
+                                          child: TextButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    title: Text(
+                                                      'لسا شغالين عليها!',
+                                                    ),
+                                                    content: Text(
+                                                      'سيتم توفير هذه الخدمه قريبًا.',
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pop();
+                                                        },
+                                                        child: Text(
+                                                          'إلغاء',
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            child: Text(
+                                              'إضافة خصم',
+                                              style: TextStyle(
+                                                color: CustomColors.primary,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(padding: EdgeInsets.only(top: 15)),
+                                    Divider(
+                                      indent: 10,
+                                      endIndent: 10,
+                                      color: Colors.grey,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).pushNamed(
+                                              '/bookings',
+                                              arguments: id,
+                                            );
+                                          },
+                                          child: Text(
+                                            'الحجوزات',
+                                            style: TextStyle(
+                                              color: CustomColors.primary,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Divider(
+                                      indent: 10,
+                                      endIndent: 10,
+                                      color: Colors.grey,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return AlertDialog(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      title: Text('تحذير'),
+                                                      content: Text(
+                                                        'هل أنت متأكد أنك تريد حذف الملعب؟',
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                              context,
+                                                            ).pop();
+                                                          },
+                                                          child: Text(
+                                                            'إلغاء',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                              context,
+                                                            ).pop();
+                                                            print('Deleted');
+                                                          },
+                                                          child: Text(
+                                                            'حذف',
+                                                            style: TextStyle(
+                                                              color: Colors.red,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
                                                   },
-                                                  child: Text(
-                                                    'حذف',
+                                                );
+                                              },
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    'حذف ملعب',
                                                     style: TextStyle(
                                                       color: Colors.red,
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            'حذف ملعب',
-                                            style: TextStyle(color: Colors.red),
-                                          ),
-                                          SizedBox(
-                                            width: getHorizontalSpace(
-                                              context,
-                                              150,
+                                                  SizedBox(
+                                                    width: getHorizontalSpace(
+                                                      context,
+                                                      150,
+                                                    ),
+                                                  ),
+                                                  Icon(
+                                                    Icons.delete,
+                                                    color: Colors.red,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          Icon(Icons.delete, color: Colors.red),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
+                              actions: [
+                                Center(
+                                  child: CustomButton(
+                                    bgColor: CustomColors.primary,
+                                    fgColor: CustomColors.white,
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    text: Text('إغلاق'),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      Center(
-                        child: CustomButton(
-                          bgColor: CustomColors.primary,
-                          fgColor: CustomColors.white,
-                          onPressed: () => Navigator.of(context).pop(),
-                          text: Text('إغلاق'),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              child: BlocBuilder<StadiumCubit, StadiumState>(
-                builder: (context, state) {
-                  if (state is StadiumLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: CustomColors.primary,
-                      ),
-                    );
-                  } else if (state is StadiumLoaded) {
-                    final stadiums = state.stadiums;
-
-                    if (stadiums.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          "لا توجد ملاعب حتى الآن",
-                          style: TextStyle(
-                            fontFamily: "MadaniArabic",
-                            fontSize: 15,
-                            color: Colors.red,
-                          ),
-                        ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      shrinkWrap:
-                          true, // يجعل ListView تأخذ فقط المساحة المطلوبة
-                      physics:
-                          NeverScrollableScrollPhysics(), // يمنع التمرير داخلها لأنها داخل SingleChildScrollView
-                      itemCount: stadiums.length,
-
-                      itemBuilder: (context, index) {
-                        
-                        final stadium = stadiums[index];
-
-                        final name = stadium['name'] ?? '';
-                        final amprice = stadium['price'] ?? '';
-                        final pmprice = stadium['night_price'] ?? '';
-                        final from = formatTimeArabic((stadium['from_time'])) ?? '';
-                        final to = formatTimeArabic(stadium['to_time']) ?? '';
-
-                        return Container(
+                          );
+                        },
+                        child: Container(
                           margin: EdgeInsets.symmetric(
                             vertical: 8,
                             horizontal: 16,
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
-
                             color: CustomColors.primary,
                           ),
                           child: ListTile(
                             contentPadding: EdgeInsets.all(15),
                             title: Text(
-                              'ملعب ${name}',
+                              'ملعب $name',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -313,13 +349,12 @@ class _MyFieldsState extends State<MyFields> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: getVerticalSpace(context, 10)),
-
                                 Text(
-                                  '${amprice} جنيه / الساعة صباحًا',
+                                  '$amprice جنيه / الساعة صباحًا',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 Text(
-                                  '${pmprice} جنيه / الساعة مساء',
+                                  '$pmprice جنيه / الساعة مساء',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 SizedBox(height: getVerticalSpace(context, 10)),
@@ -327,7 +362,7 @@ class _MyFieldsState extends State<MyFields> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'من: ${from}',
+                                      'من: $from',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
@@ -337,7 +372,7 @@ class _MyFieldsState extends State<MyFields> {
                                       width: getHorizontalSpace(context, 50),
                                     ),
                                     Text(
-                                      'إلى: ${to}',
+                                      'إلى: $to',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
@@ -349,24 +384,24 @@ class _MyFieldsState extends State<MyFields> {
                             ),
                             textColor: Colors.white,
                           ),
-                        );
-                      },
-                    );
-                  } else if (state is StadiumError) {
-                    return Center(
-                      child: Text(
-                        state.msg,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: getFontTitleSize(context),
-                          fontWeight: FontWeight.bold,
                         ),
+                      );
+                    },
+                  );
+                } else if (state is StadiumError) {
+                  return Center(
+                    child: Text(
+                      state.msg,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: getFontTitleSize(context),
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
             ),
           ],
         ),

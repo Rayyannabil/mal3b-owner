@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:mal3b/l10n/app_localizations.dart';
 import 'package:mal3b/logic/cubit/add_stadium_cubit.dart';
 import 'package:mal3b/logic/cubit/authentication_cubit.dart';
+import 'package:mal3b/logic/cubit/bookings_cubit.dart';
 import 'package:mal3b/logic/cubit/notification_cubit.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
 import 'package:mal3b/screens/bookings_screen.dart';
@@ -64,10 +65,7 @@ void main() async {
       : '/home';
 
   runApp(
-   NotificationListenerWrapper(
-        child: Mal3bApp(initialRoute: initialRoute),
-      ),
-   
+    NotificationListenerWrapper(child: Mal3bApp(initialRoute: initialRoute)),
   );
 }
 
@@ -83,6 +81,7 @@ class Mal3bApp extends StatelessWidget {
         BlocProvider(create: (_) => StadiumCubit()),
         BlocProvider(create: (_) => NotificationCubit()),
         BlocProvider(create: (_) => AddStadiumCubit()),
+        BlocProvider(create: (_) => BookingsCubit()),
         // Add other cubits here
       ],
       child: MaterialApp(
@@ -153,7 +152,8 @@ class Mal3bApp extends StatelessWidget {
                 builder: (_) => const ProfileScreenSkip(),
               );
             case '/bookings':
-              return MaterialPageRoute(builder: (_) => const BookingsScreen());
+              final id = settings.arguments as String;
+              return MaterialPageRoute(builder: (_) => BookingsScreen(id: id));
             case '/otp-screen':
               final args = settings.arguments as Map<String, String>;
               return MaterialPageRoute(
