@@ -28,8 +28,10 @@ class AddStadiumCubit extends Cubit<AddStadiumState> {
   Future<void> addStadium({
     required String name,
     required String des,
-    required double price,
+    required double amprice,
+    required double pmprice,
     required List<MultipartFile> selectedMultipartImages,
+    required String nightTime,
     required String startTime24,
     required String endTime24,
     required double latitude,
@@ -69,8 +71,10 @@ class AddStadiumCubit extends Cubit<AddStadiumState> {
       final formData = FormData.fromMap({
         "name": name,
         "description": des,
-        "price": price,
-        "images": freshImages, // Use fresh instances here
+        "price": amprice,
+        "night_price": pmprice,
+        "images": freshImages,
+        "night_time":nightTime,
         "from": startTime24,
         "to": endTime24,
         "longitude": longitude,

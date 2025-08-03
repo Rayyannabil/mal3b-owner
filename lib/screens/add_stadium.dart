@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:mal3b/components/custom_input_component.dart';
 import 'package:mal3b/components/location_picker.dart';
+import 'package:mal3b/components/single_time_picker.dart';
 import 'package:mal3b/components/time_picker.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
@@ -27,11 +28,12 @@ class _AddStadiumState extends State<AddStadium> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController desController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
+  final TextEditingController ampriceController = TextEditingController();
+  final TextEditingController pmpriceController = TextEditingController();
 
+  String? nightTime;
   List<String> base64Images = [];
   List<MultipartFile> selectedMultipartImages = [];
-
   String? startTime24;
   String? endTime24;
   double? latitude;
@@ -51,7 +53,7 @@ class _AddStadiumState extends State<AddStadium> {
       );
       return;
     }
-    
+
     List<String> base64List = [];
     List<MultipartFile> multipartFiles = [];
 
@@ -76,7 +78,7 @@ class _AddStadiumState extends State<AddStadium> {
     });
   }
 
-  void submitStadium() async  {
+  void submitStadium() async {
     if (_formKey.currentState!.validate()) {
       if (startTime24 == null || endTime24 == null) {
         ToastService().showToast(
@@ -103,30 +105,32 @@ class _AddStadiumState extends State<AddStadium> {
       }
 
       await context.read<AddStadiumCubit>().addStadium(
-            name: nameController.text.trim(),
-            des: desController.text.trim(),
-            price: double.parse(priceController.text),
-            selectedMultipartImages: selectedMultipartImages,
-            startTime24: startTime24!,
-            endTime24: endTime24!,
-            latitude: latitude!,
-            longitude: longitude!,
-            location: locationText!
-            
-          );
-           nameController.clear(); 
-           desController.clear(); 
-           priceController.clear(); 
-          setState(() {
-            selectedMultipartImages = [];
+        name: nameController.text.trim(),
+        des: desController.text.trim(),
+        amprice: double.parse(ampriceController.text),
+        pmprice: double.parse(ampriceController.text),
+        selectedMultipartImages: selectedMultipartImages,
+        nightTime: nightTime!,
+        startTime24: startTime24!,
+        endTime24: endTime24!,
+        latitude: latitude!,
+        longitude: longitude!,
+        location: locationText!,
+      );
+      nameController.clear();
+      desController.clear();
+      ampriceController.clear();
+      pmpriceController.clear();
+      setState(() {
+        selectedMultipartImages = [];
 
-           startTime24 = "";
-           endTime24 = "";
-           locationText = "";
-          });
+        startTime24 = "";
+        endTime24 = "";
+        locationText = "";
+      });
 
-          print(selectedMultipartImages);
-          print(locationText);
+      print(selectedMultipartImages);
+      print(locationText);
     }
   }
 
@@ -134,7 +138,8 @@ class _AddStadiumState extends State<AddStadium> {
   void dispose() {
     nameController.dispose();
     desController.dispose();
-    priceController.dispose();
+    ampriceController.dispose();
+    pmpriceController.dispose();
     super.dispose();
   }
 
@@ -214,16 +219,34 @@ class _AddStadiumState extends State<AddStadium> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: CustomInput(
-                        text: 'سعر/ساعة',
-                        controller: priceController,
+                        text: 'سعر/ساعة صباحا',
+                        controller: ampriceController,
                         isObsecure: false,
-                        validator: ValidationBuilder(
-                          requiredMessage: "دخل سعر الملعب",
-                        ).required().add((value) {
-                          final number = num.tryParse(value ?? '');
-                          if (number == null) return 'السعر لازم يكون رقم';
-                          return null;
-                        }).build(),
+                        validator:
+                            ValidationBuilder(
+                              requiredMessage: "دخل سعر الملعب",
+                            ).required().add((value) {
+                              final number = num.tryParse(value ?? '');
+                              if (number == null) return 'السعر لازم يكون رقم';
+                              return null;
+                            }).build(),
+                      ),
+                    ),
+                    SizedBox(height: getVerticalSpace(context, 15)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomInput(
+                        text: 'سعر/ساعة مساء',
+                        controller: pmpriceController,
+                        isObsecure: false,
+                        validator:
+                            ValidationBuilder(
+                              requiredMessage: "دخل سعر الملعب",
+                            ).required().add((value) {
+                              final number = num.tryParse(value ?? '');
+                              if (number == null) return 'السعر لازم يكون رقم';
+                              return null;
+                            }).build(),
                       ),
                     ),
                     SizedBox(height: getVerticalSpace(context, 15)),
@@ -265,6 +288,7 @@ class _AddStadiumState extends State<AddStadium> {
                         ),
                       ),
                     ),
+                    
                     SizedBox(height: getVerticalSpace(context, 20)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -276,6 +300,13 @@ class _AddStadiumState extends State<AddStadium> {
                           });
                         },
                       ),
+                    ),
+                    SizedBox(height: getVerticalSpace(context, 20)),
+                    SingleTimePicker(
+                      onTimeSelected: (formattedTime) {
+                        nightTime = formattedTime;
+                        print('Night time starts at: $formattedTime');
+                      },
                     ),
                     SizedBox(height: getVerticalSpace(context, 20)),
                     Padding(
@@ -326,7 +357,7 @@ class _AddStadiumState extends State<AddStadium> {
                                 ),
                               ),
                               child: const Text(
-                                "إضافة", 
+                                "إضافة",
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,
