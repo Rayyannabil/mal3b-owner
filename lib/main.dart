@@ -64,12 +64,10 @@ void main() async {
       : '/home';
 
   runApp(
-    DevicePreview(
-      enabled: true, // set to false in release mode if needed
-      builder: (context) => NotificationListenerWrapper(
+   NotificationListenerWrapper(
         child: Mal3bApp(initialRoute: initialRoute),
       ),
-    ),
+   
   );
 }
 

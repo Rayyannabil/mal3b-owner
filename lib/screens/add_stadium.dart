@@ -13,6 +13,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:mal3b/l10n/app_localizations.dart';
 import 'package:mal3b/logic/cubit/add_stadium_cubit.dart';
+import 'package:mal3b/logic/cubit/stadium_cubit.dart';
 import 'package:mal3b/services/toast_service.dart';
 
 class AddStadium extends StatefulWidget {
@@ -153,6 +154,9 @@ class _AddStadiumState extends State<AddStadium> {
             type: ToastType.success,
           );
           widget.onSuccess?.call();
+          setState(() {
+             context.read<StadiumCubit>().fetchStadiums(); 
+          });
         } else if (state is AddStadiumError) {
           String msg = state.msg.trim();
           if (!msg.endsWith('يا نجم')) {
