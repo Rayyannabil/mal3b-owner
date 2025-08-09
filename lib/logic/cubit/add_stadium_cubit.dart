@@ -81,7 +81,7 @@ class AddStadiumCubit extends Cubit<AddStadiumState> {
         "latitude": latitude,
         "address": location,
       });
-
+      log(formData.toString());
       final accessToken = await storage.read(key: "accessToken");
       log(accessToken.toString());
       dio.options.headers = {"Authorization": "Bearer $accessToken"};
@@ -91,6 +91,7 @@ class AddStadiumCubit extends Cubit<AddStadiumState> {
         data: formData,
       );
       print(accessToken);
+      
 
       log(response.toString());
       log(response.statusCode.toString());

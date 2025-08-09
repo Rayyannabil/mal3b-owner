@@ -15,7 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
+  
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     // Save notification token
-    // BlocProvider.of<NotificationCubit>(context).saveFCM();
+    BlocProvider.of<NotificationCubit>(context).saveFCM();
   }
 
   Widget _buildHeader() {
@@ -125,7 +125,10 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedItemColor: CustomColors.primary,
         unselectedItemColor: Colors.grey.withOpacity(0.5),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'إضافة ملعب'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'إضافة ملعب',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.stadium),
             label: 'الملاعب',

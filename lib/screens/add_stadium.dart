@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:mal3b/components/custom_input_component.dart';
 import 'package:mal3b/components/location_picker.dart';
@@ -40,7 +41,20 @@ class _AddStadiumState extends State<AddStadium> {
   double? latitude;
   double? longitude;
   String? locationText;
+  
+  Future<File> compressImage(File file) async {
+    final targetPath =
+        '${file.parent.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg';
 
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      targetPath,
+      quality: 50, 
+    );
+
+    return result != null ? File(result.path) : file; // if compression fails, return original file
+  }
+  
   Future<void> pickImagesAsMultipart() async {
     final ImagePicker picker = ImagePicker();
     final List<XFile>? images = await picker.pickMultiImage();
@@ -109,7 +123,7 @@ class _AddStadiumState extends State<AddStadium> {
         name: nameController.text.trim(),
         des: desController.text.trim(),
         amprice: double.parse(ampriceController.text),
-        pmprice: double.parse(ampriceController.text),
+        pmprice: double.parse(pmpriceController.text), // Fixed: was using ampriceController instead of pmpriceController
         selectedMultipartImages: selectedMultipartImages,
         nightTime: nightTime!,
         startTime24: startTime24!,
@@ -124,10 +138,13 @@ class _AddStadiumState extends State<AddStadium> {
       pmpriceController.clear();
       setState(() {
         selectedMultipartImages = [];
-
-        startTime24 = "";
-        endTime24 = "";
-        locationText = "";
+        base64Images = []; // Fixed: clear base64Images as well
+        nightTime = null; // Fixed: reset nightTime properly
+        startTime24 = null; // Fixed: set to null instead of empty string
+        endTime24 = null; // Fixed: set to null instead of empty string
+        latitude = null; // Fixed: reset latitude
+        longitude = null; // Fixed: reset longitude
+        locationText = null; // Fixed: set to null instead of empty string
       });
 
       print(selectedMultipartImages);
@@ -154,9 +171,8 @@ class _AddStadiumState extends State<AddStadium> {
             type: ToastType.success,
           );
           widget.onSuccess?.call();
-          setState(() {
-             context.read<StadiumCubit>().fetchStadiums(); 
-          });
+          // Fixed: removed setState from listener and moved stadium refresh logic
+          context.read<StadiumCubit>().fetchStadiums();
         } else if (state is AddStadiumError) {
           String msg = state.msg.trim();
           if (!msg.endsWith('يا نجم')) {
@@ -226,12 +242,14 @@ class _AddStadiumState extends State<AddStadium> {
                         text: 'سعر/ساعة صباحا',
                         controller: ampriceController,
                         isObsecure: false,
+                        keyboardType: TextInputType.number, // Fixed: added proper keyboard type
                         validator:
                             ValidationBuilder(
                               requiredMessage: "دخل سعر الملعب",
                             ).required().add((value) {
                               final number = num.tryParse(value ?? '');
                               if (number == null) return 'السعر لازم يكون رقم';
+                              if (number <= 0) return 'السعر لازم يكون أكبر من صفر'; // Fixed: added positive number validation
                               return null;
                             }).build(),
                       ),
@@ -243,12 +261,14 @@ class _AddStadiumState extends State<AddStadium> {
                         text: 'سعر/ساعة مساء',
                         controller: pmpriceController,
                         isObsecure: false,
+                        keyboardType: TextInputType.number, // Fixed: added proper keyboard type
                         validator:
                             ValidationBuilder(
                               requiredMessage: "دخل سعر الملعب",
                             ).required().add((value) {
                               final number = num.tryParse(value ?? '');
                               if (number == null) return 'السعر لازم يكون رقم';
+                              if (number <= 0) return 'السعر لازم يكون أكبر من صفر'; // Fixed: added positive number validation
                               return null;
                             }).build(),
                       ),
@@ -308,7 +328,9 @@ class _AddStadiumState extends State<AddStadium> {
                     SizedBox(height: getVerticalSpace(context, 20)),
                     SingleTimePicker(
                       onTimeSelected: (formattedTime) {
-                        nightTime = formattedTime;
+                        setState(() { // Fixed: wrapped in setState to trigger UI update
+                          nightTime = formattedTime;
+                        });
                         print('Night time starts at: $formattedTime');
                       },
                     ),
@@ -342,32 +364,35 @@ class _AddStadiumState extends State<AddStadium> {
                     SizedBox(height: getVerticalSpace(context, 20)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: state is AddStadiumLoading
-                          ? Center(
-                              child: CircularProgressIndicator(
-                                color: CustomColors.primary,
-                              ),
-                            )
-                          : ElevatedButton(
-                              onPressed: submitStadium,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: CustomColors.primary,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                  horizontal: 24,
+                      child: SizedBox( // Fixed: wrapped in SizedBox to give proper width
+                        width: double.infinity,
+                        child: state is AddStadiumLoading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: CustomColors.primary,
                                 ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                              )
+                            : ElevatedButton(
+                                onPressed: submitStadium,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: CustomColors.primary,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                    horizontal: 24,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: const Text(
+                                  "إضافة",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                              child: const Text(
-                                "إضافة",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                      ),
                     ),
                   ],
                 ),

@@ -20,7 +20,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
   @override
   void initState() {
     super.initState();
-    // context.read<BookingsCubit>().fetchBookings(widget.id);
+    context.read<BookingsCubit>().fetchBookings(widget.id);
   }
 
   String formatDateTime(String isoString) {
@@ -87,26 +87,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
                             ),
                           );
                         } else if (state is BookingsLoaded) {
-                          final bookings = [
-                            {
-                              'id': '1',
-                              'name': 'ملعب كرة القدم',
-                              'booking_date': '2023-10-01T12:00:00Z',
-                              'price_per_hour': '100',
-                              'night_price': '150',
-                              'from_time': '08:00:00',
-                              'to_time': '10:00:00',
-                            },
-                            {
-                              'id': '2',
-                              'name': 'ملعب كرة السلة',
-                              'booking_date': '2023-10-02T12:00:00Z',
-                              'price_per_hour': '80',
-                              'night_price': '120',
-                              'from_time': '09:00:00',
-                              'to_time': '11:00:00',
-                            },
-                          ];
+                          final bookings = state.bookings;
 
                           if (bookings.isEmpty) {
                             return const Center(
@@ -131,18 +112,17 @@ class _BookingsScreenState extends State<BookingsScreen> {
                               final id = booking['id'] ?? '';
                               final name = booking['name'] ?? '';
                               final date =
-                                  formatDateTime(booking['booking_date']!) ??
-                                  '';
+                                  formatDateTime(booking['booking_date']) ?? '';
                               final amprice = booking['price_per_hour'] ?? '';
                               final pmprice = booking['night_price'] ?? '';
                               final from =
                                   formatTimeWithoutSeconds(
-                                    booking['from_time']!,
+                                    booking['from_time'],
                                   ) ??
                                   '';
                               final to =
                                   formatTimeWithoutSeconds(
-                                    booking['to_time']!,
+                                    booking['to_time'],
                                   ) ??
                                   '';
 

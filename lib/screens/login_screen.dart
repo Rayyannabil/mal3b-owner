@@ -30,11 +30,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login() {
-    ToastService().showToast(
-      message: "تم تسجيل الدخول يا نجم",
-      type: ToastType.success,
-    );
-    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthenticationCubit>().login(
+        phone: phoneController.text,
+        password: passwordController.text,
+      );
+    }
   }
 
   @override
@@ -68,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: getVerticalSpace(context, 20)),
-
+              
               SizedBox(height: getVerticalSpace(context, 140)),
               Padding(
                 padding: EdgeInsetsDirectional.only(
