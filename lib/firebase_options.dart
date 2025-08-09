@@ -50,8 +50,8 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBFa0twiD7NbxZ6AjEZK4LUUgc1kPHYtd8',
-    appId: '1:1002201533105:android:f34736fdcc37db535d3090',
+    apiKey: 'AIzaSyBVZGny3YJTZ546lius-LxFKrdlHvaffFA',
+    appId: '1:1002201533105:android:f029789fabdc5a9c5d3090',
     messagingSenderId: '1002201533105',
     projectId: 'mal3abapp-39dd2',
     storageBucket: 'mal3abapp-39dd2.firebasestorage.app',
@@ -59,11 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCe1DM6usYXu4vmEXymrddNA91tadgV14g',
-    appId: '1:1002201533105:ios:4a7af9d48ed8123f5d3090',
+    appId: '1:1002201533105:ios:7f92986e3c917a055d3090',
     messagingSenderId: '1002201533105',
     projectId: 'mal3abapp-39dd2',
     storageBucket: 'mal3abapp-39dd2.firebasestorage.app',
-    iosBundleId: 'com.example.mal3b',
+    iosBundleId: 'com.example.mal3abOwner',
   );
 
 }

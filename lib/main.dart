@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easy_notify/easy_notify.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +60,7 @@ void main() async {
   );
   final FlutterSecureStorage storage = const FlutterSecureStorage();
   final token = await storage.read(key: "accessToken");
+  log('Access Token: $token');
 
   // Default route
   final String initialRoute = (token == null || token.isEmpty)

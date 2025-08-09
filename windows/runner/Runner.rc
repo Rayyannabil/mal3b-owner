@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "mal3b" "\0"
+            VALUE "FileDescription", "mal3ab_owner" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "mal3b" "\0"
+            VALUE "InternalName", "mal3ab_owner" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "mal3b.exe" "\0"
-            VALUE "ProductName", "mal3b" "\0"
+            VALUE "OriginalFilename", "mal3ab_owner.exe" "\0"
+            VALUE "ProductName", "mal3ab_owner" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
