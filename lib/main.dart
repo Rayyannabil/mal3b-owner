@@ -156,7 +156,9 @@ class Mal3bApp extends StatelessWidget {
               );
             case '/bookings':
               final id = settings.arguments as String;
-              return MaterialPageRoute(builder: (_) => BookingsScreen(id: id));
+              return MaterialPageRoute(
+                builder: (_) => BookingsScreen(id: id),
+              );
             case '/otp-screen':
               final args = settings.arguments as Map<String, String>;
               return MaterialPageRoute(

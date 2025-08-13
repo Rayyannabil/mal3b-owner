@@ -12,7 +12,6 @@ import 'package:mal3b/helpers/size_helper.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:mal3b/l10n/app_localizations.dart';
 import 'package:mal3b/logic/cubit/add_stadium_cubit.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
 import 'package:mal3b/services/toast_service.dart';
@@ -41,7 +40,7 @@ class _AddStadiumState extends State<AddStadium> {
   double? latitude;
   double? longitude;
   String? locationText;
-  
+
   Future<File> compressImage(File file) async {
     final targetPath =
         '${file.parent.path}/compressed_${DateTime.now().millisecondsSinceEpoch}.jpg';
@@ -49,48 +48,61 @@ class _AddStadiumState extends State<AddStadium> {
     final result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       targetPath,
-      quality: 50, 
+      quality: 50,
     );
 
-    return result != null ? File(result.path) : file; // if compression fails, return original file
+    return result != null
+        ? File(result.path)
+        : file; // if compression fails, return original file
   }
-  
+
+  bool _isPickingImages = false; // Guard flag
+
   Future<void> pickImagesAsMultipart() async {
-    final ImagePicker picker = ImagePicker();
-    final List<XFile>? images = await picker.pickMultiImage();
+    if (_isPickingImages) return; // Prevent multiple calls
+    _isPickingImages = true;
 
-    if (images == null || images.isEmpty) return;
+    try {
+      final ImagePicker picker = ImagePicker();
+      final List<XFile>? images = await picker.pickMultiImage();
 
-    if (images.length > 6) {
-      ToastService().showToast(
-        message: 'يمكنك اختيار 6 صور فقط',
-        type: ToastType.error,
-      );
-      return;
+      // If user cancels
+      if (images == null || images.isEmpty) return;
+
+      if (images.length > 6) {
+        ToastService().showToast(
+          message: 'يمكنك اختيار 6 صور فقط',
+          type: ToastType.error,
+        );
+        return;
+      }
+
+      List<String> base64List = [];
+      List<MultipartFile> multipartFiles = [];
+
+      for (XFile image in images) {
+        final file = File(image.path);
+        final bytes = await file.readAsBytes();
+
+        final base64 = base64Encode(bytes);
+        base64List.add(base64);
+
+        final multipartFile = await MultipartFile.fromFile(
+          image.path,
+          filename: image.name,
+        );
+        multipartFiles.add(multipartFile);
+      }
+
+      setState(() {
+        base64Images = base64List;
+        selectedMultipartImages = multipartFiles;
+      });
+    } catch (e) {
+      print('Error picking images: $e');
+    } finally {
+      _isPickingImages = false; // Reset flag
     }
-
-    List<String> base64List = [];
-    List<MultipartFile> multipartFiles = [];
-
-    for (XFile image in images) {
-      final file = File(image.path);
-      final bytes = await file.readAsBytes();
-
-      final base64 = base64Encode(bytes);
-      base64List.add(base64);
-
-      final multipartFile = await MultipartFile.fromFile(
-        image.path,
-        filename: image.name,
-      );
-      multipartFiles.add(multipartFile);
-    }
-
-    selectedMultipartImages = multipartFiles;
-
-    setState(() {
-      base64Images = base64List;
-    });
   }
 
   void submitStadium() async {
@@ -130,7 +142,9 @@ class _AddStadiumState extends State<AddStadium> {
         name: nameController.text.trim(),
         des: desController.text.trim(),
         amprice: double.parse(ampriceController.text),
-        pmprice: double.parse(pmpriceController.text), // Fixed: was using ampriceController instead of pmpriceController
+        pmprice: double.parse(
+          pmpriceController.text,
+        ), // Fixed: was using ampriceController instead of pmpriceController
         selectedMultipartImages: selectedMultipartImages,
         nightTime: nightTime!,
         startTime24: startTime24!,
@@ -249,14 +263,16 @@ class _AddStadiumState extends State<AddStadium> {
                         text: 'سعر/ساعة صباحا',
                         controller: ampriceController,
                         isObsecure: false,
-                        keyboardType: TextInputType.number, // Fixed: added proper keyboard type
+                        keyboardType: TextInputType
+                            .number, // Fixed: added proper keyboard type
                         validator:
                             ValidationBuilder(
                               requiredMessage: "دخل سعر الملعب",
                             ).required().add((value) {
                               final number = num.tryParse(value ?? '');
                               if (number == null) return 'السعر لازم يكون رقم';
-                              if (number <= 0) return 'السعر لازم يكون أكبر من صفر'; // Fixed: added positive number validation
+                              if (number <= 0)
+                                return 'السعر لازم يكون أكبر من صفر'; // Fixed: added positive number validation
                               return null;
                             }).build(),
                       ),
@@ -268,14 +284,16 @@ class _AddStadiumState extends State<AddStadium> {
                         text: 'سعر/ساعة مساء',
                         controller: pmpriceController,
                         isObsecure: false,
-                        keyboardType: TextInputType.number, // Fixed: added proper keyboard type
+                        keyboardType: TextInputType
+                            .number, // Fixed: added proper keyboard type
                         validator:
                             ValidationBuilder(
                               requiredMessage: "دخل سعر الملعب",
                             ).required().add((value) {
                               final number = num.tryParse(value ?? '');
                               if (number == null) return 'السعر لازم يكون رقم';
-                              if (number <= 0) return 'السعر لازم يكون أكبر من صفر'; // Fixed: added positive number validation
+                              if (number <= 0)
+                                return 'السعر لازم يكون أكبر من صفر'; // Fixed: added positive number validation
                               return null;
                             }).build(),
                       ),
@@ -319,7 +337,7 @@ class _AddStadiumState extends State<AddStadium> {
                         ),
                       ),
                     ),
-                    
+
                     SizedBox(height: getVerticalSpace(context, 20)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -335,7 +353,8 @@ class _AddStadiumState extends State<AddStadium> {
                     SizedBox(height: getVerticalSpace(context, 20)),
                     SingleTimePicker(
                       onTimeSelected: (formattedTime) {
-                        setState(() { // Fixed: wrapped in setState to trigger UI update
+                        setState(() {
+                          // Fixed: wrapped in setState to trigger UI update
                           nightTime = formattedTime;
                         });
                         print('Night time starts at: $formattedTime');
@@ -371,7 +390,8 @@ class _AddStadiumState extends State<AddStadium> {
                     SizedBox(height: getVerticalSpace(context, 20)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SizedBox( // Fixed: wrapped in SizedBox to give proper width
+                      child: SizedBox(
+                        // Fixed: wrapped in SizedBox to give proper width
                         width: double.infinity,
                         child: state is AddStadiumLoading
                             ? Center(

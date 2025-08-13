@@ -8,9 +8,12 @@ import 'package:mal3b/components/date_picker.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
+import 'package:mal3b/services/toast_service.dart';
 
 class MyFields extends StatefulWidget {
-  const MyFields({super.key});
+  final VoidCallback? onSuccess;
+
+  const MyFields({super.key, this.onSuccess});
 
   @override
   State<MyFields> createState() => _MyFieldsState();
@@ -72,9 +75,6 @@ class _MyFieldsState extends State<MyFields> {
                       ),
                     );
                   }
-                 
-                  
-                  
 
                   return ListView.builder(
                     shrinkWrap: true,
@@ -87,11 +87,9 @@ class _MyFieldsState extends State<MyFields> {
                       final id = stadium['id'] ?? '';
                       final amprice = stadium['price'] ?? '';
                       final pmprice = stadium['night_price'] ?? '';
-                      final from = formatTimeArabic(stadium['from_time']) ?? '';
-                      final to = formatTimeArabic(stadium['to_time']) ?? '';
+                      final from = formatTimeArabic(stadium['from_time']);
+                      final to = formatTimeArabic(stadium['to_time']);
 
-
-                      
                       return GestureDetector(
                         onTap: () {
                           showDialog(
@@ -109,7 +107,7 @@ class _MyFieldsState extends State<MyFields> {
                                     Align(
                                       alignment: Alignment.centerRight,
                                       child: Text(
-                                        'ضيف عرض',
+                                          'ضيف عرض',
                                         style: TextStyle(
                                           color: CustomColors.primary,
                                           fontSize: 20,
@@ -242,58 +240,103 @@ class _MyFieldsState extends State<MyFields> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return AlertDialog(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      title: Text('خطأ'),
-                                                      content: Text(
-                                                        'لا يمكن حذف الملعب ، يوجد حجوزات.',
+                                            BlocListener<
+                                              StadiumCubit,
+                                              StadiumState
+                                            >(
+                                              listener: (context, state) {
+                                                if (state
+                                                    is StadiumDeleteSuccess) {
+                                                  ToastService().showToast(
+                                                    message: state.msg,
+                                                    type: ToastType.success,
+                                                  );
+                                                } else if (state
+                                                    is StadiumDeleteError) {
+                                                  ToastService().showToast(
+                                                    message: state.msg,
+                                                    type: ToastType.error,
+                                                  );
+                                                }
+                                              },
+                                              child: GestureDetector(
+                                                onTap: () async {
+                                                  await showDialog<bool>(
+                                                    context: context,
+                                                    builder: (context) => AlertDialog(
+                                                      title: const Text(
+                                                        'تأكيد الحذف',
+                                                      ),
+                                                      content: const Text(
+                                                        'هل أنت متأكد أنك تريد حذف هذا الملعب؟',
                                                       ),
                                                       actions: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                              context,
-                                                            ).pop();
+                                                        CustomButton(
+                                                          bgColor: CustomColors
+                                                              .primary,
+                                                          fgColor: CustomColors
+                                                              .white,
+                                                          onPressed: () async {
+                                                            final fieldId =
+                                                                stadium['id']
+                                                                    ?.toString();
+                                                            if (fieldId !=
+                                                                    null &&
+                                                                fieldId
+                                                                    .isNotEmpty) {
+                                                              await context
+                                                                  .read<
+                                                                    StadiumCubit
+                                                                  >()
+                                                                  .deleteStadium(
+                                                                    fieldId,
+                                                                  );
+
+                                                              Navigator.of(
+                                                                context,
+                                                              ).pop(); // Close dialog
+                                                              Navigator.of(
+                                                                context,
+                                                              ).pop(); // Close screen (optional)
+                                                            } else {
+                                                              ToastService().showToast(
+                                                                message:
+                                                                    'معرف الملعب غير صالح',
+                                                                type: ToastType
+                                                                    .error,
+                                                              );
+                                                            }
                                                           },
-                                                          child: Text(
-                                                            'إلغاء',
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                            ),
+                                                          text: const Text(
+                                                            'تأكيد',
                                                           ),
                                                         ),
                                                       ],
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text(
-                                                    'حذف ملعب',
-                                                    style: TextStyle(
+                                                    ),
+                                                  );
+                                                },
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    const Text(
+                                                      'حذف ملعب',
+                                                      style: TextStyle(
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: getHorizontalSpace(
+                                                        context,
+                                                        150,
+                                                      ),
+                                                    ),
+                                                    const Icon(
+                                                      Icons.delete,
                                                       color: Colors.red,
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: getHorizontalSpace(
-                                                      context,
-                                                      150,
-                                                    ),
-                                                  ),
-                                                  Icon(
-                                                    Icons.delete,
-                                                    color: Colors.red,
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -304,14 +347,14 @@ class _MyFieldsState extends State<MyFields> {
                                 ),
                               ),
                               actions: [
-                                Center(
-                                  child: CustomButton(
-                                    bgColor: CustomColors.primary,
-                                    fgColor: CustomColors.white,
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    text: Text('إغلاق'),
-                                  ),
+                                CustomButton(
+                                  bgColor: CustomColors.primary,
+                                  fgColor: CustomColors.white,
+                                  onPressed: () {
+                                    Navigator.of(context).pop(); // Close dialog
+                                    // Navigate
+                                  },
+                                  text: Text('إغلاق'),
                                 ),
                               ],
                             ),

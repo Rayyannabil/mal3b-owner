@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -112,19 +114,17 @@ class _BookingsScreenState extends State<BookingsScreen> {
                               final id = booking['id'] ?? '';
                               final name = booking['name'] ?? '';
                               final date =
-                                  formatDateTime(booking['booking_date']) ?? '';
+                                  formatDateTime(booking['booking_date']);
                               final amprice = booking['price_per_hour'] ?? '';
                               final pmprice = booking['night_price'] ?? '';
                               final from =
                                   formatTimeWithoutSeconds(
                                     booking['from_time'],
-                                  ) ??
-                                  '';
+                                  );
                               final to =
                                   formatTimeWithoutSeconds(
                                     booking['to_time'],
-                                  ) ??
-                                  '';
+                                  );
 
                               log(to.toString());
                               return BookingComponent(
