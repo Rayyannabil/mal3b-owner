@@ -3,6 +3,13 @@ import 'package:intl/intl.dart';
 import 'package:mal3b/constants/colors.dart';
 
 class DatePickerRow extends StatefulWidget {
+  final void Function(String from, String to) onDateRangeSelected;
+
+  const DatePickerRow({
+    super.key,
+    required this.onDateRangeSelected,
+  });
+
   @override
   _DatePickerRowState createState() => _DatePickerRowState();
 }
@@ -11,12 +18,14 @@ class _DatePickerRowState extends State<DatePickerRow> {
   DateTime? fromDate;
   DateTime? toDate;
 
+  final _storageFormatter = DateFormat('yyyy-MM-dd'); // For storing
+  final _displayFormatter = DateFormat('d MMMM yyyy', 'ar'); // For showing
+
   Future<void> _selectDate(BuildContext context, bool isFromDate) async {
     final now = DateTime.now();
     final initial = isFromDate
         ? (fromDate ?? now)
-        : (toDate ??
-              (fromDate != null && fromDate!.isAfter(now) ? fromDate! : now));
+        : (toDate ?? (fromDate != null && fromDate!.isAfter(now) ? fromDate! : now));
 
     final first = isFromDate ? now : (fromDate ?? now);
 
@@ -50,7 +59,6 @@ class _DatePickerRowState extends State<DatePickerRow> {
       setState(() {
         if (isFromDate) {
           fromDate = picked;
-          // Reset toDate if it became earlier than fromDate
           if (toDate != null && toDate!.isBefore(fromDate!)) {
             toDate = null;
           }
@@ -58,13 +66,19 @@ class _DatePickerRowState extends State<DatePickerRow> {
           toDate = picked;
         }
       });
+
+      if (fromDate != null && toDate != null) {
+        widget.onDateRangeSelected(
+          _storageFormatter.format(fromDate!), // "2025-08-31"
+          _storageFormatter.format(toDate!),   // "2025-09-02"
+        );
+      }
     }
   }
 
-  String _formatDate(DateTime? date) {
+  String _formatDateForDisplay(DateTime? date) {
     if (date == null) return '';
-    final formatter = DateFormat('d MMMM yyyy', 'ar');
-    return formatter.format(date);
+    return _displayFormatter.format(date);
   }
 
   @override
@@ -72,7 +86,7 @@ class _DatePickerRowState extends State<DatePickerRow> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           "التاريخ",
           style: TextStyle(
             fontSize: 16,
@@ -96,11 +110,8 @@ class _DatePickerRowState extends State<DatePickerRow> {
                   ),
                 ),
                 child: Text(
-                  fromDate == null ? 'من' : _formatDate(fromDate),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 9,
-                  ),
+                  fromDate == null ? 'من' : _formatDateForDisplay(fromDate),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 9),
                 ),
               ),
             ),
@@ -118,11 +129,8 @@ class _DatePickerRowState extends State<DatePickerRow> {
                   ),
                 ),
                 child: Text(
-                  toDate == null ? 'إلى' : _formatDate(toDate),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 9,
-                  ),
+                  toDate == null ? 'إلى' : _formatDateForDisplay(toDate),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 9),
                 ),
               ),
             ),

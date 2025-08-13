@@ -13,26 +13,36 @@ class StadiumCubit extends Cubit<StadiumState> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   Future<void> fetchStadiums() async {
+    log("aa");
     emit(StadiumLoading());
-
     try {
+      log("a2");
       final token = await storage.read(key: 'accessToken');
       final response = await dio.get(
         '${DioClient.baseUrl}owner/get-stadiums',
         options: Options(headers: {"Authorization": "Bearer $token"}),
       );
-      log(response.toString());
-
+      log("a3");
+      log(response.statusCode.toString());
       if (response.statusCode == 200) {
+        print(response.data);
+        // final data = List<Map<String, String>>.from(response.data);
+        // log(data.toString()); // Safe to log as String
+        // emit(StadiumLoaded(data));
         final List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(
           response.data,
         );
+        log(data.toString()); // convert to string before logging
         emit(StadiumLoaded(data));
       } else {
+        log("a4");
+        log(response.statusCode.toString());
         emit(StadiumError(msg: "حدث خطأ أثناء تحميل الملاعب"));
       }
     } catch (e) {
-      print(e);
+      log("a6");
+      log(e.toString());
+
       emit(StadiumError(msg: "فشل في تحميل الملاعب"));
     }
   }
@@ -42,6 +52,7 @@ class StadiumCubit extends Cubit<StadiumState> {
     try {
       log(fieldId);
       final token = await storage.read(key: 'accessToken');
+
       final response = await dio.post(
         '${DioClient.baseUrl}owner/delete-field/',
         data: {"FieldId": fieldId},
@@ -70,6 +81,46 @@ class StadiumCubit extends Cubit<StadiumState> {
       }
     } catch (e) {
       emit(StadiumDeleteError(msg: "حصلت مشكلة أثناء حذف الملعب"));
+    }
+  }
+
+  void addOffer({
+    required String to_day,
+    required String from_day,
+    required double price,
+    required String stadium_id,
+  }) async {
+    try {
+      final token = await storage.read(key: 'accessToken');
+
+      final response = await dio.post(
+        '${DioClient.baseUrl}owner/add-offer/',
+        data: {
+          "stadium_id": stadium_id,
+          "to_day": to_day,
+          "from_day": from_day,
+          "price": price,
+        },
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+      );
+
+      if (response.statusCode == 200) {
+        final message = response.data['message'] ?? "تم إضافة عرض بنجاح";
+        emit(OfferSuccess(msg: message));
+      } else {
+        final message = response.data['message'] ?? "فشل في إضافة عرض";
+        emit(OfferError(msg: message));
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final message =
+            e.response?.data['message'] ?? "حصلت مشكلة أثناء إضافة العرض";
+        emit(OfferError(msg: message));
+      } else {
+        emit(OfferError(msg: "حصلت مشكلة في الاتصال"));
+      }
+    } catch (e) {
+      emit(OfferError(msg: "حصلت مشكلة أثناء إضافة العرض"));
     }
   }
 }

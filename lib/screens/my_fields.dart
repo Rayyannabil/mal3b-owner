@@ -20,6 +20,10 @@ class MyFields extends StatefulWidget {
 }
 
 class _MyFieldsState extends State<MyFields> {
+  String? from_day;
+  String? to_day;
+  final TextEditingController priceController = TextEditingController();
+
   String formatTimeArabic(String timeString) {
     final inputFormat = DateFormat("HH:mm:ss");
     final outputFormat = DateFormat.jm("en");
@@ -31,6 +35,12 @@ class _MyFieldsState extends State<MyFields> {
   void initState() {
     super.initState();
     context.read<StadiumCubit>().fetchStadiums();
+  }
+
+  @override
+  void dispose() {
+    priceController.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,393 +61,543 @@ class _MyFieldsState extends State<MyFields> {
               ),
             ),
             SizedBox(height: getVerticalSpace(context, 20)),
-            BlocBuilder<StadiumCubit, StadiumState>(
-              builder: (context, state) {
-                if (state is StadiumLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: CustomColors.primary,
-                    ),
+            // Add BlocListener to handle offer success/error states
+            BlocListener<StadiumCubit, StadiumState>(
+              listener: (context, state) {
+                if (state is OfferSuccess) {
+                  ToastService().showToast(
+                    message: 'تمت إضافة خصم بنجاح',
+                    type: ToastType.success,
                   );
-                } else if (state is StadiumLoaded) {
-                  final stadiums = state.stadiums;
-                  log(stadiums.toString());
-
-                  if (stadiums.isEmpty) {
+                  // Re-fetch stadiums after successful offer addition
+                  context.read<StadiumCubit>().fetchStadiums();
+                } else if (state is OfferError) {
+                  String msg = state.msg.trim();
+                  ToastService().showToast(message: msg, type: ToastType.error);
+                }
+              },
+              child: BlocBuilder<StadiumCubit, StadiumState>(
+                builder: (context, state) {
+                  // Handle loading states for both stadium and offer operations
+                  if (state is StadiumLoading || state is OfferLoading) {
                     return const Center(
-                      child: Text(
-                        "لا توجد ملاعب حتى الآن",
-                        style: TextStyle(
-                          fontFamily: "MadaniArabic",
-                          fontSize: 15,
-                          color: Colors.red,
-                        ),
+                      child: CircularProgressIndicator(
+                        color: CustomColors.primary,
                       ),
                     );
                   }
+                  // Handle all loaded states - keep showing stadiums even during offer operations
+                  else if (state is StadiumLoaded ||
+                      state is OfferSuccess ||
+                      state is OfferError) {
+                    // Get stadiums from the current state or maintain previous data
+                    List<dynamic> stadiums = [];
+                    if (state is StadiumLoaded) {
+                      stadiums = state.stadiums;
+                    } else {
+                      // If we're in OfferSuccess or OfferError, we need to get stadiums from previous state
+                      // This is a fallback - ideally your cubit should maintain stadium data
+                      context.read<StadiumCubit>().fetchStadiums();
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: CustomColors.primary,
+                        ),
+                      );
+                    }
+                    log(stadiums.toString());
 
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: stadiums.length,
-                    itemBuilder: (context, index) {
-                      final stadium = stadiums[index];
+                    if (stadiums.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          "لا توجد ملاعب حتى الآن",
+                          style: TextStyle(
+                            fontFamily: "MadaniArabic",
+                            fontSize: 15,
+                            color: Colors.red,
+                          ),
+                        ),
+                      );
+                    }
 
-                      final name = stadium['name'] ?? '';
-                      final id = stadium['id'] ?? '';
-                      final amprice = stadium['price'] ?? '';
-                      final pmprice = stadium['night_price'] ?? '';
-                      final from = formatTimeArabic(stadium['from_time']);
-                      final to = formatTimeArabic(stadium['to_time']);
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: stadiums.length,
+                      itemBuilder: (context, index) {
+                        final stadium = stadiums[index];
 
-                      return GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(40),
-                              ),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Padding(padding: EdgeInsets.only(top: 20)),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
+                        final name = stadium['name'] ?? '';
+                        final id = stadium['id'] ?? '';
+                        final amprice = stadium['price'] ?? '';
+                        final net_price = stadium['net_price'] ?? '';
+                        final offer = stadium['offer'] ?? '';
+                        final pmprice = stadium['night_price'] ?? '';
+                        final from = formatTimeArabic(stadium['from_time']);
+                        final to = formatTimeArabic(stadium['to_time']);
+
+                        return GestureDetector(
+                          onTap: () {
+                            // Store the cubit reference before showing dialog
+                            final stadiumCubit = context.read<StadiumCubit>();
+
+                            showDialog(
+                              context: context,
+                              builder: (dialogContext) => AlertDialog(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                content: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 20),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
                                           'ضيف عرض',
-                                        style: TextStyle(
-                                          color: CustomColors.primary,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                                          style: TextStyle(
+                                            color: CustomColors.primary,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: getVerticalSpace(context, 5),
-                                    ),
-                                    DatePickerRow(),
-                                    SizedBox(
-                                      height: getVerticalSpace(context, 10),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextFormField(
-                                            decoration: InputDecoration(
-                                              hintText: 'الخصم',
-                                              hintStyle: TextStyle(
-                                                fontSize: 14,
-                                              ),
-                                              isDense: true,
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                    vertical: 8,
-                                                    horizontal: 30,
+                                      SizedBox(
+                                        height: getVerticalSpace(context, 5),
+                                      ),
+                                      DatePickerRow(
+                                        onDateRangeSelected: (fromday, today) {
+                                          setState(() {
+                                            from_day = fromday; // "2025-08-31"
+                                            to_day = today; // "2025-09-02"
+                                          });
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: getVerticalSpace(context, 10),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: state is OfferLoading
+                                                ? CircularProgressIndicator(
+                                                    color: CustomColors.primary,
+                                                  )
+                                                : TextFormField(
+                                                    controller: priceController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration: InputDecoration(
+                                                      hintText: 'الخصم',
+                                                      hintStyle: TextStyle(
+                                                        fontSize: 14,
+                                                      ),
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.symmetric(
+                                                            vertical: 8,
+                                                            horizontal: 30,
+                                                          ),
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  12,
+                                                                ),
+                                                            borderSide:
+                                                                BorderSide(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  width: 1.5,
+                                                                ),
+                                                          ),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  12,
+                                                                ),
+                                                            borderSide: BorderSide(
+                                                              color:
+                                                                  CustomColors
+                                                                      .primary,
+                                                              width: 2,
+                                                            ),
+                                                          ),
+                                                    ),
                                                   ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                borderSide: BorderSide(
-                                                  color: Colors.grey,
-                                                  width: 1.5,
-                                                ),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                borderSide: BorderSide(
+                                          ),
+                                          SizedBox(width: 15),
+                                          Expanded(
+                                            child: TextButton(
+                                              onPressed: () {
+                                                _showAddOfferConfirmation(
+                                                  dialogContext,
+                                                  stadiumCubit,
+                                                  id,
+                                                );
+                                              },
+                                              child: const Text(
+                                                'إضافة خصم',
+                                                style: TextStyle(
                                                   color: CustomColors.primary,
-                                                  width: 2,
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(width: 15),
-                                        Expanded(
-                                          child: TextButton(
-                                            onPressed: () {
-                                              showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return AlertDialog(
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    title: Text(
-                                                      'لسا شغالين عليها!',
-                                                    ),
-                                                    content: Text(
-                                                      'سيتم توفير هذه الخدمه قريبًا.',
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(
-                                                            context,
-                                                          ).pop();
-                                                        },
-                                                        child: Text(
-                                                          'إلغاء',
-                                                          style: TextStyle(
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 15),
+                                      ),
+                                      Divider(
+                                        indent: 10,
+                                        endIndent: 10,
+                                        color: Colors.grey,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).pushNamed(
+                                                '/bookings',
+                                                arguments: id,
                                               );
                                             },
                                             child: Text(
-                                              'إضافة خصم',
+                                              'الحجوزات',
                                               style: TextStyle(
                                                 color: CustomColors.primary,
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    Padding(padding: EdgeInsets.only(top: 15)),
-                                    Divider(
-                                      indent: 10,
-                                      endIndent: 10,
-                                      color: Colors.grey,
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.of(context).pushNamed(
-                                              '/bookings',
-                                              arguments: id,
-                                            );
-                                          },
-                                          child: Text(
-                                            'الحجوزات',
-                                            style: TextStyle(
-                                              color: CustomColors.primary,
-                                            ),
+                                      ),
+                                      Divider(
+                                        indent: 10,
+                                        endIndent: 10,
+                                        color: Colors.grey,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              BlocListener<
+                                                StadiumCubit,
+                                                StadiumState
+                                              >(
+                                                listener: (context, state) {
+                                                  if (state
+                                                      is StadiumDeleteSuccess) {
+                                                    ToastService().showToast(
+                                                      message: state.msg,
+                                                      type: ToastType.success,
+                                                    );
+                                                  } else if (state
+                                                      is StadiumDeleteError) {
+                                                    ToastService().showToast(
+                                                      message: state.msg,
+                                                      type: ToastType.error,
+                                                    );
+                                                  }
+                                                },
+                                                child: GestureDetector(
+                                                  onTap: () async {
+                                                    _showDeleteConfirmation(
+                                                      dialogContext,
+                                                      stadiumCubit,
+                                                      stadium,
+                                                    );
+                                                  },
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      const Text(
+                                                        'حذف ملعب',
+                                                        style: TextStyle(
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width:
+                                                            getHorizontalSpace(
+                                                              context,
+                                                              150,
+                                                            ),
+                                                      ),
+                                                      const Icon(
+                                                        Icons.delete,
+                                                        color: Colors.red,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Divider(
-                                      indent: 10,
-                                      endIndent: 10,
-                                      color: Colors.grey,
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            BlocListener<
-                                              StadiumCubit,
-                                              StadiumState
-                                            >(
-                                              listener: (context, state) {
-                                                if (state
-                                                    is StadiumDeleteSuccess) {
-                                                  ToastService().showToast(
-                                                    message: state.msg,
-                                                    type: ToastType.success,
-                                                  );
-                                                } else if (state
-                                                    is StadiumDeleteError) {
-                                                  ToastService().showToast(
-                                                    message: state.msg,
-                                                    type: ToastType.error,
-                                                  );
-                                                }
-                                              },
-                                              child: GestureDetector(
-                                                onTap: () async {
-                                                  await showDialog<bool>(
-                                                    context: context,
-                                                    builder: (context) => AlertDialog(
-                                                      title: const Text(
-                                                        'تأكيد الحذف',
-                                                      ),
-                                                      content: const Text(
-                                                        'هل أنت متأكد أنك تريد حذف هذا الملعب؟',
-                                                      ),
-                                                      actions: [
-                                                        CustomButton(
-                                                          bgColor: CustomColors
-                                                              .primary,
-                                                          fgColor: CustomColors
-                                                              .white,
-                                                          onPressed: () async {
-                                                            final fieldId =
-                                                                stadium['id']
-                                                                    ?.toString();
-                                                            if (fieldId !=
-                                                                    null &&
-                                                                fieldId
-                                                                    .isNotEmpty) {
-                                                              await context
-                                                                  .read<
-                                                                    StadiumCubit
-                                                                  >()
-                                                                  .deleteStadium(
-                                                                    fieldId,
-                                                                  );
-
-                                                              Navigator.of(
-                                                                context,
-                                                              ).pop(); // Close dialog
-                                                              Navigator.of(
-                                                                context,
-                                                              ).pop(); // Close screen (optional)
-                                                            } else {
-                                                              ToastService().showToast(
-                                                                message:
-                                                                    'معرف الملعب غير صالح',
-                                                                type: ToastType
-                                                                    .error,
-                                                              );
-                                                            }
-                                                          },
-                                                          text: const Text(
-                                                            'تأكيد',
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    const Text(
-                                                      'حذف ملعب',
-                                                      style: TextStyle(
-                                                        color: Colors.red,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: getHorizontalSpace(
-                                                        context,
-                                                        150,
-                                                      ),
-                                                    ),
-                                                    const Icon(
-                                                      Icons.delete,
-                                                      color: Colors.red,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                    ],
+                                  ),
+                                ),
+                                actions: [
+                                  CustomButton(
+                                    bgColor: CustomColors.primary,
+                                    fgColor: CustomColors.white,
+                                    onPressed: () {
+                                      Navigator.of(dialogContext).pop();
+                                    },
+                                    text: Text('إغلاق'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: CustomColors.primary,
+                            ),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.all(15),
+                              title: Text(
+                                'ملعب $name',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: getVerticalSpace(context, 10),
+                                  ),
+                                  Text(
+                                    '$amprice جنيه / الساعة صباحًا',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  Text(
+                                    '$pmprice جنيه / الساعة مساء',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  SizedBox(
+                                    height: getVerticalSpace(context, 10),
+                                  ),
+                                  Text(
+                                    '${(offer == null || offer.toString().isEmpty) ? "لا يوجد خصم" : "$offer خصم"}',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  SizedBox(
+                                    height: getVerticalSpace(context, 10),
+                                  ),
+                                  Text(
+                                    '$net_price السعر بعد الخصم ',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  SizedBox(
+                                    height: getVerticalSpace(context, 10),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'من: $from',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                CustomButton(
-                                  bgColor: CustomColors.primary,
-                                  fgColor: CustomColors.white,
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); // Close dialog
-                                    // Navigate
-                                  },
-                                  text: Text('إغلاق'),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                        child: Container(
-                          margin: EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 16,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: CustomColors.primary,
-                          ),
-                          child: ListTile(
-                            contentPadding: EdgeInsets.all(15),
-                            title: Text(
-                              'ملعب $name',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: getVerticalSpace(context, 10)),
-                                Text(
-                                  '$amprice جنيه / الساعة صباحًا',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                Text(
-                                  '$pmprice جنيه / الساعة مساء',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                SizedBox(height: getVerticalSpace(context, 10)),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'من: $from',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
+                                      SizedBox(
+                                        width: getHorizontalSpace(context, 50),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: getHorizontalSpace(context, 50),
-                                    ),
-                                    Text(
-                                      'إلى: $to',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
+                                      Text(
+                                        'إلى: $to',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              textColor: Colors.white,
                             ),
-                            textColor: Colors.white,
                           ),
+                        );
+                      },
+                    );
+                  } else if (state is StadiumError) {
+                    return Center(
+                      child: Text(
+                        state.msg,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: getFontTitleSize(context),
+                          fontWeight: FontWeight.bold,
                         ),
-                      );
-                    },
-                  );
-                } else if (state is StadiumError) {
-                  return Center(
-                    child: Text(
-                      state.msg,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: getFontTitleSize(context),
-                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // Helper method to show add offer confirmation dialog
+  void _showAddOfferConfirmation(
+    BuildContext dialogContext,
+    dynamic stadiumCubit,
+    String stadiumId,
+  ) {
+    showDialog(
+      context: dialogContext,
+      builder: (confirmDialogContext) {
+        return AlertDialog(
+          title: const Text('إضافة خصم'),
+          content: const Text('هل أنت متأكد أنك تريد إضافة الخصم لهذا الملعب؟'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(confirmDialogContext).pop();
+              },
+              child: const Text('إلغاء', style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {
+                if (_validateOfferInput(confirmDialogContext)) {
+                  try {
+                    final price = double.parse(priceController.text);
+
+                    stadiumCubit.addOffer(
+                      from_day: from_day!,
+                      to_day: to_day!,
+                      price: price,
+                      stadium_id: stadiumId,
+                    );
+
+                    Navigator.of(confirmDialogContext).pop();
+                    Navigator.of(dialogContext).pop();
+
+                    // Clear the form
+                    _clearForm();
+                  } catch (e) {
+                    Navigator.of(confirmDialogContext).pop();
+                    ToastService().showToast(
+                      message: 'الرجاء إدخال قيمة صحيحة للخصم',
+                      type: ToastType.error,
+                    );
+                  }
+                }
+              },
+              child: const Text('تأكيد', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Helper method to validate offer input
+  bool _validateOfferInput(BuildContext context) {
+    if (priceController.text.isEmpty) {
+      Navigator.of(context).pop();
+      ToastService().showToast(
+        message: 'الرجاء إضافة قيمة العرض',
+        type: ToastType.error,
+      );
+      return false;
+    }
+
+    if (from_day == null) {
+      Navigator.of(context).pop();
+      ToastService().showToast(
+        message: 'الرجاء اختيار وقت بداية العرض',
+        type: ToastType.error,
+      );
+      return false;
+    }
+
+    if (to_day == null) {
+      Navigator.of(context).pop();
+      ToastService().showToast(
+        message: 'الرجاء اختيار وقت نهاية العرض',
+        type: ToastType.error,
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  // Helper method to clear form
+  void _clearForm() {
+    priceController.clear();
+    setState(() {
+      from_day = null;
+      to_day = null;
+    });
+  }
+
+  // Helper method to show delete confirmation dialog
+  void _showDeleteConfirmation(
+    BuildContext dialogContext,
+    dynamic stadiumCubit,
+    Map<String, dynamic> stadium,
+  ) {
+    showDialog<bool>(
+      context: dialogContext,
+      builder: (deleteDialogContext) => AlertDialog(
+        title: const Text('تأكيد الحذف'),
+        content: const Text('هل أنت متأكد أنك تريد حذف هذا الملعب؟'),
+        actions: [
+          CustomButton(
+            bgColor: Colors.grey,
+            fgColor: Colors.white,
+            onPressed: () {
+              Navigator.of(deleteDialogContext).pop();
+            },
+            text: const Text('إلغاء'),
+          ),
+          CustomButton(
+            bgColor: Colors.red,
+            fgColor: Colors.white,
+            onPressed: () async {
+              final fieldId = stadium['id']?.toString();
+              if (fieldId != null && fieldId.isNotEmpty) {
+                await stadiumCubit.deleteStadium(fieldId);
+                Navigator.of(deleteDialogContext).pop(); // Close delete dialog
+                Navigator.of(dialogContext).pop(); // Close main dialog
+              } else {
+                ToastService().showToast(
+                  message: 'معرف الملعب غير صالح',
+                  type: ToastType.error,
+                );
+              }
+            },
+            text: const Text('تأكيد'),
+          ),
+        ],
       ),
     );
   }

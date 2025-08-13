@@ -1,20 +1,4 @@
-// part of 'stadium_cubit.dart';
 
-// abstract class StadiumState {}
-
-// class StadiumInitial extends StadiumState {}
-
-// class StadiumLoading extends StadiumState {}
-
-// class StadiumLoaded extends StadiumState {
-//   final List<Map<dynamic, dynamic>> stadiums;
-//   StadiumLoaded(this.stadiums);
-// }
-
-// class StadiumError extends StadiumState {
-//   final String msg;
-//   StadiumError({required this.msg});
-// }
 
 part of 'stadium_cubit.dart';
 
@@ -49,7 +33,10 @@ final class StadiumDeleteError extends StadiumState {
 
 class OfferLoading extends StadiumState {}
 
-class OfferSuccess extends StadiumState {}
+class OfferSuccess extends StadiumState {
+  final String msg;
+  OfferSuccess({required this.msg});
+}
 
 class OfferError extends StadiumState {
   final String msg;
