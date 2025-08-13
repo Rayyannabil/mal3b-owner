@@ -102,6 +102,13 @@ class _AddStadiumState extends State<AddStadium> {
         );
         return;
       }
+      if (nightTime == null ) {
+        ToastService().showToast(
+          message: 'الرجاء اختيار وقت بداية الليل',
+          type: ToastType.error,
+        );
+        return;
+      }
 
       if (latitude == null || longitude == null) {
         ToastService().showToast(

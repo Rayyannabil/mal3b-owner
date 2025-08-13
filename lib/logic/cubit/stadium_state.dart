@@ -15,3 +15,15 @@ class StadiumError extends StadiumState {
   final String msg;
   StadiumError({required this.msg});
 }
+
+class OfferLoading extends StadiumState {}
+
+class OfferSuccess extends StadiumState {}
+
+class OfferError extends StadiumState {
+  final String msg;
+  OfferError({required this.msg});
+}
+
+
+
