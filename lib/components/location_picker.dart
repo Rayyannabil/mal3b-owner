@@ -5,7 +5,7 @@ import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/services/location_service.dart';
 
 class LocationPicker extends StatefulWidget {
-final Function(double lat, double lng, String address) onLocationPicked;
+  final Function(double lat, double lng, String address) onLocationPicked;
 
   const LocationPicker({super.key, required this.onLocationPicked});
 
@@ -15,31 +15,30 @@ final Function(double lat, double lng, String address) onLocationPicked;
 
 class _LocationPickerState extends State<LocationPicker> {
   String _locationText = 'اختر الموقع';
-  double? _lat;
-  double? _lng;
-Future<void> _determinePosition() async {
-  setState(() {
-    _locationText = 'جاري تحديد الموقع...';
-  });
-
-  try {
-    final position = await LocationService().getLongAndLat();
-    final address = await LocationService().determinePosition();
-
-  setState(() {
-      _locationText = address;
-      _lat = position.latitude;
-      _lng = position.longitude;
-    });
-
-widget.onLocationPicked(position.latitude, position.longitude, address);
-  } catch (e) {
+  double? lat;
+  double? lng;
+  Future<void> _determinePosition() async {
     setState(() {
-      _locationText = 'فشل في جلب الموقع فعل إذن الموقع';
+      _locationText = 'جاري تحديد الموقع...';
     });
-  }
-}
 
+    try {
+      final position = await LocationService().getLongAndLat();
+      final address = await LocationService().determinePosition();
+
+      setState(() {
+        _locationText = address;
+        lat = position.latitude;
+        lng = position.longitude;
+      });
+
+      widget.onLocationPicked(position.latitude, position.longitude, address);
+    } catch (e) {
+      setState(() {
+        _locationText = 'فشل في جلب الموقع فعل إذن الموقع';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +48,7 @@ widget.onLocationPicked(position.latitude, position.longitude, address);
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: CustomColors.customWhite,
-          border: Border.all(color: CustomColors.customWhite,),
+          border: Border.all(color: CustomColors.customWhite),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -57,10 +56,7 @@ widget.onLocationPicked(position.latitude, position.longitude, address);
             Icon(Icons.location_on, color: CustomColors.primary),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(
-                _locationText,
-                style: const TextStyle(fontSize: 16),
-              ),
+              child: Text(_locationText, style: const TextStyle(fontSize: 16)),
             ),
           ],
         ),

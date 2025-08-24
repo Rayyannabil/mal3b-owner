@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, unused_local_variable, unused_element
 
 import 'dart:async';
 import 'dart:developer';
@@ -15,9 +15,11 @@ import 'package:mal3b/screens/my_fields.dart';
 import 'package:mal3b/services/location_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+bool _hasWelcomePopupBeenShown = false;
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-  
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -77,32 +79,141 @@ class _HomeScreenState extends State<HomeScreen> {
     BlocProvider.of<NotificationCubit>(context).saveFCM();
   }
 
+  void _showWorkingOnlyInAlexPopup() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("تنبيه"),
+        content: const Text("التطبيق يعمل حالياً داخل محافظة الإسكندرية فقط"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              "حسناً",
+              style: TextStyle(color: CustomColors.primary),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildHeader() {
+    String locationText = 'الموقع'; // Example, replace with your logic
+
+    Future<void> _determinePosition() async {
+      try {
+        String address = await LocationService().determinePosition();
+
+        bool isInAlex =
+            address.contains("اسكندرية") || address.contains("Alexandria");
+
+        if (!isInAlex && _hasWelcomePopupBeenShown == false) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _showWorkingOnlyInAlexPopup();
+            _hasWelcomePopupBeenShown = true;
+          });
+        }
+
+        setState(() {
+          locationText = address;
+        });
+
+        final location = await LocationService().getLongAndLat();
+        // ignore: use_build_context_synchronously
+        context.read<StadiumCubit>().fetchStadiums();
+      } catch (e) {
+        log('Error determining position: $e');
+        setState(() {
+          locationText = 'الموقع غير معروف';
+        });
+      }
+    }
+
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          height: 100, // Reduced height to fit small devices better
-          width: 200,
-          decoration: const BoxDecoration(
-            color: CustomColors.primary,
-            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BlocConsumer<NotificationCubit, NotificationState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              final cubit = context.read<NotificationCubit>();
+              print("notificationsSeen = ${cubit.notificationsSeen}");
+
+              return Flexible(
+                flex: 4,
+                child: Container(
+                  height: 110,
+                  decoration: const BoxDecoration(
+                    color: CustomColors.primary,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(50),
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(width: 40),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/notifications');
+                          },
+                          child: ValueListenableBuilder<bool>(
+                            valueListenable: seenNotification,
+                            builder: (context, value, child) {
+                              return SvgPicture.asset(
+                                value
+                                    ? "assets/images/notifications_unread.svg"
+                                    : "assets/images/notification.svg",
+                                width: getIconWidth(context),
+                                height: getIconWidth(context),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
-          child: Center(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed('/notifications');
-              },
-              child: SvgPicture.asset(
-                "assets/images/notification.svg",
-                width: getIconWidth(context),
-                height: getIconWidth(context),
-                fit: BoxFit.contain,
+          SizedBox(width: getHorizontalSpace(context, 5)),
+          Flexible(
+            flex: 5,
+            child: SizedBox(
+              height: 110,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: CustomColors.customWhite,
+                    ),
+                    height: getVerticalSpace(context, 40),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                          locationText,
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                          style: TextStyle(
+                            color: CustomColors.secondary.withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -127,10 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedItemColor: CustomColors.primary,
         unselectedItemColor: Colors.grey.withOpacity(0.5),
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'إضافة ملعب',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'إضافة ملعب'),
           BottomNavigationBarItem(
             icon: Icon(Icons.stadium),
             label: 'الملاعب',

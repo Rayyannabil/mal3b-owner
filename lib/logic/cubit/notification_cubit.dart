@@ -1,50 +1,92 @@
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mal3b/api/dio_client.dart';
-import 'package:meta/meta.dart';
-
 part 'notification_state.dart';
 
 class NotificationCubit extends Cubit<NotificationState> {
   NotificationCubit() : super(NotificationInitial());
 
   final Dio dio = DioClient().dio;
-  final FlutterSecureStorage storage = FlutterSecureStorage();
+
+  /// key used for SharedPreferences persistence
+  static const String seenKey = "markAsRead";
+
+  /// local in-memory cache
+  bool notificationsSeen = false;
+
+  /// read flag from shared prefs on app startup
+  Future<void> initSeen() async {
+    final prefs = await SharedPreferences.getInstance();
+    notificationsSeen = (prefs.getBool(seenKey) ?? true);
+  }
+
+  Future<bool> markSeen() async {
+    final prefs = await SharedPreferences.getInstance();
+    notificationsSeen = true;
+    await prefs.setBool(seenKey, true);
+    emit(NotificationSeenChanged()); // <—— Trigger rebuild
+    return true;
+  }
+
+  Future<bool> markUnseen() async {
+    final prefs = await SharedPreferences.getInstance();
+    notificationsSeen = false;
+    await prefs.setBool(seenKey, false);
+    emit(NotificationSeenChanged()); // <—— Trigger rebuild
+    return true;
+  }
 
   void saveFCM() async {
-    // dio.options.headers = {'Content-Type': 'application/json'};
-    // String? token = await FirebaseMessaging.instance.getToken();
-    // final storage = FlutterSecureStorage();
-    // final accessToken = await storage.read(key: "accessToken");
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
+    final accessToken = await SharedPreferences.getInstance().then(
+      (prefs) => prefs.getString("accessToken"),
+    );
 
-    // try {
-    //   // ignore: unused_local_variable
-    //   final response = await dio.post(
-    //     "${DioClient.baseUrl}user/store-fcm",
-    //     data: {"token": token},
-    //     options: Options(headers: {"Authorization": "Bearer $accessToken"}),
-    //   );
-    // } catch (e) {
-    //   emit(NotificationError(msg: "فشل في حفظ توكن FCM"));
-    //   throw Exception("فشل في حفظ توكن FCM: $e");
-    // }
+    log(fcmToken.toString());
+
+    if (accessToken == null) {
+      //
+    } else {
+      await dio
+          .post(
+            "${DioClient.baseUrl}user/store-fcm",
+            data: {"token": fcmToken},
+            options: Options(headers: {"Authorization": "Bearer $accessToken"}),
+          )
+          .then((response) {
+            log(response.data.toString());
+          });
+    }
   }
 
   Future<void> fetchNotifications() async {
     emit(NotificationLoading());
     try {
-      final token = await storage.read(key: 'accessToken');
+      final prefs = await SharedPreferences.getInstance();
+      final accessToken = prefs.getString("accessToken");
+
       final response = await dio.get(
         '${DioClient.baseUrl}user/notification',
-        options: Options(headers: {"Authorization": "Bearer $token"}),
+        options: Options(headers: {"Authorization": "Bearer $accessToken"}),
       );
+      log(response.data.toString());
 
       if (response.statusCode == 200) {
-        emit(
-          NotificationSuccess(List<Map<String, dynamic>>.from(response.data)),
-        );
+        final data = List<Map<String, dynamic>>.from(response.data);
+        emit(NotificationSuccess(data));
+
+        for (var item in data) {
+          final createdAt = DateTime.parse(item['created_at']).toLocal();
+          item['created_at_date'] = createdAt;
+        }
+
+        if (data.isNotEmpty && notificationsSeen == false) {
+          // mark as unread until user open the screen
+          // await markUnseen();
+        }
       } else {
         emit(NotificationError(msg: "حدث خطأ أثناء تحميل الإشعارات يا نجم"));
       }

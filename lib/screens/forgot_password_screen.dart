@@ -95,6 +95,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         arguments: {
                           'phone': phone,
                           'verificationId': verificationId,
+                          'isResetFlow' : true,
                         },
                       );
                     },

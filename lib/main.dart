@@ -31,11 +31,24 @@ import 'package:mal3b/screens/notifications_screen.dart';
 import 'package:mal3b/services/notification_wrapper.dart';
 import 'package:mal3b/services/toast_service.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  try {
+    // Required for background handling to avoid "duplicate app" error
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (_) {}
+
   final notification = message.notification;
+
   if (notification != null) {
+    seenNotification.value = false;
+    SharedPreferences.getInstance().then((value) {
+      value.setBool("seenKey", seenNotification.value);
+    });
     EasyNotify.showBasicNotification(
       id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
       title: notification.title ?? 'No title (background)',
@@ -156,15 +169,17 @@ class Mal3bApp extends StatelessWidget {
               );
             case '/bookings':
               final id = settings.arguments as String;
-              return MaterialPageRoute(
-                builder: (_) => BookingsScreen(id: id),
-              );
+              return MaterialPageRoute(builder: (_) => BookingsScreen(id: id));
             case '/otp-screen':
               final args = settings.arguments as Map<String, String>;
               return MaterialPageRoute(
                 builder: (_) => OtpScreen(
                   phoneNumber: args['phone'] ?? '',
                   verificationId: args['verificationId'] ?? '',
+                  name: args['name'] ?? '',
+                  password: args['new'] ?? '',
+                  phone: args['phone'] ?? '',
+                  isResetFlow: false,
                 ),
               );
             default:

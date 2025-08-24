@@ -1,12 +1,15 @@
+import 'dart:developer';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_notify/easy_notify.dart';
+import 'package:mal3b/screens/my_fields.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationListenerWrapper extends StatefulWidget {
   final Widget child;
 
-  const NotificationListenerWrapper({required this.child, Key? key})
-    : super(key: key);
+  const NotificationListenerWrapper({required this.child, super.key});
 
   @override
   State<NotificationListenerWrapper> createState() =>
@@ -23,10 +26,14 @@ class _NotificationListenerWrapperState
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       final notification = message.notification;
       if (notification != null) {
+        seenNotification.value = false;
+        log("We are here from foreground");
+        SharedPreferences.getInstance().then((value) {
+          value.setBool("seenKey", seenNotification.value);
+        });
         EasyNotify.showBasicNotification(
           id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
           title: notification.title ?? 'No title',
-          imagePath: "assets/images/",
           body: notification.body ?? 'No body',
         );
       }
@@ -35,6 +42,8 @@ class _NotificationListenerWrapperState
     // Background (opened from tap)
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       final notification = message.notification;
+      log("We are here fron background");
+
       if (notification != null) {
         EasyNotify.showBasicNotification(
           id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
@@ -48,6 +57,7 @@ class _NotificationListenerWrapperState
     FirebaseMessaging.instance.getInitialMessage().then((
       RemoteMessage? message,
     ) {
+      log("We are here from terminated");
       if (message != null) {
         final notification = message.notification;
         if (notification != null) {

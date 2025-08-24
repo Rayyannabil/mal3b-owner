@@ -6,7 +6,7 @@ class DioClient {
   static final DioClient _instance = DioClient._internal();
   factory DioClient() => _instance;
 
-  static const String baseUrl = "http://192.168.1.12:8080/";
+  static const String baseUrl = "http://192.168.1.26:3000/";
 
   late Dio dio;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
@@ -19,7 +19,7 @@ class DioClient {
       sendTimeout: const Duration(seconds: 10),
       headers: {
         'Accept': 'application/json',
-        // 'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
     );
 

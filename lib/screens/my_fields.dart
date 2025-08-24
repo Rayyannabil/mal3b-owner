@@ -1,14 +1,23 @@
+// ignore_for_file: use_build_context_synchronously, unused_element
+
 import 'dart:developer';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:mal3b/components/custom_button.dart';
 import 'package:mal3b/components/date_picker.dart';
 import 'package:mal3b/constants/colors.dart';
 import 'package:mal3b/helpers/size_helper.dart';
+import 'package:mal3b/logic/cubit/authentication_cubit.dart';
+import 'package:mal3b/logic/cubit/notification_cubit.dart';
 import 'package:mal3b/logic/cubit/stadium_cubit.dart';
 import 'package:mal3b/services/toast_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+ValueNotifier<bool> seenNotification = ValueNotifier(false);
 
 class MyFields extends StatefulWidget {
   final VoidCallback? onSuccess;
@@ -23,6 +32,7 @@ class _MyFieldsState extends State<MyFields> {
   String? from_day;
   String? to_day;
   final TextEditingController priceController = TextEditingController();
+  String? _fcmToken;
 
   String formatTimeArabic(String timeString) {
     final inputFormat = DateFormat("HH:mm:ss");
@@ -35,12 +45,131 @@ class _MyFieldsState extends State<MyFields> {
   void initState() {
     super.initState();
     context.read<StadiumCubit>().fetchStadiums();
+    context.read<NotificationCubit>().saveFCM();
+    SharedPreferences.getInstance().then(
+      (value) => {seenNotification.value = value.getBool("seenKey") ?? false},
+    );
+    context.read<AuthenticationCubit>().getProfileDetails();
+    context.read<NotificationCubit>().fetchNotifications();
+    _getToken();
   }
 
   @override
   void dispose() {
     priceController.dispose();
     super.dispose();
+  }
+
+  Future<void> _getToken() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    // Request permission (iOS)
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      String? token = await messaging.getToken();
+      setState(() {
+        _fcmToken = token;
+      });
+      print("FCM Token: $_fcmToken"); // You can send this to your backend
+    } else {
+      print("Permission denied");
+    }
+  }
+
+  Widget _buildHeader() {
+    String locationText = "الموقع"; // Example, replace with your logic
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BlocConsumer<NotificationCubit, NotificationState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              final cubit = context.read<NotificationCubit>();
+              print("notificationsSeen = ${cubit.notificationsSeen}");
+
+              return Flexible(
+                flex: 4,
+                child: Container(
+                  height: 110,
+                  decoration: const BoxDecoration(
+                    color: CustomColors.primary,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(50),
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(width: 40),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/notifications');
+                          },
+                          child: ValueListenableBuilder<bool>(
+                            valueListenable: seenNotification,
+                            builder: (context, value, child) {
+                              return SvgPicture.asset(
+                                value
+                                    ? "assets/images/notifications_unread.svg"
+                                    : "assets/images/notification.svg",
+                                width: getIconWidth(context),
+                                height: getIconWidth(context),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          SizedBox(width: getHorizontalSpace(context, 5)),
+          Flexible(
+            flex: 5,
+            child: SizedBox(
+              height: 110,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: CustomColors.customWhite,
+                    ),
+                    height: getVerticalSpace(context, 40),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                          locationText,
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
+                          style: TextStyle(
+                            color: CustomColors.secondary.withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -129,7 +258,7 @@ class _MyFieldsState extends State<MyFields> {
                         final name = stadium['name'] ?? '';
                         final id = stadium['id'] ?? '';
                         final amprice = stadium['price'] ?? '';
-                        final net_price = stadium['net_price'] ?? '';
+                        final netPrice = stadium['net_price'] ?? '';
                         final offer = stadium['offer'] ?? '';
                         final pmprice = stadium['night_price'] ?? '';
                         final from = formatTimeArabic(stadium['from_time']);
@@ -406,7 +535,7 @@ class _MyFieldsState extends State<MyFields> {
                                     height: getVerticalSpace(context, 10),
                                   ),
                                   Text(
-                                    '$net_price السعر بعد الخصم ',
+                                    'السعر بعد الخصم: $netPrice جنية / الساعة ',
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   SizedBox(
